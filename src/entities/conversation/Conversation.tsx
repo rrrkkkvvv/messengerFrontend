@@ -131,7 +131,7 @@ const Conversation = () => {
   };
   const handleInvalidateConversation = async () => {
     try {
-      await invalidateConversation({ optionalArg: null }).unwrap();
+      await invalidateConversation().unwrap();
     } catch (error) {
       console.error("Failed to invalidate conversation:", error);
     }
@@ -172,7 +172,13 @@ const Conversation = () => {
 
   //Scorlling down on messages updates
   useEffect(() => {
-    handleScrollDown();
+    if (messagesEndRef.current) {
+      messagesEndRef.current.classList.remove("scroll-smooth");
+
+      handleScrollDown();
+
+      messagesEndRef.current?.classList.add("scroll-smooth");
+    }
   }, [conversationMessages]);
 
   useEffect(() => {

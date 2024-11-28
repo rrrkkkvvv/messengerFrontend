@@ -4,7 +4,7 @@ import { logout, selectCurrentUser } from "../../entities/user";
 import { useEffect, useState } from "react";
 import { routes } from "../../shared/values/strValues";
 
-import Conversations from "../../widgets/UsersList/UsersList";
+import UsersList from "../../widgets/UsersList/UsersList";
 import { useDispatch } from "react-redux";
 import Conversation from "../../entities/conversation";
 
@@ -32,7 +32,7 @@ const MainPage = () => {
         <Outlet />
       ) : (
         <>
-          <Conversations />
+          <UsersList />
           <Conversation />
         </>
       )}

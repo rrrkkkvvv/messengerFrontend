@@ -10,9 +10,9 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";
 import Conversation from "../entities/conversation";
-import Conversations from "../widgets/UsersList";
 import ErrorPage from "../pages/error/ErrorPage";
 import { createBrowserHistory } from "history";
+import UsersList from "../widgets/UsersList";
 
 export const history = createBrowserHistory();
 
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       {
         index: true,
         // path: routes.main,
-        element: <Conversations />,
+        element: <UsersList />,
       },
       {
         path: routes.conversation + "/:anotherUserIdParam",

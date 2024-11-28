@@ -12,7 +12,7 @@ import { skipToken } from "@reduxjs/toolkit/query";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../shared/values/strValues";
 
-const Conversations = () => {
+const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const currentJWT = useAppSelector(selectJWTToken);
 
@@ -36,8 +36,6 @@ const Conversations = () => {
 
   const openConversationWithUser = async (userId: number) => {
     if (currentJWT && currentUser) {
-      // dispatch(baseApi.util.resetApiState());
-
       navigate(`${routes.conversation}/${userId}`);
     }
   };
@@ -63,8 +61,6 @@ const Conversations = () => {
       </h1>
       {/* Users list */}
       <div className=" text-green-200">
-        {/* Users */}
-
         {users.map((user) => (
           <User
             user={user}
@@ -77,4 +73,4 @@ const Conversations = () => {
   );
 };
 
-export default Conversations;
+export default UsersList;

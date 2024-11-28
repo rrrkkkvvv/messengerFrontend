@@ -154,13 +154,8 @@ export const chatApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Conversation"],
     }),
-    invalidateConversation: builder.mutation<
-      string,
-      {
-        optionalArg: null;
-      }
-    >({
-      async queryFn({ optionalArg }) {
+    invalidateConversation: builder.mutation<string, void>({
+      async queryFn() {
         return new Promise((resolve) => {
           resolve({ data: "Conversation invalidated" });
         });
