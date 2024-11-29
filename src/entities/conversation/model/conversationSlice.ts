@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../../../app/store/store";
 import { TMessageInfo } from "../api/conversationTypes";
 import { TUserInfo } from "../../user";
@@ -23,24 +23,27 @@ const currentConversationSlice = createSlice({
   reducers: {
     setCurrentConversationStatusState(
       state,
-      action: PayloadAction<"exists" | "absent">
+      action: PayloadAction<{ newStatus: "exists" | "absent" }>
     ) {
-      state.status = action.payload;
+      state.status = action.payload.newStatus;
     },
     setCurrentConversationMessagesState(
       state,
-      action: PayloadAction<TMessageInfo[] | null>
+      action: PayloadAction<{ messages: TMessageInfo[] | null }>
     ) {
-      state.messages = action.payload;
+      state.messages = action.payload.messages;
     },
     setCurrentConversationMembersState(
       state,
-      action: PayloadAction<TUserInfo[] | null>
+      action: PayloadAction<{ members: TUserInfo[] | null }>
     ) {
-      state.members = action.payload;
+      state.members = action.payload.members;
     },
-    setCurrentConversationIdState(state, action: PayloadAction<number | null>) {
-      state.conversationId = action.payload;
+    setCurrentConversationIdState(
+      state,
+      action: PayloadAction<{ conversationId: number | null }>
+    ) {
+      state.conversationId = action.payload.conversationId;
     },
   },
   selectors: {
@@ -57,48 +60,67 @@ const {
   setCurrentConversationIdState,
   setCurrentConversationStatusState,
 } = currentConversationSlice.actions;
-
-export const setCurrentConversationMessages =
-  (messages: TMessageInfo[] | null) => async (dispatch: AppDispatch) => {
+export const setCurrentConversationMessages = createAsyncThunk(
+  "setCurrentConversationMessages",
+  (messages: TMessageInfo[] | null, { dispatch }) => {
     if (messages && Array.isArray(messages)) {
-      dispatch(setCurrentConversationMessagesState(messages));
+      dispatch(setCurrentConversationMessagesState({ messages: messages }));
     } else {
-      dispatch(setCurrentConversationMessagesState(null));
+      dispatch(setCurrentConversationMessagesState({ messages: null }));
     }
-  };
-export const setCurrentConversationMembers =
-  (members: TUserInfo[] | null) => async (dispatch: AppDispatch) => {
+  }
+);
+
+export const setCurrentConversationMembers = createAsyncThunk(
+  "setCurrentConversationMembers",
+  (members: TUserInfo[] | null, { dispatch }) => {
     if (members && Array.isArray(members)) {
-      dispatch(setCurrentConversationMembersState(members));
+      dispatch(setCurrentConversationMembersState({ members: members }));
     } else {
-      dispatch(setCurrentConversationMembersState(null));
+      dispatch(setCurrentConversationMembersState({ members: null }));
     }
-  };
-export const setCurrentConversationId =
-  (conversationId: string | number | null) => async (dispatch: AppDispatch) => {
+  }
+);
+export const setCurrentConversationId = createAsyncThunk(
+  "setCurrentConversationId",
+  (conversationId: string | number | null, { dispatch }) => {
     if (conversationId) {
       if (typeof conversationId == "string") {
-        dispatch(setCurrentConversationIdState(parseInt(conversationId)));
+        dispatch(
+          setCurrentConversationIdState({
+            conversationId: parseInt(conversationId),
+          })
+        );
       } else {
-        dispatch(setCurrentConversationIdState(conversationId));
+        dispatch(
+          setCurrentConversationIdState({ conversationId: conversationId })
+        );
       }
     } else {
-      dispatch(setCurrentConversationIdState(null));
+      dispatch(setCurrentConversationIdState({ conversationId: null }));
     }
-  };
+  }
+);
 
-export const deleteConversation = () => async (dispatch: AppDispatch) => {
-  dispatch(setCurrentConversationIdState(null));
+export const deleteConversation = createAsyncThunk(
+  "deleteConversation",
+  (_, { dispatch }) => {
+    dispatch(setCurrentConversationIdState({ conversationId: null }));
 
-  dispatch(setCurrentConversationMessagesState(null));
+    dispatch(setCurrentConversationMessagesState({ messages: null }));
 
-  dispatch(setCurrentConversationMembersState(null));
-  dispatch(setCurrentConversationStatusState("absent"));
-};
-export const setCurrentConversationExists =
-  () => async (dispatch: AppDispatch) => {
-    dispatch(setCurrentConversationStatusState("exists"));
-  };
+    dispatch(setCurrentConversationMembersState({ members: null }));
+    dispatch(setCurrentConversationStatusState({ newStatus: "absent" }));
+  }
+);
+
+export const setCurrentConversationExists = createAsyncThunk(
+  "setCurrentConversationExists",
+  (_, { dispatch }) => {
+    dispatch(setCurrentConversationStatusState({ newStatus: "exists" }));
+  }
+);
+
 export const {
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,
