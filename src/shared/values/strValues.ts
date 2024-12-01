@@ -50,4 +50,5 @@ export const routes = {
   auth: "/auth",
   main: "/",
   conversation: "/conversation",
+  profile: "/profile",
 };

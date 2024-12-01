@@ -11,6 +11,7 @@ import { useGetUsersQuery } from "../../entities/user/api/usersApi";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../shared/values/strValues";
+import { CgProfile } from "react-icons/cg";
 
 const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
@@ -41,15 +42,31 @@ const UsersList = () => {
   };
   return (
     <div className=" w-full md:w-2/5 overflow-y-auto  h-dvh bg-gray-300">
-      <h1 className="h-20 flex px-20 justify-between  text-center border border-gray-200 text-white items-center">
-        <span className="text-xl">Start conversation with...</span>
+      <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
+        <button
+          className="
+                  text-green-400
+                  flex
+                  gap-3
+                  items-center
+                  ml-2
+                  px-4
+                  outline-none
+                  rounded-sm
+                  transition-all
+                  focus:outline-green-400
+                  hover:outline-green-200"
+          onClick={() => navigate("/profile")}
+        >
+          <CgProfile className="text-2xl" />
+          My profile
+        </button>
         <button
           className="
                   text-green-400
                   ml-2
                   px-4
                   outline-none
-                  outline-green-100
                   rounded-sm
                   transition-all
                   focus:outline-green-400

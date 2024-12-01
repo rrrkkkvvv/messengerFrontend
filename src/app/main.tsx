@@ -13,6 +13,7 @@ import Conversation from "../entities/conversation";
 import ErrorPage from "../pages/error/ErrorPage";
 import { createBrowserHistory } from "history";
 import UsersList from "../widgets/UsersList";
+import Profile from "../widgets/Profile/";
 
 export const history = createBrowserHistory();
 
@@ -31,12 +32,15 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        // path: routes.main,
         element: <UsersList />,
       },
       {
         path: routes.conversation + "/:anotherUserIdParam",
         element: <Conversation />,
+      },
+      {
+        path: routes.profile,
+        element: <Profile />,
       },
     ],
   },
@@ -51,14 +55,5 @@ createRoot(document.getElementById("root")!).render(
         <RouterProvider router={router} />
       </Provider>
     </GoogleOAuthProvider>
-    {/* <div className="bg-white text-white  flex flex-col justify-center  items-center w-full h-dvh">
-
-      <div className='text-5xl p-5 bg-green-100'>messenger</div>
-      <div className='text-5xl  p-5 bg-green-200'>messenger</div>
-      <div className='text-5xl text-white p-5 bg-gray-300'>messenger</div>
-      <div className='text-5xl text-white p-5 bg-gray-200'>messenger</div>
-      <div className='text-5xl text-white p-5 bg-gray-100'>messenger</div>
-
-    </div> */}
   </StrictMode>
 );

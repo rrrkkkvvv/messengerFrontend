@@ -33,7 +33,14 @@ const MessageList = ({
                 ? "You"
                 : message.sender_name}
             </span>
-            <span>{message.message_text}</span>
+
+            <div>
+              <span>{message.message_text && message.message_text}</span>
+
+              {message.message_image && (
+                <img className="max-w-52" src={message.message_image} />
+              )}
+            </div>
           </div>
         </div>
       ))}

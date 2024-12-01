@@ -7,7 +7,8 @@ export type TCreateConversationProps = {
 
 export type TMessageInfo = {
   message_id: number;
-  message_text: string;
+  message_text: string | null;
+  message_image: string | null;
   conversation_id: number;
   sender_name: string;
   sender_id: number;

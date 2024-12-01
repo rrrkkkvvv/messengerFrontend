@@ -98,7 +98,11 @@ export const chatApi = baseApi.injectEndpoints({
       string,
       {
         conversationId: number;
-        message: { text: string; senderId: number };
+        message: {
+          text: string | null;
+          image: string | null;
+          senderId: number;
+        };
       }
     >({
       async queryFn({ conversationId, message }) {
@@ -111,6 +115,7 @@ export const chatApi = baseApi.injectEndpoints({
             conversationId: conversationId,
             message: {
               message_text: message.text,
+              message_image: message.image,
               sender_id: message.senderId,
             },
             token: localStorage.getItem(localStorageItems.jwtToken),

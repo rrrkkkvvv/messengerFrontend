@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import { FaArrowAltCircleDown, FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
+import { IoCloseOutline } from "react-icons/io5";
 
 import {
   selectCurrentConversationId,
@@ -27,6 +28,7 @@ import {
 import MessageList from "./ui/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
+import UploadButton from "./ui/UploadImageButton";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
@@ -76,7 +78,10 @@ const Conversation = () => {
   // Flag state for arrow-scroll-down
   const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
   // Input message value
-  const [message, setMessage] = useState("");
+  const [message, setMessage] = useState<string | null>(null);
+
+  const [messageImage, setMessageImage] = useState<string | null>(null);
+
   // Is mobile device flag
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -88,17 +93,19 @@ const Conversation = () => {
   // HANDLES FUNCTIONS
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!message.trim()) return;
+    // if (!message.trim()) return;
     if (!conversationId) return;
     if (!currentUser) return;
+    if (!message && !messageImage) return;
     const messageData = {
       conversationId: conversationId,
-      message: { text: message, senderId: currentUser.id },
+      message: { text: message, senderId: currentUser.id, image: messageImage },
     };
-
+    console.log(messageData);
     try {
       await sendMessage(messageData).unwrap();
-      setMessage("");
+      setMessage(null);
+      setMessageImage(null);
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -116,7 +123,10 @@ const Conversation = () => {
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
     }
   };
-
+  const handleSetMessageImage = (url: string | null) => {
+    setMessageImage(url);
+    console.log("Uploaded image URL:", url);
+  };
   // Setting visibility of arrow-scroll-down on messages-elem scroll
   const handleScroll = () => {
     if (messagesEndRef.current) {
@@ -265,23 +275,47 @@ const Conversation = () => {
           {/* INPUT MESSAGE */}
           <form
             onSubmit={(event) => handleSendMessage(event)}
-            className="flex absolute px-5 justify-center bottom-0 h-26 overflow-hidden  w-full z-30 gap-5 items-center py-4 bg-gray-300"
+            className={`flex flex-col absolute px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
+              messageImage && "border border-t-gray-200"
+            }`}
           >
-            <Input
-              type="text"
-              onClick={() => {}}
-              onChange={handleInputChange}
-              placeholder="Input message..."
-              value={message}
-              className="w-full hover:border"
-            />
-            <button
-              type="submit"
-              className="p-4 rounded-md outline-none transition-all border-white border focus:border-green-400 hover:border-green-400"
-            >
-              Send
-            </button>
+            {messageImage && (
+              <>
+                <button
+                  // Clears state of message image
+                  onClick={() => handleSetMessageImage(null)}
+                  className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
+                >
+                  <IoCloseOutline />
+                </button>
+                <div className="flex justify-center  mb-4 ">
+                  <img
+                    src={messageImage}
+                    alt="Uploaded"
+                    className="max-w-full h-44 rounded-lg shadow-md border-2 p-2 border-green-400"
+                  />
+                </div>
+              </>
+            )}
+            <div className="flex gap-5 items-center">
+              <Input
+                type="text"
+                onClick={() => {}}
+                onChange={handleInputChange}
+                placeholder="Input message..."
+                value={message ? message : ""}
+                className="w-full hover:border"
+              />
+              <UploadButton onUpload={handleSetMessageImage} />
+              <button
+                type="submit"
+                className="p-4 rounded-md outline-none transition-all border-white border focus:border-green-400 hover:border-green-400"
+              >
+                Send
+              </button>
+            </div>
           </form>
+
           <SidebarMenu
             isSidebarMenuVisible={isSidebarMenuVisible}
             closeSidebarMenu={handleCloseSidebarMenu}

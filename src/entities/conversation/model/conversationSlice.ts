@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppDispatch } from "../../../app/store/store";
 import { TMessageInfo } from "../api/conversationTypes";
 import { TUserInfo } from "../../user";
 
