@@ -130,6 +130,34 @@ export const chatApi = baseApi.injectEndpoints({
         });
       },
     }),
+    deleteMessage: builder.mutation<
+      string,
+      {
+        conversationId: number;
+        messageId: number;
+      }
+    >({
+      async queryFn({ conversationId, messageId }) {
+        return new Promise((resolve, reject) => {
+          if (!ws || ws.readyState !== WebSocket.OPEN) {
+            reject(new Error("Websocket does not exists"));
+            return;
+          }
+          const data = {
+            conversationId: conversationId,
+            messageId: messageId,
+            token: localStorage.getItem(localStorageItems.jwtToken),
+          };
+
+          ws.send(JSON.stringify(data));
+          resolve({ data: "Message deleted" });
+          ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+            reject(new Error("Failed to send message"));
+          };
+        });
+      },
+    }),
     deleteConversation: builder.mutation<
       string,
       {
@@ -175,4 +203,5 @@ export const {
   useSendMessageMutation,
   useDeleteConversationMutation,
   useInvalidateConversationMutation,
+  useDeleteMessageMutation,
 } = chatApi;

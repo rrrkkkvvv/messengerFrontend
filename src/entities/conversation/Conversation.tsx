@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
-import { FaArrowAltCircleDown, FaArrowLeft } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { IoCloseOutline } from "react-icons/io5";
 
@@ -22,6 +22,7 @@ import Avatar from "../../shared/ui/Avatar/Avatar";
 import Input from "../../shared/ui/Input/Input";
 import {
   useConnectToChatQuery,
+  useDeleteMessageMutation,
   useInvalidateConversationMutation,
   useSendMessageMutation,
 } from "./api/conversationApi";
@@ -44,6 +45,7 @@ const Conversation = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [sendMessage] = useSendMessageMutation();
+  const [deleteMessage] = useDeleteMessageMutation();
 
   //USE CALLBACKS
   const member_ids = useCallback(() => {
@@ -73,10 +75,7 @@ const Conversation = () => {
   const [invalidateConversation] = useInvalidateConversationMutation();
 
   // STATES
-  // Last scroll position(for calculation and scroll down)
-  const [lastScroll, setLastScroll] = useState<number>(0);
-  // Flag state for arrow-scroll-down
-  const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
+
   // Input message value
   const [message, setMessage] = useState<string | null>(null);
 
@@ -86,9 +85,6 @@ const Conversation = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const [isSidebarMenuVisible, setIsSidebarMenuVisible] = useState(false);
-
-  //Ref of messages-elem for scrolling down
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // HANDLES FUNCTIONS
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
@@ -101,7 +97,6 @@ const Conversation = () => {
       conversationId: conversationId,
       message: { text: message, senderId: currentUser.id, image: messageImage },
     };
-    console.log(messageData);
     try {
       await sendMessage(messageData).unwrap();
       setMessage(null);
@@ -110,35 +105,29 @@ const Conversation = () => {
       console.error("Failed to send message:", error);
     }
   };
-
+  const handleDeleteMessage = async (messageId: number) => {
+    if (!conversationId) return;
+    try {
+      await deleteMessage({
+        messageId: messageId,
+        conversationId: conversationId,
+      }).unwrap();
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
+  };
   const handleCloseSidebarMenu = () => {
     setIsSidebarMenuVisible(false);
   };
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     setMessage(e.currentTarget.value);
   };
-  const handleScrollDown = () => {
-    if (messagesEndRef.current) {
-      setDownScrollVisible(false);
-      messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-    }
-  };
+
   const handleSetMessageImage = (url: string | null) => {
     setMessageImage(url);
     console.log("Uploaded image URL:", url);
   };
-  // Setting visibility of arrow-scroll-down on messages-elem scroll
-  const handleScroll = () => {
-    if (messagesEndRef.current) {
-      const currentScroll = messagesEndRef.current.scrollTop;
-      if (currentScroll > lastScroll && downScrollVisible) {
-        setDownScrollVisible(false);
-      } else if (currentScroll < lastScroll && !downScrollVisible) {
-        setDownScrollVisible(true);
-      }
-      setLastScroll(currentScroll);
-    }
-  };
+
   const handleInvalidateConversation = async () => {
     try {
       await invalidateConversation().unwrap();
@@ -154,7 +143,17 @@ const Conversation = () => {
       dispatch(setCurrentConversationExists());
     }
   }, [conversationStatus]);
+  useEffect(() => {
+    // Resize of window if there is mobile device
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
 
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   // Chat data processing(messages, members, conversationId)
   useEffect(() => {
     if (!chatData && !currentUser) return;
@@ -179,39 +178,6 @@ const Conversation = () => {
       handleInvalidateConversation();
     }
   }, [chatData, currentUser, dispatch]);
-
-  //Scorlling down on messages updates
-  useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.classList.remove("scroll-smooth");
-
-      handleScrollDown();
-
-      messagesEndRef.current?.classList.add("scroll-smooth");
-    }
-  }, [conversationMessages]);
-
-  useEffect(() => {
-    // Resize of window if there is mobile device
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener("resize", handleResize);
-
-    //   // Scroll-down on window open/refresh
-    const scrollElement = messagesEndRef.current;
-    if (scrollElement) {
-      scrollElement.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-
-      if (scrollElement) {
-        scrollElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [lastScroll, downScrollVisible]);
 
   if (!currentUser) {
     logout(navigate, dispatch);
@@ -252,25 +218,11 @@ const Conversation = () => {
           </h1>
 
           {/* MESSAGES */}
-          <div
-            ref={messagesEndRef}
-            className="py-24 scroll-smooth overflow-y-auto bg-gray-300 text-2xl h-dvh relative text-center border-2 border-gray-200"
-          >
-            {conversationMessages && (
-              <MessageList
-                currentUser={currentUser}
-                conversationMessages={conversationMessages}
-              />
-            )}
-            <div
-              onClick={handleScrollDown}
-              className={` text-green-300  transition    bottom-24 duration-300 flex fixed text-5xl right-0  px-4 justify-center z-20 ${
-                downScrollVisible ? "  " : " opacity-0 translate-y-20 -z-0"
-              }`}
-            >
-              <FaArrowAltCircleDown className="cursor-pointer bg-gray-300 box-content rounded-full" />
-            </div>
-          </div>
+          <MessageList
+            onDeleteMessage={handleDeleteMessage}
+            currentUser={currentUser}
+            conversationMessages={conversationMessages}
+          />
 
           {/* INPUT MESSAGE */}
           <form
