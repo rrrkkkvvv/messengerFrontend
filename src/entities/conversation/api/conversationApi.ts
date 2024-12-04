@@ -130,6 +130,44 @@ export const chatApi = baseApi.injectEndpoints({
         });
       },
     }),
+    editMessage: builder.mutation<
+      string,
+      {
+        conversationId: number;
+        message: {
+          text: string | null;
+          image: string | null;
+          senderId: number;
+          id: number;
+        };
+      }
+    >({
+      async queryFn({ conversationId, message }) {
+        return new Promise((resolve, reject) => {
+          if (!ws || ws.readyState !== WebSocket.OPEN) {
+            reject(new Error("Websocket does not exists"));
+            return;
+          }
+          const data = {
+            conversationId: conversationId,
+            message: {
+              message_id: message.id,
+              message_text: message.text,
+              message_image: message.image,
+              sender_id: message.senderId,
+            },
+            token: localStorage.getItem(localStorageItems.jwtToken),
+          };
+
+          ws.send(JSON.stringify(data));
+          resolve({ data: "Message edited" });
+          ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+            reject(new Error("Failed to edit message"));
+          };
+        });
+      },
+    }),
     deleteMessage: builder.mutation<
       string,
       {
@@ -200,8 +238,9 @@ export const chatApi = baseApi.injectEndpoints({
 
 export const {
   useConnectToChatQuery,
-  useSendMessageMutation,
   useDeleteConversationMutation,
   useInvalidateConversationMutation,
+  useSendMessageMutation,
   useDeleteMessageMutation,
+  useEditMessageMutation,
 } = chatApi;

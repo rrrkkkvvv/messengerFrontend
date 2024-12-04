@@ -7,12 +7,14 @@ interface IMessageListProps {
   conversationMessages: TMessageInfo[] | null;
   currentUser: TUserInfo;
   onDeleteMessage: (messageId: number) => void;
+  onEditMessage: (message: TMessageInfo) => void;
 }
 
 const MessageList = ({
   conversationMessages,
   currentUser,
   onDeleteMessage,
+  onEditMessage,
 }: IMessageListProps) => {
   const [lastScroll, setLastScroll] = useState<number>(0);
   const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
@@ -21,13 +23,13 @@ const MessageList = ({
     x: number;
     y: number;
     backgroundColor: string;
-    messageId: number | null;
+    message: TMessageInfo | null;
   }>({
     visible: false,
     x: 0,
     y: 0,
     backgroundColor: "",
-    messageId: null,
+    message: null,
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -40,7 +42,7 @@ const MessageList = ({
   };
   const handleContextMenu = (
     event: React.MouseEvent,
-    messageId: number,
+    message: TMessageInfo,
     backgroundColor: string
   ) => {
     event.preventDefault();
@@ -62,7 +64,7 @@ const MessageList = ({
         x: adjustedX,
         y: adjustedY,
         backgroundColor,
-        messageId,
+        message,
       });
     }
   };
@@ -73,17 +75,22 @@ const MessageList = ({
       x: 0,
       y: 0,
       backgroundColor: "",
-      messageId: null,
+      message: null,
     });
   };
 
   const handleDelete = () => {
-    if (contextMenu.messageId) {
-      onDeleteMessage(contextMenu.messageId);
+    if (contextMenu.message?.message_id) {
+      onDeleteMessage(contextMenu.message?.message_id);
     }
     closeContextMenu();
   };
-
+  const handleEdit = () => {
+    if (contextMenu.message) {
+      onEditMessage(contextMenu.message);
+    }
+    closeContextMenu();
+  };
   const handleScroll = () => {
     if (messagesEndRef.current) {
       const currentScroll = messagesEndRef.current.scrollTop;
@@ -137,11 +144,7 @@ const MessageList = ({
                 onContextMenu={
                   isCurrentUser
                     ? (e) => {
-                        handleContextMenu(
-                          e,
-                          message.message_id,
-                          backgroundColor
-                        );
+                        handleContextMenu(e, message, backgroundColor);
                       }
                     : () => {}
                 }
@@ -179,7 +182,7 @@ const MessageList = ({
 
       {contextMenu.visible && (
         <div
-          className={`absolute border rounded-xl shadow-md z-10 ${contextMenu.backgroundColor}`}
+          className={`absolute border rounded-xl shadow-md z-50 ${contextMenu.backgroundColor}`}
           style={{
             top: contextMenu.y,
             left: contextMenu.x,
@@ -187,9 +190,15 @@ const MessageList = ({
         >
           <button
             onClick={handleDelete}
-            className="block px-4 py-4 rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+            className="block px-4 py-4 w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
           >
             Delete message
+          </button>
+          <button
+            onClick={handleEdit}
+            className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+          >
+            Edit message
           </button>
         </div>
       )}

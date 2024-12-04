@@ -23,6 +23,7 @@ import Input from "../../shared/ui/Input/Input";
 import {
   useConnectToChatQuery,
   useDeleteMessageMutation,
+  useEditMessageMutation,
   useInvalidateConversationMutation,
   useSendMessageMutation,
 } from "./api/conversationApi";
@@ -30,6 +31,7 @@ import MessageList from "./ui/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
 import UploadButton from "./ui/UploadImageButton";
+import { TMessageInfo } from "./api/conversationTypes";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
@@ -41,11 +43,11 @@ const Conversation = () => {
   const conversationMessages = useAppSelector(
     selectCurrentConversationMessages
   );
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [sendMessage] = useSendMessageMutation();
   const [deleteMessage] = useDeleteMessageMutation();
+  const [editMessage] = useEditMessageMutation();
 
   //USE CALLBACKS
   const member_ids = useCallback(() => {
@@ -75,9 +77,11 @@ const Conversation = () => {
   const [invalidateConversation] = useInvalidateConversationMutation();
 
   // STATES
+  const [isMessageEdit, setIsMessageEdit] = useState(false);
 
   // Input message value
-  const [message, setMessage] = useState<string | null>(null);
+  const [messageText, setMessageText] = useState<string | null>(null);
+  const [messageId, setMessageId] = useState<number | null>(null);
 
   const [messageImage, setMessageImage] = useState<string | null>(null);
 
@@ -87,19 +91,42 @@ const Conversation = () => {
   const [isSidebarMenuVisible, setIsSidebarMenuVisible] = useState(false);
 
   // HANDLES FUNCTIONS
+
+  const handleClearMessage = () => {
+    setMessageText(null);
+    setMessageImage(null);
+    setIsMessageEdit(false);
+  };
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    // if (!message.trim()) return;
     if (!conversationId) return;
     if (!currentUser) return;
-    if (!message && !messageImage) return;
-    const messageData = {
-      conversationId: conversationId,
-      message: { text: message, senderId: currentUser.id, image: messageImage },
-    };
+    if (!messageText && !messageImage) return;
+
     try {
-      await sendMessage(messageData).unwrap();
-      setMessage(null);
+      if (isMessageEdit && messageId) {
+        await editMessage({
+          conversationId: conversationId,
+          message: {
+            text: messageText,
+            senderId: currentUser.id,
+            image: messageImage,
+            id: messageId,
+          },
+        }).unwrap();
+        setIsMessageEdit(false);
+      } else {
+        await sendMessage({
+          conversationId: conversationId,
+          message: {
+            text: messageText,
+            senderId: currentUser.id,
+            image: messageImage,
+          },
+        }).unwrap();
+      }
+
+      setMessageText(null);
       setMessageImage(null);
     } catch (error) {
       console.error("Failed to send message:", error);
@@ -120,12 +147,11 @@ const Conversation = () => {
     setIsSidebarMenuVisible(false);
   };
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setMessage(e.currentTarget.value);
+    setMessageText(e.currentTarget.value);
   };
 
   const handleSetMessageImage = (url: string | null) => {
     setMessageImage(url);
-    console.log("Uploaded image URL:", url);
   };
 
   const handleInvalidateConversation = async () => {
@@ -133,6 +159,16 @@ const Conversation = () => {
       await invalidateConversation().unwrap();
     } catch (error) {
       console.error("Failed to invalidate conversation:", error);
+    }
+  };
+  const handleSetEditingMessage = (message: TMessageInfo) => {
+    setIsMessageEdit(true);
+    setMessageId(message.message_id);
+    if (message.message_text) {
+      setMessageText(message.message_text);
+    }
+    if (message.message_image) {
+      setMessageImage(message.message_image);
     }
   };
   //USE EFFECTS
@@ -220,6 +256,7 @@ const Conversation = () => {
           {/* MESSAGES */}
           <MessageList
             onDeleteMessage={handleDeleteMessage}
+            onEditMessage={handleSetEditingMessage}
             currentUser={currentUser}
             conversationMessages={conversationMessages}
           />
@@ -249,13 +286,24 @@ const Conversation = () => {
                 </div>
               </>
             )}
+
             <div className="flex gap-5 items-center">
+              <button
+                onClick={handleClearMessage}
+                className=" text-4xl  rounded-full     transition   text-green-400 border hover:border-green-200"
+              >
+                {isMessageEdit ? (
+                  <FaArrowLeft className=" p-2" />
+                ) : (
+                  <IoCloseOutline />
+                )}
+              </button>
               <Input
                 type="text"
                 onClick={() => {}}
                 onChange={handleInputChange}
                 placeholder="Input message..."
-                value={message ? message : ""}
+                value={messageText ? messageText : ""}
                 className="w-full hover:border"
               />
               <UploadButton onUpload={handleSetMessageImage} />
@@ -263,7 +311,7 @@ const Conversation = () => {
                 type="submit"
                 className="p-4 rounded-md outline-none transition-all border-white border focus:border-green-400 hover:border-green-400"
               >
-                Send
+                {isMessageEdit ? "Edit" : "Send"}
               </button>
             </div>
           </form>
