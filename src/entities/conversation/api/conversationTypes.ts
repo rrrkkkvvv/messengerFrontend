@@ -12,7 +12,8 @@ export type TMessageInfo = {
   conversation_id: number;
   sender_name: string;
   sender_id: number;
-  sent_at: Date;
+  sent_at: string;
+  edited_at: string | null;
 };
 export type TConversation = {
   members: TUserInfo[] | null;

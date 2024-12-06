@@ -16,7 +16,7 @@ import {
 } from "./model/conversationSlice";
 
 import { logout, selectCurrentUser } from "../user";
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useState } from "react";
 import { routes } from "../../shared/values/strValues";
 import Avatar from "../../shared/ui/Avatar/Avatar";
 import Input from "../../shared/ui/Input/Input";
@@ -97,6 +97,7 @@ const Conversation = () => {
     setMessageImage(null);
     setIsMessageEdit(false);
   };
+
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!conversationId) return;
@@ -232,7 +233,6 @@ const Conversation = () => {
               <button
                 className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none outline-green-100  transition-all focus:outline-green-400 hover:outline-green-200"
                 onClick={() => {
-                  // window.location.href = routes.main;
                   navigate(routes.main);
                 }}
               >
@@ -288,16 +288,16 @@ const Conversation = () => {
             )}
 
             <div className="flex gap-5 items-center">
-              <button
-                onClick={handleClearMessage}
-                className=" text-4xl  rounded-full     transition   text-green-400 border hover:border-green-200"
-              >
-                {isMessageEdit ? (
-                  <FaArrowLeft className=" p-2" />
-                ) : (
-                  <IoCloseOutline />
-                )}
-              </button>
+              {isMessageEdit && (
+                <button
+                  type="button"
+                  onClick={handleClearMessage}
+                  className=" text-4xl  rounded-full     transition   text-green-400 border hover:border-green-200"
+                >
+                  {<FaArrowLeft className=" p-2" />}
+                </button>
+              )}
+
               <Input
                 type="text"
                 onClick={() => {}}

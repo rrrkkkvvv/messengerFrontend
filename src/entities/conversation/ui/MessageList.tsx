@@ -9,6 +9,23 @@ interface IMessageListProps {
   onDeleteMessage: (messageId: number) => void;
   onEditMessage: (message: TMessageInfo) => void;
 }
+const formatTime = (dateInput: Date | string): string => {
+  const parsedDate =
+    typeof dateInput === "string" ? new Date(dateInput) : dateInput;
+
+  if (isNaN(parsedDate.getTime())) {
+    console.error("Invalid date:", dateInput);
+    return "Invalid date";
+  }
+
+  const minutes = parsedDate.getMinutes();
+  const hours = parsedDate.getHours();
+
+  const minutesStr = minutes < 10 ? `0${minutes}` : minutes.toString();
+  const hoursStr = hours < 10 ? `0${hours}` : hours.toString();
+
+  return `${hoursStr}:${minutesStr}`;
+};
 
 const MessageList = ({
   conversationMessages,
@@ -141,12 +158,8 @@ const MessageList = ({
 
             return (
               <div
-                onContextMenu={
-                  isCurrentUser
-                    ? (e) => {
-                        handleContextMenu(e, message, backgroundColor);
-                      }
-                    : () => {}
+                onContextMenu={(e) =>
+                  handleContextMenu(e, message, backgroundColor)
                 }
                 key={message.message_id}
                 className={`w-full p-2 flex mb-10 relative ${
@@ -156,14 +169,17 @@ const MessageList = ({
                 <div
                   className={`h-max text-base md:text-lg rounded-md text-left p-3 flex flex-col text-white ${backgroundColor}`}
                 >
-                  <span className="text-sm">
-                    {isCurrentUser ? "You" : message.sender_name}
-                  </span>
                   <div>
                     <span>{message.message_text && message.message_text}</span>
                     {message.message_image && (
                       <img className="max-w-52" src={message.message_image} />
                     )}
+                    <sub className="text-xs ">
+                      &nbsp;&nbsp;
+                      {message.edited_at && "edited"}
+                      &nbsp;
+                      {formatTime(message.sent_at)}
+                    </sub>
                   </div>
                 </div>
               </div>
@@ -179,7 +195,7 @@ const MessageList = ({
           <FaArrowAltCircleDown className="cursor-pointer bg-gray-300 box-content rounded-full" />
         </div>
       </div>
-
+      {/* Context menu */}
       {contextMenu.visible && (
         <div
           className={`absolute border rounded-xl shadow-md z-50 ${contextMenu.backgroundColor}`}
@@ -188,18 +204,28 @@ const MessageList = ({
             left: contextMenu.x,
           }}
         >
-          <button
-            onClick={handleDelete}
-            className="block px-4 py-4 w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
-          >
-            Delete message
-          </button>
-          <button
-            onClick={handleEdit}
-            className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
-          >
-            Edit message
-          </button>
+          {contextMenu.message?.edited_at && (
+            <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
+              Edited at {formatTime(contextMenu.message.edited_at)}
+            </div>
+          )}
+
+          {contextMenu.message?.sender_name === currentUser.name && (
+            <>
+              <button
+                onClick={handleDelete}
+                className="block px-4 py-4 w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+              >
+                Delete message
+              </button>
+              <button
+                onClick={handleEdit}
+                className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+              >
+                Edit message
+              </button>
+            </>
+          )}
         </div>
       )}
     </>
