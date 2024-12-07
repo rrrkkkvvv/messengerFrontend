@@ -30,8 +30,9 @@ import {
 import MessageList from "./ui/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
-import UploadButton from "./ui/UploadImageButton";
+import UploadButton from "../../shared/ui/UploadImage/UploadImageButton";
 import { TMessageInfo } from "./api/conversationTypes";
+import SubmitButton from "../../shared/ui/Button/SubmitButton";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
@@ -231,7 +232,7 @@ const Conversation = () => {
           <h1 className="flex px-5 absolute border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
             {isMobile && (
               <button
-                className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none outline-green-100  transition-all focus:outline-green-400 hover:outline-green-200"
+                className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-green-400 hover:outline-green-200"
                 onClick={() => {
                   navigate(routes.main);
                 }}
@@ -307,12 +308,8 @@ const Conversation = () => {
                 className="w-full hover:border"
               />
               <UploadButton onUpload={handleSetMessageImage} />
-              <button
-                type="submit"
-                className="p-4 rounded-md outline-none transition-all border-white border focus:border-green-400 hover:border-green-400"
-              >
-                {isMessageEdit ? "Edit" : "Send"}
-              </button>
+
+              <SubmitButton children={isMessageEdit ? "Edit" : "Send"} />
             </div>
           </form>
 

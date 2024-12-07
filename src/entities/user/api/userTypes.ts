@@ -19,3 +19,16 @@ export type TGetUsersResponse =
       message: "Unauthorized";
     };
 export type TSignInUserData = Omit<TUserData, "name">;
+export type TProfile = {
+  id: number;
+  picture: null | string;
+  name: null | string;
+};
+export type TEditProfileResponse =
+  | {
+      message: "User was edited";
+      user: TUserInfo;
+    }
+  | {
+      message: "Editing went wrong";
+    };

@@ -1,6 +1,12 @@
 import baseApi from "../../../app/api/baseApi";
+import { TAuthResponse } from "../../../features/auth/api/authTypes";
 import { apiURLs, localStorageItems } from "../../../shared/values/strValues";
-import { TGetUsersResponse } from "./userTypes";
+import {
+  TEditProfileResponse,
+  TGetUsersResponse,
+  TProfile,
+  TUserInfo,
+} from "./userTypes";
 
 const fragmentBaseUrl = apiURLs.paths.userAPI;
 
@@ -14,8 +20,22 @@ const authApi = baseApi.injectEndpoints({
         method: "GET",
       }),
     }),
+    editUser: builder.mutation<TEditProfileResponse, TProfile>({
+      query: (newUserProfile: TProfile) => ({
+        url: fragmentBaseUrl,
+        method: "POST",
+        body: JSON.stringify({
+          method: "editUser",
+
+          params: {
+            profile: newUserProfile,
+          },
+        }),
+      }),
+      invalidatesTags: ["Conversation"],
+    }),
   }),
 });
 
-export const { useGetUsersQuery, usePrefetch } = authApi;
+export const { useGetUsersQuery, usePrefetch, useEditUserMutation } = authApi;
 export default authApi;

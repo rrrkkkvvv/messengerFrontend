@@ -2,11 +2,12 @@ import { TUserInfo } from "../../../entities/user";
 
 interface AvatarProps {
   user?: TUserInfo | null;
+  className?: string;
 }
-const Avatar = ({ user }: AvatarProps) => {
+const Avatar = ({ user, className }: AvatarProps) => {
   return (
     <img
-      className="
+      className={`
         relative
         inlinte-block
         rounded-full
@@ -15,7 +16,9 @@ const Avatar = ({ user }: AvatarProps) => {
         w-9
         md:h-11
         md:w-11
-        "
+
+        ${className}
+        `}
       src={
         // if user exists checking his picture else using placeholder
         user

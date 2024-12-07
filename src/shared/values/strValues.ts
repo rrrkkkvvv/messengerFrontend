@@ -16,6 +16,7 @@ export const toastTexts = {
     successAuth: "Authenticated successfully",
     successSignup: "Signed up",
     successSignin: "Signed in",
+    successEditUser: "Edited",
     successConversationDelete: "Chat was successfully deleted",
   },
   error: {
@@ -43,6 +44,11 @@ export const backendMessages: websocketMessages = {
     success: {
       successSignup: "User was signed up",
       successSignin: "User was signed in",
+    },
+  },
+  user: {
+    success: {
+      successEdit: "User was edited",
     },
   },
 };
