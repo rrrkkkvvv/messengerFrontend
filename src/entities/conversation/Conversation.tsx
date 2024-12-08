@@ -241,7 +241,7 @@ const Conversation = () => {
               </button>
             )}
             <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
-              <Avatar user={anotherUser()} />
+              <Avatar picture={anotherUser()?.picture} />
               {anotherUser()?.name}
             </div>
             <div className="">

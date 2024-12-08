@@ -54,7 +54,7 @@ const SidebarMenu = ({
 
       <div className="flex gap-4 justify-center items-center flex-col">
         <h1>
-          <Avatar user={anotherUser} />
+          <Avatar picture={anotherUser?.picture} />
         </h1>
         <h1>{anotherUser?.name}</h1>
         <h1>{anotherUser?.email}</h1>

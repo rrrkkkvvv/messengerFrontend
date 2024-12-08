@@ -1,10 +1,10 @@
 import { TUserInfo } from "../../../entities/user";
 
 interface AvatarProps {
-  user?: TUserInfo | null;
+  picture: string | null | undefined;
   className?: string;
 }
-const Avatar = ({ user, className }: AvatarProps) => {
+const Avatar = ({ picture, className }: AvatarProps) => {
   return (
     <img
       className={`
@@ -20,14 +20,9 @@ const Avatar = ({ user, className }: AvatarProps) => {
         ${className}
         `}
       src={
-        // if user exists checking his picture else using placeholder
-        user
-          ? user.picture
-            ? user.picture
-            : "/public/icons/placeholder.jpg"
-          : "/public/icons/placeholder.jpg"
+        // if picture exists use it, else using placeholder
+        picture ? picture : "/public/icons/placeholder.jpg"
       }
-      // src={"/public/icons/placeholder.jpg"}
       alt="avatar"
     />
   );

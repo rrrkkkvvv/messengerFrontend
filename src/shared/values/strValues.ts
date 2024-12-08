@@ -21,7 +21,7 @@ export const toastTexts = {
   },
   error: {
     errorConversationDelete: "Chat deleting error",
-
+    errorEditUser: "Data must be different and valid",
     errorAuth: "Authentication error",
   },
 };

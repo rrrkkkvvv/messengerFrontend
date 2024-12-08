@@ -1,17 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
-import {
-  selectCurrentUser,
-  selectJWTToken,
-  setCurrentUser,
-} from "../../entities/user";
+import { selectCurrentUser, setCurrentUser } from "../../entities/user";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../shared/ui/Avatar/Avatar";
 import { MdModeEdit } from "react-icons/md";
-import {
-  backendMessages,
-  routes,
-  toastTexts,
-} from "../../shared/values/strValues";
+import { routes, toastTexts } from "../../shared/values/strValues";
 import { FaArrowLeft } from "react-icons/fa";
 import { FormEvent, useEffect, useState } from "react";
 import Input from "../../shared/ui/Input/Input";
@@ -20,16 +12,16 @@ import { TbArrowBackUp } from "react-icons/tb";
 import SubmitButton from "../../shared/ui/Button/SubmitButton";
 import toast from "react-hot-toast";
 import { useEditUserMutation } from "../../entities/user/api/usersApi";
+import { IoCloseOutline } from "react-icons/io5";
 type TProfile = {
   id: number;
-  picture: null | string;
-  name: null | string;
+  picture?: null | string;
+  name?: string;
 };
 const Profile = () => {
   const currentUser = useAppSelector(selectCurrentUser);
-  const currentJWT = useAppSelector(selectJWTToken);
   const [userName, setUserName] = useState("");
-  const [userPicture, setUserPicture] = useState("");
+  const [userPicture, setUserPicture] = useState<string | null>(null);
   const [isProfileEdit, setIsProfileEdit] = useState(false);
   const [editUser] = useEditUserMutation();
   const navigate = useNavigate();
@@ -53,26 +45,36 @@ const Profile = () => {
   const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
     setUserName(e.currentTarget.value);
   };
-
+  const handleRemoveUserPicture = () => {
+    setUserPicture(null);
+  };
   const handleEditProfile = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!currentUser) return;
 
     const toastId = toast.loading("Loading...");
     try {
+      if (
+        (userName === currentUser.name &&
+          userPicture === currentUser.picture) ||
+        !userName.trim()
+      ) {
+        toast.error(toastTexts.error.errorEditUser);
+        return;
+      }
+
       let result;
 
       let profile: TProfile = {
         id: currentUser.id,
-        picture: null,
-        name: null,
       };
-      if (userName !== currentUser?.name && userName.trim()) {
+      if (userName !== currentUser.name) {
         profile.name = userName;
       }
-      if (userPicture !== currentUser?.picture && userPicture) {
+      if (userPicture !== currentUser.picture) {
         profile.picture = userPicture;
       }
+
       result = await editUser(profile).unwrap();
 
       if (result.message === "User was edited") {
@@ -129,23 +131,14 @@ const Profile = () => {
           >
             <div className="flex w-full justify-center items-center flex-col gap-3">
               {/* User picture */}
+              <Avatar picture={userPicture} className={"scale-150 mb-4"} />
 
-              <img
-                src={userPicture}
-                alt="Uploaded"
-                className="relative
-                            inlinte-block
-                            rounded-full
-                            overflow-hidden
-                      
-                            w-24 h-24"
-              />
-
-              <div className="flex items-center justify-center">
+              <div className="flex items-center justify-between gap-5">
                 {/* Reset picture button(exists if picture is not saved) */}
 
                 {userPicture !== currentUser?.picture && (
                   <button
+                    type="button"
                     className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
                     onClick={handleResetUserPicutre}
                   >
@@ -154,6 +147,14 @@ const Profile = () => {
                 )}
                 {/* Choose picture */}
                 <UploadButton onUpload={handleSetProfilePicture} />
+
+                <button
+                  type="button"
+                  onClick={handleRemoveUserPicture}
+                  className=" text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                >
+                  <IoCloseOutline />
+                </button>
               </div>
             </div>
             <div className="flex items-center">
@@ -178,7 +179,7 @@ const Profile = () => {
           </form>
         ) : (
           <>
-            <Avatar user={currentUser} className={"w-24 h-24"} />
+            <Avatar picture={currentUser?.picture} className={"scale-150"} />
 
             <span className="text-2xl">{currentUser?.name}</span>
           </>

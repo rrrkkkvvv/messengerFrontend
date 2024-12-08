@@ -1,12 +1,6 @@
 import baseApi from "../../../app/api/baseApi";
-import { TAuthResponse } from "../../../features/auth/api/authTypes";
 import { apiURLs, localStorageItems } from "../../../shared/values/strValues";
-import {
-  TEditProfileResponse,
-  TGetUsersResponse,
-  TProfile,
-  TUserInfo,
-} from "./userTypes";
+import { TEditProfileResponse, TGetUsersResponse, TProfile } from "./userTypes";
 
 const fragmentBaseUrl = apiURLs.paths.userAPI;
 

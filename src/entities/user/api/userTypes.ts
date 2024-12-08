@@ -7,7 +7,7 @@ export type TUserInfo = {
   id: number;
   name: string;
   email: string;
-  picture: string;
+  picture: string | null;
 };
 
 export type TGetUsersResponse =
@@ -21,8 +21,8 @@ export type TGetUsersResponse =
 export type TSignInUserData = Omit<TUserData, "name">;
 export type TProfile = {
   id: number;
-  picture: null | string;
-  name: null | string;
+  picture?: null | string;
+  name?: string;
 };
 export type TEditProfileResponse =
   | {

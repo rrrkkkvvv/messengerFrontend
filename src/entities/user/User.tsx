@@ -23,7 +23,7 @@ const User = ({ user, onClick }: IUserProps) => {
                     border-green-200
                     p-2"
     >
-      <Avatar user={user} />
+      <Avatar picture={user.picture} />
       <div className="">
         <div className="">{user.name}</div>
         {/* <div className="">Last message</div> */}
