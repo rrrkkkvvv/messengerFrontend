@@ -1,7 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import { TUserInfo } from "../../user";
 import { TMessageInfo } from "../api/conversationTypes";
 import { FaArrowAltCircleDown } from "react-icons/fa";
+import ImageModal from "../../../widgets/ImageModal";
+import MessageBox from "./MessageBox";
+import { formatTime } from "../../../shared/utils/formatTime";
 
 interface IMessageListProps {
   conversationMessages: TMessageInfo[] | null;
@@ -9,23 +12,6 @@ interface IMessageListProps {
   onDeleteMessage: (messageId: number) => void;
   onEditMessage: (message: TMessageInfo) => void;
 }
-const formatTime = (dateInput: Date | string): string => {
-  const parsedDate =
-    typeof dateInput === "string" ? new Date(dateInput) : dateInput;
-
-  if (isNaN(parsedDate.getTime())) {
-    console.error("Invalid date:", dateInput);
-    return "Invalid date";
-  }
-
-  const minutes = parsedDate.getMinutes();
-  const hours = parsedDate.getHours();
-
-  const minutesStr = minutes < 10 ? `0${minutes}` : minutes.toString();
-  const hoursStr = hours < 10 ? `0${hours}` : hours.toString();
-
-  return `${hoursStr}:${minutesStr}`;
-};
 
 const MessageList = ({
   conversationMessages,
@@ -58,7 +44,7 @@ const MessageList = ({
     }
   };
   const handleContextMenu = (
-    event: React.MouseEvent,
+    event: MouseEvent,
     message: TMessageInfo,
     backgroundColor: string
   ) => {
@@ -150,41 +136,14 @@ const MessageList = ({
         }`}
       >
         <div onClick={closeContextMenu} className="relative">
-          {conversationMessages?.map((message) => {
-            const isCurrentUser = message.sender_name === currentUser.name;
-            const backgroundColor = isCurrentUser
-              ? "bg-green-700"
-              : "bg-green-900";
-
-            return (
-              <div
-                onContextMenu={(e) =>
-                  handleContextMenu(e, message, backgroundColor)
-                }
-                key={message.message_id}
-                className={`w-full p-2 flex mb-10 relative ${
-                  isCurrentUser ? "justify-end" : "justify-start"
-                }`}
-              >
-                <div
-                  className={`h-max text-base md:text-lg rounded-md text-left p-3 flex flex-col text-white ${backgroundColor}`}
-                >
-                  <div>
-                    <span>{message.message_text && message.message_text}</span>
-                    {message.message_image && (
-                      <img className="max-w-52" src={message.message_image} />
-                    )}
-                    <sub className="text-xs ">
-                      &nbsp;&nbsp;
-                      {message.edited_at && "edited"}
-                      &nbsp;
-                      {formatTime(message.sent_at)}
-                    </sub>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
+          {conversationMessages?.map((message) => (
+            <MessageBox
+              key={message.message_id}
+              currentUser={currentUser}
+              message={message}
+              handleContextMenu={handleContextMenu}
+            />
+          ))}
         </div>
         <div
           onClick={handleScrollDown}
