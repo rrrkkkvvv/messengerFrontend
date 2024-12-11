@@ -232,6 +232,7 @@ const Conversation = () => {
           <h1 className="flex px-5 absolute border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
             {isMobile && (
               <button
+                type="button"
                 className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-green-400 hover:outline-green-200"
                 onClick={() => {
                   navigate(routes.main);
@@ -246,6 +247,7 @@ const Conversation = () => {
             </div>
             <div className="">
               <button
+                type="button"
                 onClick={() => setIsSidebarMenuVisible(true)}
                 className="text-green-400 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-green-200"
               >
@@ -273,6 +275,7 @@ const Conversation = () => {
               <>
                 <button
                   // Clears state of message image
+                  type="button"
                   onClick={() => handleSetMessageImage(null)}
                   className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
                 >
@@ -303,7 +306,7 @@ const Conversation = () => {
                 type="text"
                 onClick={() => {}}
                 onChange={handleInputChange}
-                placeholder="Input message..."
+                placeholder="Input message"
                 value={messageText ? messageText : ""}
                 className="w-full hover:border"
               />

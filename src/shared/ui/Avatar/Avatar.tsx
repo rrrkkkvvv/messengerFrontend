@@ -1,5 +1,3 @@
-import { TUserInfo } from "../../../entities/user";
-
 interface AvatarProps {
   picture: string | null | undefined;
   className?: string;
@@ -16,7 +14,8 @@ const Avatar = ({ picture, className }: AvatarProps) => {
         w-9
         md:h-11
         md:w-11
-
+        border-2
+      border-green-300
         ${className}
         `}
       src={
