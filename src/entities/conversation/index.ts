@@ -1,8 +1,2 @@
 export { default } from "./Conversation";
-export {
-  default as currentUserReducer,
-  setCurrentConversationMembers,
-  setCurrentConversationMessages,
-  selectCurrentConversationMembers,
-  selectCurrentConversationMessages,
-} from "./model/conversationSlice";
+export { default as currentUserReducer } from "./model/conversationSlice";

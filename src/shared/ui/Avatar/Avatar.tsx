@@ -20,7 +20,7 @@ const Avatar = ({ picture, className }: AvatarProps) => {
         `}
       src={
         // if picture exists use it, else using placeholder
-        picture ? picture : "/public/icons/placeholder.jpg"
+        picture ? picture : "/icons/placeholder.jpg"
       }
       alt="avatar"
     />

@@ -32,7 +32,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
         onClick={onClose}
       ></div>
       <div
-        className={`relative z-50  bg-white rounded-lg shadow-xl transform transition duration-300 w-full max-w-lg p-8 ${
+        className={`relative z-50  bg-gray-50 rounded-lg shadow-xl transform transition duration-300 w-full max-w-lg p-8 ${
           isOpen ? "translate-y-0 scale-100" : "translate-y-4 scale-95"
         }`}
       >

@@ -1,10 +1,10 @@
-import React, { MouseEvent, useEffect, useRef, useState } from "react";
-import { TUserInfo } from "../../user";
-import { TMessageInfo } from "../api/conversationTypes";
+import { MouseEvent, useEffect, useRef, useState } from "react";
+import { TUserInfo } from "../../../user";
+import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowAltCircleDown } from "react-icons/fa";
-import ImageModal from "../../../widgets/ImageModal";
+
+import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
-import { formatTime } from "../../../shared/utils/formatTime";
 
 interface IMessageListProps {
   conversationMessages: TMessageInfo[] | null;
@@ -39,8 +39,8 @@ const MessageList = ({
 
   const handleScrollDown = () => {
     if (messagesEndRef.current) {
-      setDownScrollVisible(false);
       messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+      setDownScrollVisible(false);
     }
   };
   const handleContextMenu = (
@@ -97,9 +97,9 @@ const MessageList = ({
   const handleScroll = () => {
     if (messagesEndRef.current) {
       const currentScroll = messagesEndRef.current.scrollTop;
-      if (currentScroll > lastScroll && downScrollVisible) {
+      if (currentScroll < lastScroll && downScrollVisible) {
         setDownScrollVisible(false);
-      } else if (currentScroll < lastScroll && !downScrollVisible) {
+      } else if (currentScroll > lastScroll && !downScrollVisible) {
         setDownScrollVisible(true);
       }
       setLastScroll(currentScroll);
@@ -131,7 +131,7 @@ const MessageList = ({
     <>
       <div
         ref={messagesEndRef}
-        className={`py-24 scroll-smooth  bg-gray-300 text-2xl h-dvh relative text-center border-2 border-gray-200 ${
+        className={`scroll-smooth  bg-gray-300 text-2xl h-dvh relative text-center border-2 border-gray-200  ${
           contextMenu.visible ? "overflow-y-hidden" : "overflow-y-auto"
         }`}
       >

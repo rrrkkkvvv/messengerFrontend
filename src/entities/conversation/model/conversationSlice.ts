@@ -59,6 +59,7 @@ const {
   setCurrentConversationIdState,
   setCurrentConversationStatusState,
 } = currentConversationSlice.actions;
+
 export const setCurrentConversationMessages = createAsyncThunk(
   "setCurrentConversationMessages",
   (messages: TMessageInfo[] | null, { dispatch }) => {
@@ -69,7 +70,6 @@ export const setCurrentConversationMessages = createAsyncThunk(
     }
   }
 );
-
 export const setCurrentConversationMembers = createAsyncThunk(
   "setCurrentConversationMembers",
   (members: TUserInfo[] | null, { dispatch }) => {

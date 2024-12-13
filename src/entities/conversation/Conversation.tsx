@@ -27,7 +27,7 @@ import {
   useInvalidateConversationMutation,
   useSendMessageMutation,
 } from "./api/conversationApi";
-import MessageList from "./ui/MessageList";
+import MessageList from "./ui/Messages/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
 import UploadButton from "../../shared/ui/UploadImage/UploadImageButton";
@@ -38,6 +38,7 @@ const Conversation = () => {
   const { anotherUserIdParam } = useParams();
 
   const currentUser = useAppSelector(selectCurrentUser);
+
   const conversationStatus = useAppSelector(selectCurrentConversationStatus);
   const conversationId = useAppSelector(selectCurrentConversationId);
   const conversationMembers = useAppSelector(selectCurrentConversationMembers);
@@ -229,7 +230,7 @@ const Conversation = () => {
       ) : (
         <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white">
           {/* HEADER */}
-          <h1 className="flex px-5 absolute border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
+          <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
             {isMobile && (
               <button
                 type="button"
@@ -267,7 +268,7 @@ const Conversation = () => {
           {/* INPUT MESSAGE */}
           <form
             onSubmit={(event) => handleSendMessage(event)}
-            className={`flex flex-col absolute px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
+            className={`flex flex-col  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
               messageImage && "border border-t-gray-200"
             }`}
           >
