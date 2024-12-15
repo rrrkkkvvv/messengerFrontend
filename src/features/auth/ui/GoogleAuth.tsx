@@ -9,6 +9,7 @@ import { useSignInByGoogleMutation } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
 import { setCurrentUser, setJWTToken } from "../../../entities/user";
+import { setIsLoggedIn } from "../../../entities/user/model/userSlice";
 
 interface GoogleLoginComponentProps {
   text?: string;
@@ -33,6 +34,7 @@ const GoogleAuth: React.FC<GoogleLoginComponentProps> = () => {
       toast.success(backendMessages.auth.success.successSignin);
       dispatch(setCurrentUser(result.user));
       dispatch(setJWTToken(result.token));
+      dispatch(setIsLoggedIn(true));
 
       navigate(routes.main);
     } else {

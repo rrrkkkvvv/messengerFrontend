@@ -14,6 +14,8 @@ import ErrorPage from "../pages/error/ErrorPage";
 import { createBrowserHistory } from "history";
 import UsersList from "../widgets/UsersList";
 import Profile from "../widgets/Profile/";
+import PrivateRoute from "../shared/ui/Routes/PrivateRoute";
+import RestrictedRoute from "../shared/ui/Routes/RestrictedRoute";
 
 export const history = createBrowserHistory();
 
@@ -24,11 +26,19 @@ const router = createBrowserRouter([
   },
   {
     path: routes.auth,
-    element: <AuthPage />,
+    element: (
+      <RestrictedRoute>
+        <AuthPage />
+      </RestrictedRoute>
+    ),
   },
   {
     path: routes.main,
-    element: <MainPage />,
+    element: (
+      <PrivateRoute>
+        <MainPage />
+      </PrivateRoute>
+    ),
     children: [
       {
         index: true,

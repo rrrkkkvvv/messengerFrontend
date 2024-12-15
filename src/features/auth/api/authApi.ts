@@ -1,5 +1,5 @@
 import baseApi from "../../../app/api/baseApi";
-import { TAuthResponse } from "./authTypes";
+import { TAuthResponse, TRefreshUserAuthResponse } from "./authTypes";
 import { apiURLs } from "../../../shared/values/strValues";
 import { TSignInUserData, TUserData } from "../../../entities/user";
 
@@ -51,6 +51,15 @@ const authApi = baseApi.injectEndpoints({
         }),
       }),
     }),
+    refreshUserAuth: builder.mutation<TRefreshUserAuthResponse, void>({
+      query: () => ({
+        url: fragmentBaseUrl,
+        method: "POST",
+        body: JSON.stringify({
+          method: "refreshUserAuth",
+        }),
+      }),
+    }),
   }),
 });
 
@@ -59,5 +68,6 @@ export const {
   useSignInMutation,
   useSignInByGoogleMutation,
   usePrefetch,
+  useRefreshUserAuthMutation,
 } = authApi;
 export default authApi;

@@ -9,7 +9,8 @@ export const apiURLs = {
 };
 export const localStorageItems = {
   jwtToken: "JWT",
-  currentUser: "currentUser",
+  isLoggedIn: "isLoggedIn",
+  isLoggedInText: "loggedIn",
 };
 export const toastTexts = {
   success: {

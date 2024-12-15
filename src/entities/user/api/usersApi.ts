@@ -1,5 +1,5 @@
 import baseApi from "../../../app/api/baseApi";
-import { apiURLs, localStorageItems } from "../../../shared/values/strValues";
+import { apiURLs } from "../../../shared/values/strValues";
 import { TEditProfileResponse, TGetUsersResponse, TProfile } from "./userTypes";
 
 const fragmentBaseUrl = apiURLs.paths.userAPI;
@@ -8,9 +8,7 @@ const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     getUsers: builder.query<TGetUsersResponse, string>({
       query: (email) => ({
-        url: `${fragmentBaseUrl}?email=${email}&token=${localStorage.getItem(
-          localStorageItems.jwtToken
-        )}`,
+        url: `${fragmentBaseUrl}?email=${email}`,
         method: "GET",
       }),
     }),

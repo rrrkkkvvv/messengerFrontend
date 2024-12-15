@@ -20,3 +20,4 @@ export type TAuthResponse = {
   token: string;
   user: TUserInfo;
 };
+export type TRefreshUserAuthResponse = Omit<TAuthResponse, "token">;

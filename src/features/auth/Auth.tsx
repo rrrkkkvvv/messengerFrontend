@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../app/store/store";
 import { setCurrentUser, setJWTToken } from "../../entities/user";
 import GoogleAuth from "./ui/GoogleAuth";
+import { setIsLoggedIn } from "../../entities/user/model/userSlice";
 
 const Auth = () => {
   const [isSignUp, setSignIn] = useState(true);
@@ -51,6 +52,7 @@ const Auth = () => {
         if (result.message === backendMessages.auth.success.successSignup) {
           dispatch(setCurrentUser(result.user));
           dispatch(setJWTToken(result.token));
+          dispatch(setIsLoggedIn(true));
           navigate(routes.main);
           toast.success(toastTexts.success.successSignup);
         } else {
@@ -61,6 +63,7 @@ const Auth = () => {
         if (result.message === backendMessages.auth.success.successSignin) {
           dispatch(setCurrentUser(result.user));
           dispatch(setJWTToken(result.token));
+          dispatch(setIsLoggedIn(true));
           navigate(routes.main);
           toast.success(toastTexts.success.successAuth);
         } else {

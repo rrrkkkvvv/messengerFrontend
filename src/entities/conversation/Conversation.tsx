@@ -15,7 +15,7 @@ import {
   setCurrentConversationMessages,
 } from "./model/conversationSlice";
 
-import { logout, selectCurrentUser } from "../user";
+import { selectCurrentUser } from "../user";
 import { FormEvent, useCallback, useEffect, useState } from "react";
 import { routes } from "../../shared/values/strValues";
 import Avatar from "../../shared/ui/Avatar/Avatar";
@@ -219,8 +219,7 @@ const Conversation = () => {
   }, [chatData, currentUser, dispatch]);
 
   if (!currentUser) {
-    logout(navigate, dispatch);
-    return;
+    return <ConversationPlaceholder />;
   }
 
   return (

@@ -7,7 +7,7 @@ const getTokenFromLS = (): string | null => {
     try {
       return storedToken;
     } catch (error) {
-      console.error("Error parsing token from LC:", error);
+      console.error("Error parsing token from LS:", error);
       return null;
     }
   } else {
