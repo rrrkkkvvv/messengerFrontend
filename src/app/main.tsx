@@ -14,8 +14,8 @@ import ErrorPage from "../pages/error/ErrorPage";
 import { createBrowserHistory } from "history";
 import UsersList from "../widgets/UsersList";
 import Profile from "../widgets/Profile/";
-import PrivateRoute from "../shared/ui/Routes/PrivateRoute";
-import RestrictedRoute from "../shared/ui/Routes/RestrictedRoute";
+import RestrictedRoute from "../features/routes/RestrictedRoute";
+import PrivateRoute from "../features/routes/PrivateRoute";
 
 export const history = createBrowserHistory();
 

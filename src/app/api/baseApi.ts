@@ -16,7 +16,7 @@ const staggeredBaseQuery = retry(
     },
   }),
   {
-    maxRetries: 2,
+    maxRetries: 3,
   }
 );
 const baseApi = createApi({
