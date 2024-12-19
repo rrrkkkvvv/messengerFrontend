@@ -21,7 +21,7 @@ import { routes } from "../../shared/values/strValues";
 import Avatar from "../../shared/ui/Avatar/Avatar";
 import Input from "../../shared/ui/Input/Input";
 import {
-  useConnectToChatQuery,
+  useConnectToChatChanelQuery,
   useDeleteMessageMutation,
   useEditMessageMutation,
   useInvalidateConversationMutation,
@@ -75,7 +75,7 @@ const Conversation = () => {
       members: null,
       conversationId: null,
     },
-  } = useConnectToChatQuery({ member_ids: member_ids() });
+  } = useConnectToChatChanelQuery({ member_ids: member_ids() });
   const [invalidateConversation] = useInvalidateConversationMutation();
 
   // STATES

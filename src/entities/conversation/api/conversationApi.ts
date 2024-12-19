@@ -5,16 +5,20 @@ import {
   localStorageItems,
 } from "../../../shared/values/strValues";
 import { TUserInfo } from "../../user";
+import getTokenFromLS from "../../user/utils/getTokenFromLS";
 import { deleteConversation } from "../model/conversationSlice";
-import { TMessageInfo, TOpenResponse } from "./conversationTypes";
+import {
+  TMessageInfo,
+  TOpenConversationConnectionResponse,
+} from "./conversationTypes";
 
 // Websocket connection
 let ws: WebSocket | null = null;
-const websocketUrl = apiURLs.websocketConn;
+const websocketUrl = apiURLs.conversationWebsocketConn;
 
 export const chatApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    connectToChat: builder.query<
+    connectToChatChanel: builder.query<
       {
         messages: TMessageInfo[] | null;
         members: TUserInfo[] | null;
@@ -35,20 +39,22 @@ export const chatApi = baseApi.injectEndpoints({
       ) {
         if (member_ids) {
           ws = new WebSocket(
-            `${websocketUrl}[${member_ids.join(
+            `${websocketUrl}?member_ids=[${member_ids.join(
               ","
-            )}]&token=${localStorage.getItem(localStorageItems.jwtToken)}`
+            )}]&token=${getTokenFromLS()}`
           );
 
           try {
             await cacheDataLoaded;
 
             ws.onmessage = (event) => {
-              const data: TOpenResponse = JSON.parse(event.data);
-
+              const data: TOpenConversationConnectionResponse = JSON.parse(
+                event.data
+              );
               // Initialize
               if (
-                data.message === backendMessages.websocket.conversationCreating
+                data.message ===
+                backendMessages.websocket.conversationWS.conversationCreating
               ) {
                 updateCachedData((draft) => {
                   draft.messages = data.messages;
@@ -57,14 +63,16 @@ export const chatApi = baseApi.injectEndpoints({
                 });
               } else if (
                 // Accepting a message
-                data.message === backendMessages.websocket.messagesUpdate
+                data.message ===
+                backendMessages.websocket.conversationWS.messagesUpdate
               ) {
                 updateCachedData((draft) => {
                   draft.messages = data.messages;
                 });
               } else if (
                 // Deleting conversation(clear draft)
-                data.message === backendMessages.websocket.conversationDeleted
+                data.message ===
+                backendMessages.websocket.conversationWS.conversationDeleted
               ) {
                 updateCachedData((draft) => {
                   draft.messages = null;
@@ -237,7 +245,7 @@ export const chatApi = baseApi.injectEndpoints({
 });
 
 export const {
-  useConnectToChatQuery,
+  useConnectToChatChanelQuery,
   useDeleteConversationMutation,
   useInvalidateConversationMutation,
   useSendMessageMutation,

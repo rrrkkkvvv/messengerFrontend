@@ -20,7 +20,7 @@ export type TConversation = {
   messages: TMessageInfo[] | null;
 };
 
-export type TOpenResponse =
+export type TOpenConversationConnectionResponse =
   | {
       message: "Conversation is created/already exists";
       messages: TMessageInfo[] | null;
@@ -28,7 +28,7 @@ export type TOpenResponse =
       conversationId: number;
     }
   | {
-      message: "Websocket message";
+      message: "Update";
       messages: TMessageInfo[];
     }
   | {

@@ -32,3 +32,13 @@ export type TEditProfileResponse =
   | {
       message: "Editing went wrong";
     };
+
+export type TOpenGetUsersConnectionResponse =
+  | {
+      message: "Success get users";
+      users: TUserInfo[];
+      usersOnline: string | null[];
+    }
+  | {
+      message: "Unauthorized";
+    };

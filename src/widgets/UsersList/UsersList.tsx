@@ -7,7 +7,7 @@ import {
   TUserInfo,
   User,
 } from "../../entities/user";
-import { useGetUsersQuery } from "../../entities/user/api/usersApi";
+import { useConnectToGetUsersChanelQuery } from "../../entities/user/api/usersApi";
 import { skipToken } from "@reduxjs/toolkit/query";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../shared/values/strValues";
@@ -21,17 +21,22 @@ const UsersList = () => {
   const dispatch = useAppDispatch();
 
   const [users, setUsers] = useState<TUserInfo[]>([]);
-  const { data } = useGetUsersQuery(
-    currentUser ? currentUser.email : skipToken
+  const [usersOnline, setUsersOnline] = useState<string | null[]>([]);
+
+  // Chat connection
+  const {
+    data = {
+      users: null,
+      usersOnline: null,
+    },
+  } = useConnectToGetUsersChanelQuery(
+    currentUser?.email ? { userEmail: currentUser?.email } : skipToken
   );
+
   useEffect(() => {
-    if (data) {
-      if (data.message === "Unauthorized") {
-        logout(navigate, dispatch);
-        navigate(routes.auth);
-      } else {
-        setUsers(data.records);
-      }
+    if (data.users && data.usersOnline) {
+      setUsers(data.users);
+      setUsersOnline(data.usersOnline);
     }
   }, [data]);
 
