@@ -37,7 +37,11 @@ export type TOpenGetUsersConnectionResponse =
   | {
       message: "Success get users";
       users: TUserInfo[];
-      usersOnline: string | null[];
+      usersOnline: string[] | null;
+    }
+  | {
+      message: "Update online users list";
+      usersOnline: string[] | null;
     }
   | {
       message: "Unauthorized";

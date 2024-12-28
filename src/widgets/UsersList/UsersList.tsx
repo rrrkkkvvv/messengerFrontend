@@ -1,44 +1,28 @@
-import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import {
   logout,
   selectCurrentUser,
   selectJWTToken,
-  TUserInfo,
   User,
 } from "../../entities/user";
-import { useConnectToGetUsersChanelQuery } from "../../entities/user/api/usersApi";
-import { skipToken } from "@reduxjs/toolkit/query";
+
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
+import {
+  selectUsersList,
+  selectUsersOnlineEmails,
+} from "./model/getUsersSlice";
 
 const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const currentJWT = useAppSelector(selectJWTToken);
 
+  const usersList = useAppSelector(selectUsersList);
+  const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const [users, setUsers] = useState<TUserInfo[]>([]);
-  const [usersOnline, setUsersOnline] = useState<string | null[]>([]);
-
-  // Chat connection
-  const {
-    data = {
-      users: null,
-      usersOnline: null,
-    },
-  } = useConnectToGetUsersChanelQuery(
-    currentUser?.email ? { userEmail: currentUser?.email } : skipToken
-  );
-
-  useEffect(() => {
-    if (data.users && data.usersOnline) {
-      setUsers(data.users);
-      setUsersOnline(data.usersOnline);
-    }
-  }, [data]);
 
   const openConversationWithUser = async (userId: number) => {
     if (currentJWT && currentUser) {
@@ -83,13 +67,18 @@ const UsersList = () => {
       </h1>
       {/* Users list */}
       <div className=" text-green-200">
-        {users.map((user) => (
-          <User
-            user={user}
-            onClick={() => openConversationWithUser(user.id)}
-            key={user.id}
-          />
-        ))}
+        {usersList?.map((user) => {
+          let isOnline = usersOnlineEmails?.includes(user.email);
+
+          return (
+            <User
+              isOnline={!!isOnline}
+              user={user}
+              onClick={() => openConversationWithUser(user.id)}
+              key={user.id}
+            />
+          );
+        })}
       </div>
     </div>
   );

@@ -100,6 +100,7 @@ const EditProfile = () => {
       <div className="flex w-full justify-center items-center flex-col gap-3">
         {/* User picture */}
         <Avatar
+          isProfileAvatar={true}
           picture={userPicture}
           className="
             h-24

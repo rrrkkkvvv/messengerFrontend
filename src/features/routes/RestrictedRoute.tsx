@@ -21,7 +21,12 @@ const RestrictedRoute = ({ children }: TPrivateRouteProps) => {
   useEffect(() => {
     const jwtToken = localStorage.getItem(localStorageItems.jwtToken);
     if (jwtToken && jwtToken !== "null") {
-      refreshAuth(refreshUserAuth, navigate, dispatch);
+      refreshAuth({
+        refreshUserAuth: refreshUserAuth,
+        navigate: navigate,
+        dispatch: dispatch,
+        isRestrictedRoute: true,
+      });
     } else {
       logout(navigate, dispatch);
     }

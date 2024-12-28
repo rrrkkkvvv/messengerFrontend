@@ -10,12 +10,14 @@ interface ISidebarMenuProps {
   isSidebarMenuVisible: boolean;
   closeSidebarMenu: () => void;
   conversationId: number | null;
+  isAnotherUserOnline: boolean;
 }
 const SidebarMenu = ({
   conversationId,
   anotherUser,
   closeSidebarMenu,
   isSidebarMenuVisible,
+  isAnotherUserOnline,
 }: ISidebarMenuProps) => {
   const [deleteConversation] = useDeleteConversationMutation();
 
@@ -54,7 +56,11 @@ const SidebarMenu = ({
 
       <div className="flex gap-4 justify-center items-center flex-col">
         <h1>
-          <Avatar picture={anotherUser?.picture} />
+          <Avatar
+            picture={anotherUser?.picture}
+            isOnline={isAnotherUserOnline}
+            isProfileAvatar={false}
+          />
         </h1>
         <h1>{anotherUser?.name}</h1>
         <h1>{anotherUser?.email}</h1>

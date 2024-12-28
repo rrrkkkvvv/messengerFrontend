@@ -47,6 +47,7 @@ const Profile = () => {
         ) : (
           <>
             <Avatar
+              isProfileAvatar={true}
               picture={currentUser?.picture}
               className="
        

@@ -26,7 +26,7 @@ const baseApi = createApi({
   refetchOnMountOrArgChange: true,
   refetchOnFocus: true,
   refetchOnReconnect: true,
-  tagTypes: ["Conversation"],
+  tagTypes: ["Conversation", "Users"],
 });
 
 export default baseApi;

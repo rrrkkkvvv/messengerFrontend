@@ -2,7 +2,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { IoCloseOutline } from "react-icons/io5";
 
 import {
   selectCurrentConversationId,
@@ -16,23 +15,20 @@ import {
 } from "./model/conversationSlice";
 
 import { selectCurrentUser } from "../user";
-import { FormEvent, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { routes } from "../../shared/values/strValues";
 import Avatar from "../../shared/ui/Avatar/Avatar";
-import Input from "../../shared/ui/Input/Input";
 import {
   useConnectToChatChanelQuery,
   useDeleteMessageMutation,
-  useEditMessageMutation,
   useInvalidateConversationMutation,
-  useSendMessageMutation,
 } from "./api/conversationApi";
 import MessageList from "./ui/Messages/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
-import UploadButton from "../../shared/ui/UploadImage/UploadImageButton";
 import { TMessageInfo } from "./api/conversationTypes";
-import SubmitButton from "../../shared/ui/Button/SubmitButton";
+import { selectUsersOnlineEmails } from "../../widgets/UsersList/model/getUsersSlice";
+import MessageForm from "./ui/MessageForm/MessageForm";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
@@ -45,11 +41,11 @@ const Conversation = () => {
   const conversationMessages = useAppSelector(
     selectCurrentConversationMessages
   );
+  const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [sendMessage] = useSendMessageMutation();
   const [deleteMessage] = useDeleteMessageMutation();
-  const [editMessage] = useEditMessageMutation();
 
   //USE CALLBACKS
   const member_ids = useCallback(() => {
@@ -68,6 +64,15 @@ const Conversation = () => {
     }
   }, [conversationMembers, currentUser?.id]);
 
+  const isAnotherUserOnline = useCallback(() => {
+    const anotherUserData = anotherUser();
+    if (usersOnlineEmails && anotherUserData) {
+      return usersOnlineEmails.includes(anotherUserData.email);
+    } else {
+      return false;
+    }
+  }, [usersOnlineEmails, anotherUser]);
+
   // Chat connection
   const {
     data: chatData = {
@@ -80,12 +85,9 @@ const Conversation = () => {
 
   // STATES
   const [isMessageEdit, setIsMessageEdit] = useState(false);
-
-  // Input message value
-  const [messageText, setMessageText] = useState<string | null>(null);
-  const [messageId, setMessageId] = useState<number | null>(null);
-
-  const [messageImage, setMessageImage] = useState<string | null>(null);
+  const [editingMessage, setEditingMessage] = useState<TMessageInfo | null>(
+    null
+  );
 
   // Is mobile device flag
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -94,47 +96,6 @@ const Conversation = () => {
 
   // HANDLES FUNCTIONS
 
-  const handleClearMessage = () => {
-    setMessageText(null);
-    setMessageImage(null);
-    setIsMessageEdit(false);
-  };
-
-  const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (!conversationId) return;
-    if (!currentUser) return;
-    if (!messageText && !messageImage) return;
-
-    try {
-      if (isMessageEdit && messageId) {
-        await editMessage({
-          conversationId: conversationId,
-          message: {
-            text: messageText,
-            senderId: currentUser.id,
-            image: messageImage,
-            id: messageId,
-          },
-        }).unwrap();
-        setIsMessageEdit(false);
-      } else {
-        await sendMessage({
-          conversationId: conversationId,
-          message: {
-            text: messageText,
-            senderId: currentUser.id,
-            image: messageImage,
-          },
-        }).unwrap();
-      }
-
-      setMessageText(null);
-      setMessageImage(null);
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-  };
   const handleDeleteMessage = async (messageId: number) => {
     if (!conversationId) return;
     try {
@@ -149,13 +110,6 @@ const Conversation = () => {
   const handleCloseSidebarMenu = () => {
     setIsSidebarMenuVisible(false);
   };
-  const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
-    setMessageText(e.currentTarget.value);
-  };
-
-  const handleSetMessageImage = (url: string | null) => {
-    setMessageImage(url);
-  };
 
   const handleInvalidateConversation = async () => {
     try {
@@ -166,17 +120,13 @@ const Conversation = () => {
   };
   const handleSetEditingMessage = (message: TMessageInfo) => {
     setIsMessageEdit(true);
-    setMessageId(message.message_id);
-    if (message.message_text) {
-      setMessageText(message.message_text);
-    }
-    if (message.message_image) {
-      setMessageImage(message.message_image);
-    }
+    setEditingMessage(message);
+  };
+  const handleToggleIsMessageEdit = () => {
+    setIsMessageEdit((prev) => !prev);
   };
   //USE EFFECTS
   useEffect(() => {
-    // refetch();
     if (conversationStatus == "absent") {
       navigate(routes.main);
       dispatch(setCurrentConversationExists());
@@ -242,7 +192,11 @@ const Conversation = () => {
               </button>
             )}
             <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
-              <Avatar picture={anotherUser()?.picture} />
+              <Avatar
+                isProfileAvatar={false}
+                picture={anotherUser()?.picture}
+                isOnline={isAnotherUserOnline()}
+              />
               {anotherUser()?.name}
             </div>
             <div className="">
@@ -265,58 +219,16 @@ const Conversation = () => {
           />
 
           {/* INPUT MESSAGE */}
-          <form
-            onSubmit={(event) => handleSendMessage(event)}
-            className={`flex flex-col  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
-              messageImage && "border border-t-gray-200"
-            }`}
-          >
-            {messageImage && (
-              <>
-                <button
-                  // Clears state of message image
-                  type="button"
-                  onClick={() => handleSetMessageImage(null)}
-                  className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
-                >
-                  <IoCloseOutline />
-                </button>
-                <div className="flex justify-center  mb-4 ">
-                  <img
-                    src={messageImage}
-                    alt="Uploaded"
-                    className="max-w-full h-44 rounded-lg shadow-md border-2 p-2 border-green-400"
-                  />
-                </div>
-              </>
-            )}
-
-            <div className="flex gap-5 items-center">
-              {isMessageEdit && (
-                <button
-                  type="button"
-                  onClick={handleClearMessage}
-                  className=" text-4xl  rounded-full     transition   text-green-400 border hover:border-green-200"
-                >
-                  {<FaArrowLeft className=" p-2" />}
-                </button>
-              )}
-
-              <Input
-                type="text"
-                onClick={() => {}}
-                onChange={handleInputChange}
-                placeholder="Input message"
-                value={messageText ? messageText : ""}
-                className="w-full hover:border"
-              />
-              <UploadButton onUpload={handleSetMessageImage} />
-
-              <SubmitButton children={isMessageEdit ? "Edit" : "Send"} />
-            </div>
-          </form>
+          <MessageForm
+            handleToggleIsMessageEdit={handleToggleIsMessageEdit}
+            currentUser={currentUser}
+            conversationId={conversationId}
+            isMessageEdit={isMessageEdit}
+            editingMessage={editingMessage}
+          />
 
           <SidebarMenu
+            isAnotherUserOnline={isAnotherUserOnline()}
             isSidebarMenuVisible={isSidebarMenuVisible}
             closeSidebarMenu={handleCloseSidebarMenu}
             anotherUser={anotherUser()}

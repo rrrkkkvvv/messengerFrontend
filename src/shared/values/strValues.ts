@@ -35,8 +35,9 @@ type websocketMessages = {} & {
       conversationDeleted: "Conversation was deleted";
     };
     getUsersWS: {
+      updateOnlineUsersList: "Update online users list";
       successGetUsers: "Success get users";
-      Unathorized: "Unauthorized";
+      unathorized: "Unauthorized";
     };
   };
   [key: string]: any;
@@ -50,8 +51,10 @@ export const backendMessages: websocketMessages = {
       conversationDeleted: "Conversation was deleted",
     },
     getUsersWS: {
+      updateOnlineUsersList: "Update online users list",
+
       successGetUsers: "Success get users",
-      Unathorized: "Unauthorized",
+      unathorized: "Unauthorized",
     },
   },
   auth: {

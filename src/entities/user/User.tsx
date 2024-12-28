@@ -3,8 +3,9 @@ import { TUserInfo } from "./api/userTypes";
 interface IUserProps {
   user: TUserInfo;
   onClick: () => void;
+  isOnline: boolean;
 }
-const User = ({ user, onClick }: IUserProps) => {
+const User = ({ user, onClick, isOnline }: IUserProps) => {
   return (
     <div
       onClick={onClick}
@@ -23,7 +24,11 @@ const User = ({ user, onClick }: IUserProps) => {
                     border-green-200
                     p-2"
     >
-      <Avatar picture={user.picture} />
+      <Avatar
+        picture={user.picture}
+        isOnline={isOnline}
+        isProfileAvatar={false}
+      />
       <div className="">
         <div className="">{user.name}</div>
         {/* <div className="">Last message</div> */}
