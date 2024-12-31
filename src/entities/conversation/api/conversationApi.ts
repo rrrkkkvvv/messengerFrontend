@@ -1,11 +1,7 @@
 import baseApi from "../../../app/api/baseApi";
-import {
-  apiURLs,
-  backendMessages,
-  localStorageItems,
-} from "../../../shared/values/strValues";
-import { TUserInfo } from "../../user";
-import getTokenFromLS from "../../user/utils/getTokenFromLS";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
+import { apiURLs, backendMessages } from "../../../shared/values/strValues";
 import { deleteConversation } from "../model/conversationSlice";
 import {
   TMessageInfo,
@@ -126,7 +122,7 @@ export const chatApi = baseApi.injectEndpoints({
               message_image: message.image,
               sender_id: message.senderId,
             },
-            token: localStorage.getItem(localStorageItems.jwtToken),
+            token: getTokenFromLS(),
           };
 
           ws.send(JSON.stringify(data));
@@ -164,7 +160,7 @@ export const chatApi = baseApi.injectEndpoints({
               message_image: message.image,
               sender_id: message.senderId,
             },
-            token: localStorage.getItem(localStorageItems.jwtToken),
+            token: getTokenFromLS(),
           };
 
           ws.send(JSON.stringify(data));
@@ -192,7 +188,7 @@ export const chatApi = baseApi.injectEndpoints({
           const data = {
             conversationId: conversationId,
             messageId: messageId,
-            token: localStorage.getItem(localStorageItems.jwtToken),
+            token: getTokenFromLS(),
           };
 
           ws.send(JSON.stringify(data));
@@ -221,7 +217,7 @@ export const chatApi = baseApi.injectEndpoints({
             conversationUpdate: "delete",
             conversationId: conversationId,
 
-            token: localStorage.getItem(localStorageItems.jwtToken),
+            token: getTokenFromLS(),
           };
           ws.send(JSON.stringify(data));
           resolve({ data: "Conversation deleted" });

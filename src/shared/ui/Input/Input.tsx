@@ -5,6 +5,7 @@ type InputPropsType = {
   onChange?: (e: React.FormEvent<HTMLInputElement>) => void;
   onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
   className?: string;
+  required?: boolean;
 };
 const Input = ({
   placeholder,
@@ -13,9 +14,11 @@ const Input = ({
   onChange,
   onClick,
   className,
+  required,
 }: InputPropsType) => {
   return (
     <input
+      required={required}
       onChange={onChange}
       onClick={onClick}
       type={type}

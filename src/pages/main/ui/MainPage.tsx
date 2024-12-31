@@ -1,21 +1,21 @@
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { routes } from "../../shared/values/strValues";
+import { routes } from "../../../shared/values/strValues";
 
-import UsersList from "../../widgets/UsersList/UsersList";
-import Conversation from "../../entities/conversation";
-import Profile from "../../widgets/Profile";
-import { useAppDispatch, useAppSelector } from "../../app/store/store";
+import UsersList from "../../../entities/user/ui/UsersList";
+import Conversation from "../../../entities/conversation";
+import Profile from "../../../widgets/Profile";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import {
   useConnectToGetUsersChanelQuery,
   useInvalidateGetUsersMutation,
-} from "../../entities/user/api/usersApi";
-import { selectCurrentUser } from "../../entities/user";
+} from "../../../entities/user/api/usersApi";
+import { selectCurrentUser } from "../../../entities/user";
 import { skipToken } from "@reduxjs/toolkit/query";
 import {
   setUsersList,
   setUsersOnlineEmails,
-} from "../../widgets/UsersList/model/getUsersSlice";
+} from "../../../entities/user/model/getUsersSlice";
 
 const MainPage = () => {
   const location = useLocation();

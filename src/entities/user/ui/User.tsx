@@ -1,5 +1,6 @@
-import Avatar from "../../shared/ui/Avatar/Avatar";
-import { TUserInfo } from "./api/userTypes";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import Avatar from "../../../shared/ui/Avatar/Avatar";
+
 interface IUserProps {
   user: TUserInfo;
   onClick: () => void;

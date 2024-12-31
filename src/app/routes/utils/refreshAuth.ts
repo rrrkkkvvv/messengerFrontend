@@ -1,5 +1,5 @@
 import { NavigateFunction } from "react-router-dom";
-import { useRefreshUserAuthMutation } from "../../auth/api/authApi";
+import { useRefreshUserAuthMutation } from "../../../pages/auth/api/authApi";
 import { AppDispatch } from "../../../app/store/store";
 import { logout, setCurrentUser } from "../../../entities/user";
 import { backendMessages, routes } from "../../../shared/values/strValues";

@@ -1,4 +1,4 @@
-import Modal from "../../shared/ui/Modal/Modal";
+import Modal from "../Modal/Modal";
 
 interface ImageModalProps {
   src?: string | null;

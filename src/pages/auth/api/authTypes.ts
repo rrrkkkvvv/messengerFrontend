@@ -1,4 +1,4 @@
-import { TUserInfo } from "../../../entities/user";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 export type TDefaultResponse = {
   message: string;

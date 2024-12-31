@@ -1,4 +1,4 @@
-import { localStorageItems } from "../../../shared/values/strValues";
+import { localStorageItems } from "../values/strValues";
 
 const getIsLoggedInLS = (): boolean => {
   // Could be "loggedIn" or ""

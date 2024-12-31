@@ -1,11 +1,12 @@
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/store/store";
-import { selectIsLoggedIn } from "../../entities/user/model/userSlice";
-import { localStorageItems, routes } from "../../shared/values/strValues";
-import { useRefreshUserAuthMutation } from "../auth/api/authApi";
-import { logout } from "../../entities/user";
-import { refreshAuth } from "./utils/refreshAuth";
+import { selectIsLoggedIn } from "../../../entities/user/model/userSlice";
+import { useAppDispatch, useAppSelector } from "../../store/store";
+import { useRefreshUserAuthMutation } from "../../../pages/auth/api/authApi";
+import { routes } from "../../../shared/values/strValues";
+import { refreshAuth } from "../utils/refreshAuth";
+import { logout } from "../../../entities/user";
+import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 
 type TPrivateRouteProps = {
   children: ReactNode;
@@ -19,7 +20,7 @@ const RestrictedRoute = ({ children }: TPrivateRouteProps) => {
   const [refreshUserAuth] = useRefreshUserAuthMutation();
 
   useEffect(() => {
-    const jwtToken = localStorage.getItem(localStorageItems.jwtToken);
+    const jwtToken = getTokenFromLS();
     if (jwtToken && jwtToken !== "null") {
       refreshAuth({
         refreshUserAuth: refreshUserAuth,

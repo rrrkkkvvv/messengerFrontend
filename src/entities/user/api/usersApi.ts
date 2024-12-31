@@ -1,12 +1,12 @@
 import baseApi from "../../../app/api/baseApi";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 import { apiURLs, backendMessages } from "../../../shared/values/strValues";
-import getTokenFromLS from "../utils/getTokenFromLS";
 import { usersWs } from "../utils/usersWs";
 import {
   TEditProfileResponse,
   TOpenGetUsersConnectionResponse,
   TProfile,
-  TUserInfo,
 } from "./userTypes";
 
 const fragmentBaseUrl = apiURLs.paths.userAPI;

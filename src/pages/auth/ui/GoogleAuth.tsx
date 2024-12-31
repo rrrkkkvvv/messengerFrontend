@@ -31,7 +31,7 @@ const GoogleAuth: React.FC<GoogleLoginComponentProps> = () => {
     toastId = toast.loading("Signing in...");
 
     if (result.message === backendMessages.auth.success.successSignin) {
-      toast.success(backendMessages.auth.success.successSignin);
+      toast.success(toastTexts.success.successAuth);
       dispatch(setCurrentUser(result.user));
       dispatch(setJWTToken(result.token));
       dispatch(setIsLoggedIn(true));

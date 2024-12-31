@@ -1,10 +1,10 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { TUserInfo } from "../../../user";
 import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 
 import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 interface IMessageListProps {
   conversationMessages: TMessageInfo[] | null;

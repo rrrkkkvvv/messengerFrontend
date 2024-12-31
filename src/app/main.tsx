@@ -5,17 +5,17 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthPage from "../pages/auth";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import MainPage from "../pages/main/MainPage";
+import MainPage from "../pages/main/ui/MainPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";
 import Conversation from "../entities/conversation";
-import ErrorPage from "../pages/error/ErrorPage";
 import { createBrowserHistory } from "history";
-import UsersList from "../widgets/UsersList";
-import Profile from "../widgets/Profile/";
-import RestrictedRoute from "../features/routes/RestrictedRoute";
-import PrivateRoute from "../features/routes/PrivateRoute";
+
+import Profile from "../widgets/Profile";
+import ErrorPage from "../pages/error";
+import { RestrictedRoute, PrivateRoute } from "./routes/";
+import { UsersList } from "../entities/user";
 
 export const history = createBrowserHistory();
 

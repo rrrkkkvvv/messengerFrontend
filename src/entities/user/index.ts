@@ -1,4 +1,5 @@
-export { default as User } from "./User";
+export { default as User } from "./ui/User";
+export { default as UsersList } from "./ui/UsersList";
 export { default as logout } from "./utils/logout";
 export {
   default as currentUserReducer,
@@ -8,4 +9,4 @@ export {
   selectCurrentUserPicture,
   selectJWTToken,
 } from "./model/userSlice";
-export type { TUserData, TUserInfo, TSignInUserData } from "./api/userTypes";
+export type { TUserData, TSignInUserData } from "./api/userTypes";

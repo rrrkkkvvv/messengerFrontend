@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "../../../app/store/store";
-import getTokenFromLS from "../utils/getTokenFromLS";
-import { TUserInfo } from "../api/userTypes";
 import { localStorageItems } from "../../../shared/values/strValues";
-import getIsLoggedInLS from "../utils/getIsloggedInFromLS";
+import getIsLoggedInLS from "../../../shared/utils/getIsloggedInFromLS";
+import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 interface ICurrentUserSliceProps {
   currentUser: TUserInfo | null;

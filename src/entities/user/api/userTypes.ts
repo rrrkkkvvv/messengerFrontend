@@ -1,13 +1,9 @@
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+
 export type TUserData = {
   name: string;
   email: string;
   password: string;
-};
-export type TUserInfo = {
-  id: number;
-  name: string;
-  email: string;
-  picture: string | null;
 };
 
 export type TGetUsersResponse =

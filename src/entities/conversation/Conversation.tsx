@@ -27,7 +27,7 @@ import MessageList from "./ui/Messages/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
 import { TMessageInfo } from "./api/conversationTypes";
-import { selectUsersOnlineEmails } from "../../widgets/UsersList/model/getUsersSlice";
+import { selectUsersOnlineEmails } from "../user/model/getUsersSlice";
 import MessageForm from "./ui/MessageForm/MessageForm";
 
 const Conversation = () => {

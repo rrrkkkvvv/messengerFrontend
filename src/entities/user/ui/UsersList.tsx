@@ -1,18 +1,13 @@
-import { useAppDispatch, useAppSelector } from "../../app/store/store";
-import {
-  logout,
-  selectCurrentUser,
-  selectJWTToken,
-  User,
-} from "../../entities/user";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { logout, selectCurrentUser, selectJWTToken, User } from "..";
 
 import { useNavigate } from "react-router-dom";
-import { routes } from "../../shared/values/strValues";
+import { routes } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
 import {
   selectUsersList,
   selectUsersOnlineEmails,
-} from "./model/getUsersSlice";
+} from "../model/getUsersSlice";
 
 const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);

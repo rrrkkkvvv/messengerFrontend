@@ -1,19 +1,19 @@
 import { FormEvent, useState } from "react";
-import Input from "../../shared/ui/Input/Input";
-import { useSignInMutation, useSignUpMutation } from "./api/authApi";
 import toast from "react-hot-toast";
+import { useSignInMutation, useSignUpMutation } from "../api/authApi";
+import { useAppDispatch } from "../../../app/store/store";
+import { useNavigate } from "react-router-dom";
 import {
   backendMessages,
   routes,
   toastTexts,
-} from "../../shared/values/strValues";
-import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../../app/store/store";
-import { setCurrentUser, setJWTToken } from "../../entities/user";
-import GoogleAuth from "./ui/GoogleAuth";
-import { setIsLoggedIn } from "../../entities/user/model/userSlice";
+} from "../../../shared/values/strValues";
+import { setCurrentUser, setJWTToken } from "../../../entities/user";
+import { setIsLoggedIn } from "../../../entities/user/model/userSlice";
+import Input from "../../../shared/ui/Input/Input";
+import GoogleAuth from "./GoogleAuth";
 
-const Auth = () => {
+const AuthPage = () => {
   const [isSignUp, setSignIn] = useState(true);
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -71,7 +71,7 @@ const Auth = () => {
         }
       }
     } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+      toast.error(error.data.message || "An error occurred");
       console.error(error);
     } finally {
       toast.dismiss(toastId);
@@ -79,46 +79,50 @@ const Auth = () => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col w-dvw md:w-3/6 lg:w-2/6 gap-4 p-4 rounded-md border-2 border-green-400  "
-      action=""
-    >
-      <h3 className="text-center">{isSignUp ? "Sign Up" : "Sign In"}</h3>
-      {isSignUp && (
+    <div className="h-dvh text-white bg-gray-300 flex  justify-center items-center ">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col w-dvw md:w-3/6 lg:w-2/6 gap-4 p-4 rounded-md border-2 border-green-400  "
+        action=""
+      >
+        <h3 className="text-center">{isSignUp ? "Sign Up" : "Sign In"}</h3>
+        {isSignUp && (
+          <Input
+            required
+            value={name}
+            onChange={(e) => handleInputChange("name", e)}
+            placeholder="Your name..."
+            type="text"
+          />
+        )}
         <Input
-          value={name}
-          onChange={(e) => handleInputChange("name", e)}
-          placeholder="Your name..."
-          type="text"
+          required
+          placeholder="Your email..."
+          value={email}
+          onChange={(e) => handleInputChange("email", e)}
+          type="email"
         />
-      )}
-      <Input
-        placeholder="Your email..."
-        value={email}
-        onChange={(e) => handleInputChange("email", e)}
-        type="email"
-      />
-      <Input
-        placeholder="Your password..."
-        value={password}
-        onChange={(e) => handleInputChange("password", e)}
-        type="password"
-      />
-      <Input value={isSignUp ? "Sign Up" : "Sign In"} type="submit" />
-      <GoogleAuth /> <br />
-      <br />
-      <div className="">
-        <span>
-          {isSignUp ? "Already have an account?" : "Do not have an account?"}
-        </span>
+        <Input
+          required
+          placeholder="Your password..."
+          value={password}
+          onChange={(e) => handleInputChange("password", e)}
+          type="password"
+        />
+        <Input value={isSignUp ? "Sign Up" : "Sign In"} type="submit" />
+        <GoogleAuth /> <br />
+        <br />
+        <div className="">
+          <span>
+            {isSignUp ? "Already have an account?" : "Do not have an account?"}
+          </span>
 
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            toggleSignIn();
-          }}
-          className={`
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              toggleSignIn();
+            }}
+            className={`
                   text-green-400
                     ml-2
                     outline-none
@@ -127,12 +131,13 @@ const Auth = () => {
                   focus:outline-green-400
                   hover:outline-green-200
                   `}
-        >
-          {isSignUp ? "Sign In" : "Sign Up"}
-        </button>
-      </div>
-    </form>
+          >
+            {isSignUp ? "Sign In" : "Sign Up"}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 };
 
-export default Auth;
+export default AuthPage;

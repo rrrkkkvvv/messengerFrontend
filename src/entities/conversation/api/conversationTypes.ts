@@ -1,4 +1,4 @@
-import { TUserInfo } from "../../user";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 export type TCreateConversationProps = {
   member_ids: number[];

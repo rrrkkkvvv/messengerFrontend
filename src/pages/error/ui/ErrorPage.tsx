@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { routes } from "../../shared/values/strValues";
+import { routes } from "../../../shared/values/strValues";
 
 const ErrorPage = () => {
   const navigate = useNavigate();

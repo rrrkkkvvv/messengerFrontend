@@ -1,8 +1,8 @@
 import { MouseEvent, useState } from "react";
-import ImageModal from "../../../../widgets/ImageModal";
+import ImageModal from "../../../../shared/ui/ImageModal/ImageModal.tsx";
 import { TMessageInfo } from "../../api/conversationTypes";
-import { TUserInfo } from "../../../user";
 import { formatTime } from "../../../../shared/utils/formatTime";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes.ts";
 
 type TMessageBoxProps = {
   message: TMessageInfo;

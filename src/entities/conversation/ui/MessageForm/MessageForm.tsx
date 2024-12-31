@@ -2,7 +2,6 @@ import { FormEvent, useEffect, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import SubmitButton from "../../../../shared/ui/Button/SubmitButton";
 import { IoCloseOutline } from "react-icons/io5";
-import { TUserInfo } from "../../../user";
 import {
   useEditMessageMutation,
   useSendMessageMutation,
@@ -10,6 +9,7 @@ import {
 import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 import Input from "../../../../shared/ui/Input/Input";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 type TMessageFormProps = {
   currentUser: TUserInfo;

@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TUserInfo } from "../../../entities/user";
 import { AppDispatch } from "../../../app/store/store";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 interface IGetUsersSliceProps {
   usersList: TUserInfo[] | null;

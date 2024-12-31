@@ -1,4 +1,4 @@
-import { localStorageItems } from "../../../shared/values/strValues";
+import { localStorageItems } from "../values/strValues";
 
 const getTokenFromLS = (): string | null => {
   const storedToken = localStorage.getItem(localStorageItems.jwtToken);

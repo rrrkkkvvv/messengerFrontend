@@ -1,9 +1,9 @@
-import { TUserInfo } from "../../user";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { IoCloseOutline } from "react-icons/io5";
 import { useDeleteConversationMutation } from "../api/conversationApi";
 import { toastTexts } from "../../../shared/values/strValues";
 import toast from "react-hot-toast";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 interface ISidebarMenuProps {
   anotherUser?: TUserInfo | null;
