@@ -1,2 +1,2 @@
-export { default as RestrictedRoute } from "./ui/RestrictedRoute";
-export { default as PrivateRoute } from "./ui/PrivateRoute";
+export { default as RestrictedRoute } from "./routesWrappers/RestrictedRoute";
+export { default as PrivateRoute } from "./routesWrappers/PrivateRoute";

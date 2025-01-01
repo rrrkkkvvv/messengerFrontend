@@ -109,6 +109,7 @@ const Conversation = () => {
   };
   const handleCloseSidebarMenu = () => {
     setIsSidebarMenuVisible(false);
+    setEditingMessage(null);
   };
 
   const handleInvalidateConversation = async () => {
@@ -118,13 +119,14 @@ const Conversation = () => {
       console.error("Failed to invalidate conversation:", error);
     }
   };
-  const handleSetEditingMessage = (message: TMessageInfo) => {
+  const handleSetEditingMessageData = (message: TMessageInfo) => {
     setIsMessageEdit(true);
     setEditingMessage(message);
   };
-  const handleToggleIsMessageEdit = () => {
-    setIsMessageEdit((prev) => !prev);
+  const handleResetIsEditingMessage = () => {
+    setIsMessageEdit(false);
   };
+
   //USE EFFECTS
   useEffect(() => {
     if (conversationStatus == "absent") {
@@ -213,14 +215,14 @@ const Conversation = () => {
           {/* MESSAGES */}
           <MessageList
             onDeleteMessage={handleDeleteMessage}
-            onEditMessage={handleSetEditingMessage}
+            onEditMessage={handleSetEditingMessageData}
             currentUser={currentUser}
             conversationMessages={conversationMessages}
           />
 
           {/* INPUT MESSAGE */}
           <MessageForm
-            handleToggleIsMessageEdit={handleToggleIsMessageEdit}
+            handleResetIsEditingMessage={handleResetIsEditingMessage}
             currentUser={currentUser}
             conversationId={conversationId}
             isMessageEdit={isMessageEdit}

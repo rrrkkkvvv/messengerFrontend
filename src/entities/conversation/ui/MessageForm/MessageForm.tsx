@@ -16,14 +16,14 @@ type TMessageFormProps = {
   conversationId: number | null;
   isMessageEdit: boolean;
   editingMessage: TMessageInfo | null;
-  handleToggleIsMessageEdit: () => void;
+  handleResetIsEditingMessage: () => void;
 };
 const MessageForm = ({
   currentUser,
   conversationId,
   isMessageEdit,
   editingMessage,
-  handleToggleIsMessageEdit,
+  handleResetIsEditingMessage,
 }: TMessageFormProps) => {
   // Input message value
   const [messageText, setMessageText] = useState<string | null>(null);
@@ -34,6 +34,8 @@ const MessageForm = ({
   const [sendMessage] = useSendMessageMutation();
 
   const handleClearMessage = () => {
+    handleResetIsEditingMessage();
+    setMessageId(null);
     setMessageText(null);
     setMessageImage(null);
   };
@@ -61,7 +63,6 @@ const MessageForm = ({
             id: messageId,
           },
         }).unwrap();
-        handleToggleIsMessageEdit();
       } else {
         await sendMessage({
           conversationId: conversationId,
@@ -72,7 +73,6 @@ const MessageForm = ({
           },
         }).unwrap();
       }
-
       setMessageText(null);
       setMessageImage(null);
     } catch (error) {
@@ -81,7 +81,7 @@ const MessageForm = ({
   };
 
   useEffect(() => {
-    if (editingMessage) {
+    if (isMessageEdit && editingMessage) {
       setMessageId(editingMessage.message_id);
       if (editingMessage.message_text) {
         setMessageText(editingMessage.message_text);
@@ -94,7 +94,7 @@ const MessageForm = ({
   return (
     <form
       onSubmit={(event) => handleSendMessage(event)}
-      className={`flex flex-col  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
+      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
         messageImage && "border border-t-gray-200"
       }`}
     >
