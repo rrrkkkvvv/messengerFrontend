@@ -12,9 +12,8 @@ import {
   setCurrentConversationId,
   setCurrentConversationMembers,
   setCurrentConversationMessages,
-} from "./model/conversationSlice";
+} from "./model/";
 
-import { selectCurrentUser } from "../user";
 import { useCallback, useEffect, useState } from "react";
 import { routes } from "../../shared/values/strValues";
 import Avatar from "../../shared/ui/Avatar/Avatar";
@@ -22,13 +21,14 @@ import {
   useConnectToChatChanelQuery,
   useDeleteMessageMutation,
   useInvalidateConversationMutation,
-} from "./api/conversationApi";
+} from "./api/";
 import MessageList from "./ui/Messages/MessageList";
 import SidebarMenu from "./ui/SidebarMenu";
 import ConversationPlaceholder from "./ui/ConversationPlaceholder";
 import { TMessageInfo } from "./api/conversationTypes";
-import { selectUsersOnlineEmails } from "../user/model/getUsersSlice";
+import { selectUsersOnlineEmails } from "../user/model/";
 import MessageForm from "./ui/MessageForm/MessageForm";
+import { selectCurrentUser } from "../user/model/";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();

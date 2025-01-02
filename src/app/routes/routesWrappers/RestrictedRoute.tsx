@@ -1,12 +1,12 @@
 import { ReactNode, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { selectIsLoggedIn } from "../../../entities/user/model/userSlice";
 import { useAppDispatch, useAppSelector } from "../../store/store";
-import { useRefreshUserAuthMutation } from "../../../pages/auth/api/authApi";
+import { useRefreshUserAuthMutation } from "../../../pages/auth/";
 import { routes } from "../../../shared/values/strValues";
 import { refreshAuth } from "../utils/refreshAuth";
 import { logout } from "../../../entities/user";
 import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
+import { selectIsLoggedIn } from "../../../entities/user/model/";
 
 type TPrivateRouteProps = {
   children: ReactNode;

@@ -1,8 +1,8 @@
 import { NavigateFunction } from "react-router-dom";
 import { localStorageItems, routes } from "../../../shared/values/strValues";
 import { AppDispatch } from "../../../app/store/store";
-import { setCurrentUser, setIsLoggedIn, setJWTToken } from "../model/userSlice";
-import { setUsersList, setUsersOnlineEmails } from "../model/getUsersSlice";
+import { setCurrentUser, setIsLoggedIn, setJWTToken } from "../model/";
+import { setUsersList, setUsersOnlineEmails } from "../model/";
 import baseApi from "../../../app/api/baseApi";
 
 const logout = (navigate: NavigateFunction, dispatch: AppDispatch) => {

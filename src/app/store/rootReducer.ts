@@ -1,8 +1,10 @@
 import { combineReducers } from "@reduxjs/toolkit";
 import baseApi from "../api/baseApi";
-import { currentUserReducer } from "../../entities/user";
-import currentConversationReducer from "../../entities/conversation/model/conversationSlice";
-import getUsersReducer from "../../entities/user/model/getUsersSlice";
+import { currentConversationReducer } from "../../entities/conversation/model/";
+import {
+  currentUserReducer,
+  getUsersReducer,
+} from "../../entities/user/model/";
 export const rootReducer = combineReducers({
   currentUser: currentUserReducer,
   currentConversation: currentConversationReducer,

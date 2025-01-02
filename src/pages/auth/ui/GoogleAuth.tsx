@@ -8,8 +8,11 @@ import {
 import { useSignInByGoogleMutation } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
-import { setCurrentUser, setJWTToken } from "../../../entities/user";
-import { setIsLoggedIn } from "../../../entities/user/model/userSlice";
+import {
+  setCurrentUser,
+  setIsLoggedIn,
+  setJWTToken,
+} from "../../../entities/user/model/";
 
 interface GoogleLoginComponentProps {
   text?: string;

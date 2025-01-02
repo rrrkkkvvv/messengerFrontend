@@ -5,7 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthPage from "../pages/auth";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import MainPage from "../pages/main/ui/MainPage";
+import MainPage from "../pages/main/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";

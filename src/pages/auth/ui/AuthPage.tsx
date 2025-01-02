@@ -8,8 +8,11 @@ import {
   routes,
   toastTexts,
 } from "../../../shared/values/strValues";
-import { setCurrentUser, setJWTToken } from "../../../entities/user";
-import { setIsLoggedIn } from "../../../entities/user/model/userSlice";
+import {
+  setCurrentUser,
+  setIsLoggedIn,
+  setJWTToken,
+} from "../../../entities/user/model/";
 import Input from "../../../shared/ui/Input/Input";
 import GoogleAuth from "./GoogleAuth";
 

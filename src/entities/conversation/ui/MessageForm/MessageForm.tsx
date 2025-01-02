@@ -2,10 +2,7 @@ import { FormEvent, useEffect, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import SubmitButton from "../../../../shared/ui/Button/SubmitButton";
 import { IoCloseOutline } from "react-icons/io5";
-import {
-  useEditMessageMutation,
-  useSendMessageMutation,
-} from "../../api/conversationApi";
+import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
 import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 import Input from "../../../../shared/ui/Input/Input";

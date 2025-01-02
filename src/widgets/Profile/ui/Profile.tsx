@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/store";
-import { selectCurrentUser } from "../../../entities/user";
 import { useState } from "react";
 import { routes } from "../../../shared/values/strValues";
 import { FaArrowLeft, FaEye } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import EditProfile from "./EditProfile";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
+import { selectCurrentUser } from "../../../entities/user/model/";
 
 const Profile = () => {
   const currentUser = useAppSelector(selectCurrentUser);

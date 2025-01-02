@@ -2,7 +2,7 @@ import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 import { apiURLs, backendMessages } from "../../../shared/values/strValues";
-import { deleteConversation } from "../model/conversationSlice";
+import { deleteConversation } from "../model/";
 import {
   TMessageInfo,
   TOpenConversationConnectionResponse,
@@ -12,7 +12,7 @@ import {
 let ws: WebSocket | null = null;
 const websocketUrl = apiURLs.conversationWebsocketConn;
 
-export const chatApi = baseApi.injectEndpoints({
+const chatApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToChatChanel: builder.query<
       {
