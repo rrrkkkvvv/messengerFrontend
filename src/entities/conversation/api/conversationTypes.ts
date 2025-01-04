@@ -28,8 +28,20 @@ export type TOpenConversationConnectionResponse =
       conversationId: number;
     }
   | {
-      message: "Update";
-      messages: TMessageInfo[];
+      message: "Sended message";
+      // messages: TMessageInfo[];
+
+      sended_message: TMessageInfo;
+    }
+  | {
+      message: "Edited message";
+      edited_message: TMessageInfo;
+      // messages: TMessageInfo[];
+    }
+  | {
+      message: "Deleted message";
+      deleted_message_id: number;
+      // messages: TMessageInfo[];
     }
   | {
       message: "Conversation was deleted";

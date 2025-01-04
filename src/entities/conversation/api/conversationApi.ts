@@ -7,9 +7,9 @@ import {
   TMessageInfo,
   TOpenConversationConnectionResponse,
 } from "./conversationTypes";
+import { conversationWs } from "./conversationWs";
 
 // Websocket connection
-let ws: WebSocket | null = null;
 const websocketUrl = apiURLs.conversationWebsocketConn;
 
 const chatApi = baseApi.injectEndpoints({
@@ -34,19 +34,22 @@ const chatApi = baseApi.injectEndpoints({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
       ) {
         if (member_ids) {
-          ws = new WebSocket(
-            `${websocketUrl}?member_ids=[${member_ids.join(
-              ","
-            )}]&token=${getTokenFromLS()}`
+          conversationWs.setWs(
+            new WebSocket(
+              `${websocketUrl}?member_ids=[${member_ids.join(
+                ","
+              )}]&token=${getTokenFromLS()}`
+            )
           );
 
           try {
             await cacheDataLoaded;
 
-            ws.onmessage = (event) => {
+            conversationWs.onmessage = (event) => {
               const data: TOpenConversationConnectionResponse = JSON.parse(
                 event.data
               );
+
               // Initialize
               if (
                 data.message ===
@@ -58,12 +61,45 @@ const chatApi = baseApi.injectEndpoints({
                   draft.conversationId = data.conversationId;
                 });
               } else if (
-                // Accepting a message
+                // Accepting message
                 data.message ===
-                backendMessages.websocket.conversationWS.messagesUpdate
+                backendMessages.websocket.conversationWS.sendedMessage
               ) {
                 updateCachedData((draft) => {
-                  draft.messages = data.messages;
+                  // draft.messages = data.messages;
+                  if (draft.messages) {
+                    draft.messages.push(data.sended_message);
+                  } else if (!draft.messages && Array.isArray(draft.messages)) {
+                    draft.messages = [data.sended_message];
+                  }
+                });
+              } else if (
+                // Editing message
+                data.message ===
+                backendMessages.websocket.conversationWS.editedMessage
+              ) {
+                updateCachedData((draft) => {
+                  // draft.messages = data.messages;
+                  const messageToEdit = draft.messages?.find(
+                    (message) =>
+                      message.message_id === data.edited_message.message_id
+                  );
+                  if (messageToEdit) {
+                    Object.assign(messageToEdit, data.edited_message);
+                  }
+                });
+              } else if (
+                // Deleting message
+                data.message ===
+                backendMessages.websocket.conversationWS.deletedMessage
+              ) {
+                updateCachedData((draft) => {
+                  // draft.messages = data.messages;
+                  draft.messages =
+                    draft.messages?.filter(
+                      (message) =>
+                        message.message_id !== data.deleted_message_id
+                    ) || [];
                 });
               } else if (
                 // Deleting conversation(clear draft)
@@ -77,14 +113,13 @@ const chatApi = baseApi.injectEndpoints({
                 });
                 // Clear store atributes related with conversation and close web socket conn
                 dispatch(deleteConversation());
-                if (ws) {
-                  ws.close();
-                  ws = null;
+                if (conversationWs) {
+                  conversationWs.closeWs();
                 }
               }
             };
 
-            ws.onerror = (error) => {
+            conversationWs.onerror = (error) => {
               console.error("WebSocket error:", error);
             };
           } catch (err) {
@@ -93,6 +128,7 @@ const chatApi = baseApi.injectEndpoints({
 
           // Remove websocket connection
           await cacheEntryRemoved;
+          conversationWs.closeWs();
         }
       },
       providesTags: ["Conversation"],
@@ -111,10 +147,6 @@ const chatApi = baseApi.injectEndpoints({
     >({
       async queryFn({ conversationId, message }) {
         return new Promise((resolve, reject) => {
-          if (!ws || ws.readyState !== WebSocket.OPEN) {
-            reject(new Error("Websocket does not exists"));
-            return;
-          }
           const data = {
             conversationId: conversationId,
             message: {
@@ -125,9 +157,9 @@ const chatApi = baseApi.injectEndpoints({
             token: getTokenFromLS(),
           };
 
-          ws.send(JSON.stringify(data));
+          conversationWs.send(JSON.stringify(data));
           resolve({ data: "Message sent" });
-          ws.onerror = (error) => {
+          conversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };
@@ -148,10 +180,6 @@ const chatApi = baseApi.injectEndpoints({
     >({
       async queryFn({ conversationId, message }) {
         return new Promise((resolve, reject) => {
-          if (!ws || ws.readyState !== WebSocket.OPEN) {
-            reject(new Error("Websocket does not exists"));
-            return;
-          }
           const data = {
             conversationId: conversationId,
             message: {
@@ -163,9 +191,9 @@ const chatApi = baseApi.injectEndpoints({
             token: getTokenFromLS(),
           };
 
-          ws.send(JSON.stringify(data));
+          conversationWs.send(JSON.stringify(data));
           resolve({ data: "Message edited" });
-          ws.onerror = (error) => {
+          conversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to edit message"));
           };
@@ -181,19 +209,15 @@ const chatApi = baseApi.injectEndpoints({
     >({
       async queryFn({ conversationId, messageId }) {
         return new Promise((resolve, reject) => {
-          if (!ws || ws.readyState !== WebSocket.OPEN) {
-            reject(new Error("Websocket does not exists"));
-            return;
-          }
           const data = {
             conversationId: conversationId,
             messageId: messageId,
             token: getTokenFromLS(),
           };
 
-          ws.send(JSON.stringify(data));
+          conversationWs.send(JSON.stringify(data));
           resolve({ data: "Message deleted" });
-          ws.onerror = (error) => {
+          conversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };
@@ -208,20 +232,15 @@ const chatApi = baseApi.injectEndpoints({
     >({
       async queryFn({ conversationId }) {
         return new Promise((resolve, reject) => {
-          if (!ws || ws.readyState !== WebSocket.OPEN) {
-            reject(new Error("Websocket does not exists"));
-            return;
-          }
-
           const data = {
             conversationUpdate: "delete",
             conversationId: conversationId,
 
             token: getTokenFromLS(),
           };
-          ws.send(JSON.stringify(data));
+          conversationWs.send(JSON.stringify(data));
           resolve({ data: "Conversation deleted" });
-          ws.onerror = (error) => {
+          conversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };

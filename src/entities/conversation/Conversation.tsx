@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
@@ -32,6 +32,7 @@ import { selectCurrentUser } from "../user/model/";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
+  const location = useLocation();
 
   const currentUser = useAppSelector(selectCurrentUser);
 
@@ -48,6 +49,7 @@ const Conversation = () => {
   const [deleteMessage] = useDeleteMessageMutation();
 
   //USE CALLBACKS
+
   const member_ids = useCallback(() => {
     if (anotherUserIdParam && currentUser) {
       return [parseInt(anotherUserIdParam), currentUser.id];
@@ -95,6 +97,16 @@ const Conversation = () => {
   const [isSidebarMenuVisible, setIsSidebarMenuVisible] = useState(false);
 
   // HANDLES FUNCTIONS
+  // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
+  // MUST HAVE, because of it gives reconect to WS
+  const redirectToCurrentConversation = () => {
+    if (!location.pathname.startsWith("/conversation/")) {
+      let anotherUserData = anotherUser();
+      if (anotherUserData) {
+        navigate("/conversation/" + anotherUserData.id);
+      }
+    }
+  };
 
   const handleDeleteMessage = async (messageId: number) => {
     if (!conversationId) return;
@@ -179,7 +191,10 @@ const Conversation = () => {
       {!anotherUser() ? (
         <ConversationPlaceholder />
       ) : (
-        <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white">
+        <div
+          className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white"
+          onClick={redirectToCurrentConversation}
+        >
           {/* HEADER */}
           <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
             {isMobile && (

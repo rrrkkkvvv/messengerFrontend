@@ -70,8 +70,7 @@ const MessageForm = ({
           },
         }).unwrap();
       }
-      setMessageText(null);
-      setMessageImage(null);
+      handleClearMessage();
     } catch (error) {
       console.error("Failed to send message:", error);
     }

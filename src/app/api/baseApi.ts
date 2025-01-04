@@ -24,7 +24,6 @@ const baseApi = createApi({
   baseQuery: staggeredBaseQuery,
   endpoints: () => ({}),
   refetchOnMountOrArgChange: true,
-  refetchOnFocus: true,
   refetchOnReconnect: true,
   tagTypes: ["Conversation", "Users"],
 });

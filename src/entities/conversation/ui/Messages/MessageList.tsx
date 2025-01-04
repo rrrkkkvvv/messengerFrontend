@@ -19,7 +19,6 @@ const MessageList = ({
   onDeleteMessage,
   onEditMessage,
 }: IMessageListProps) => {
-  const [lastScroll, setLastScroll] = useState<number>(0);
   const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
@@ -95,15 +94,18 @@ const MessageList = ({
     closeContextMenu();
   };
   const handleScroll = () => {
-    if (messagesEndRef.current) {
-      const currentScroll = messagesEndRef.current.scrollTop;
-      if (currentScroll < lastScroll && downScrollVisible) {
-        setDownScrollVisible(false);
-      } else if (currentScroll > lastScroll && !downScrollVisible) {
-        setDownScrollVisible(true);
-      }
-      setLastScroll(currentScroll);
-    }
+    let messageContainer = messagesEndRef.current;
+    if (!messageContainer) return;
+
+    const isAtBottom =
+      messageContainer.scrollHeight - messageContainer.scrollTop ===
+      messageContainer.clientHeight;
+
+    const isScrollingUp =
+      messageContainer.scrollTop <
+      messageContainer.scrollHeight - messageContainer.clientHeight;
+
+    setDownScrollVisible(isScrollingUp && !isAtBottom);
   };
 
   useEffect(() => {
@@ -125,7 +127,7 @@ const MessageList = ({
         scrollElement.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [lastScroll, downScrollVisible]);
+  }, [downScrollVisible]);
 
   return (
     <>

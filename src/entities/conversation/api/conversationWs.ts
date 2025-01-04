@@ -1,6 +1,6 @@
 import { customWebsocket } from "../../../shared/types/websocketType";
 
-export const usersWs: customWebsocket = (() => {
+export const conversationWs: customWebsocket = (() => {
   let currentWs: WebSocket | null = null;
 
   return {

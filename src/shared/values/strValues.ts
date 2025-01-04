@@ -31,7 +31,9 @@ type websocketMessages = {} & {
   websocket: {
     conversationWS: {
       conversationCreating: "Conversation is created/already exists";
-      messagesUpdate: "Update";
+      sendedMessage: "Sended message";
+      editedMessage: "Edited message";
+      deletedMessage: "Deleted message";
       conversationDeleted: "Conversation was deleted";
     };
     getUsersWS: {
@@ -47,7 +49,9 @@ export const backendMessages: websocketMessages = {
   websocket: {
     conversationWS: {
       conversationCreating: "Conversation is created/already exists",
-      messagesUpdate: "Update",
+      sendedMessage: "Sended message",
+      editedMessage: "Edited message",
+      deletedMessage: "Deleted message",
       conversationDeleted: "Conversation was deleted",
     },
     getUsersWS: {
