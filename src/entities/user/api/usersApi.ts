@@ -2,7 +2,7 @@ import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 import { apiURLs, backendMessages } from "../../../shared/values/strValues";
-import { usersWs } from "../utils/usersWs";
+import { usersWs } from "./usersWs";
 import {
   TEditProfileResponse,
   TOpenGetUsersConnectionResponse,
