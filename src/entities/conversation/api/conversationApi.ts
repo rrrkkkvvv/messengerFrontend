@@ -7,7 +7,7 @@ import {
   TMessageInfo,
   TOpenConversationConnectionResponse,
 } from "./conversationTypes";
-import { conversationWs } from "./conversationWs";
+import { useConversationWs } from "./useConversationWs";
 
 // Websocket connection
 const websocketUrl = apiURLs.conversationWebsocketConn;
@@ -34,7 +34,7 @@ const chatApi = baseApi.injectEndpoints({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
       ) {
         if (member_ids) {
-          conversationWs.setWs(
+          useConversationWs.setWs(
             new WebSocket(
               `${websocketUrl}?member_ids=[${member_ids.join(
                 ","
@@ -45,7 +45,7 @@ const chatApi = baseApi.injectEndpoints({
           try {
             await cacheDataLoaded;
 
-            conversationWs.onmessage = (event) => {
+            useConversationWs.onmessage = (event) => {
               const data: TOpenConversationConnectionResponse = JSON.parse(
                 event.data
               );
@@ -113,13 +113,13 @@ const chatApi = baseApi.injectEndpoints({
                 });
                 // Clear store atributes related with conversation and close web socket conn
                 dispatch(deleteConversation());
-                if (conversationWs) {
-                  conversationWs.closeWs();
+                if (useConversationWs) {
+                  useConversationWs.closeWs();
                 }
               }
             };
 
-            conversationWs.onerror = (error) => {
+            useConversationWs.onerror = (error) => {
               console.error("WebSocket error:", error);
             };
           } catch (err) {
@@ -128,7 +128,7 @@ const chatApi = baseApi.injectEndpoints({
 
           // Remove websocket connection
           await cacheEntryRemoved;
-          conversationWs.closeWs();
+          useConversationWs.closeWs();
         }
       },
       providesTags: ["Conversation"],
@@ -157,9 +157,9 @@ const chatApi = baseApi.injectEndpoints({
             token: getTokenFromLS(),
           };
 
-          conversationWs.send(JSON.stringify(data));
+          useConversationWs.send(JSON.stringify(data));
           resolve({ data: "Message sent" });
-          conversationWs.onerror = (error) => {
+          useConversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };
@@ -175,6 +175,7 @@ const chatApi = baseApi.injectEndpoints({
           image: string | null;
           senderId: number;
           id: number;
+          seen: boolean;
         };
       }
     >({
@@ -187,13 +188,14 @@ const chatApi = baseApi.injectEndpoints({
               message_text: message.text,
               message_image: message.image,
               sender_id: message.senderId,
+              seen: message.seen,
             },
             token: getTokenFromLS(),
           };
 
-          conversationWs.send(JSON.stringify(data));
+          useConversationWs.send(JSON.stringify(data));
           resolve({ data: "Message edited" });
-          conversationWs.onerror = (error) => {
+          useConversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to edit message"));
           };
@@ -212,12 +214,39 @@ const chatApi = baseApi.injectEndpoints({
           const data = {
             conversationId: conversationId,
             messageId: messageId,
+            method: "delete",
+
             token: getTokenFromLS(),
           };
 
-          conversationWs.send(JSON.stringify(data));
+          useConversationWs.send(JSON.stringify(data));
           resolve({ data: "Message deleted" });
-          conversationWs.onerror = (error) => {
+          useConversationWs.onerror = (error) => {
+            console.error("WebSocket error:", error);
+            reject(new Error("Failed to send message"));
+          };
+        });
+      },
+    }),
+    setSeenMessage: builder.mutation<
+      string,
+      {
+        conversationId: number;
+        messageId: number;
+      }
+    >({
+      async queryFn({ conversationId, messageId }) {
+        return new Promise((resolve, reject) => {
+          const data = {
+            conversationId: conversationId,
+            messageId: messageId,
+            method: "set_seen",
+            token: getTokenFromLS(),
+          };
+
+          useConversationWs.send(JSON.stringify(data));
+          resolve({ data: "Message seen" });
+          useConversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };
@@ -238,9 +267,9 @@ const chatApi = baseApi.injectEndpoints({
 
             token: getTokenFromLS(),
           };
-          conversationWs.send(JSON.stringify(data));
+          useConversationWs.send(JSON.stringify(data));
           resolve({ data: "Conversation deleted" });
-          conversationWs.onerror = (error) => {
+          useConversationWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to send message"));
           };
@@ -266,4 +295,5 @@ export const {
   useSendMessageMutation,
   useDeleteMessageMutation,
   useEditMessageMutation,
+  useSetSeenMessageMutation,
 } = chatApi;

@@ -14,6 +14,7 @@ export type TMessageInfo = {
   sender_id: number;
   sent_at: string;
   edited_at: string | null;
+  seen: boolean;
 };
 export type TConversation = {
   members: TUserInfo[] | null;

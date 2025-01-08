@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
 
@@ -12,23 +12,23 @@ import {
   setCurrentConversationId,
   setCurrentConversationMembers,
   setCurrentConversationMessages,
-} from "./model/";
+} from "../model";
 
 import { useCallback, useEffect, useState } from "react";
-import { routes } from "../../shared/values/strValues";
-import Avatar from "../../shared/ui/Avatar/Avatar";
+import { routes } from "../../../shared/values/strValues";
+import Avatar from "../../../shared/ui/Avatar/Avatar";
 import {
   useConnectToChatChanelQuery,
   useDeleteMessageMutation,
   useInvalidateConversationMutation,
-} from "./api/";
-import MessageList from "./ui/Messages/MessageList";
-import SidebarMenu from "./ui/SidebarMenu";
-import ConversationPlaceholder from "./ui/ConversationPlaceholder";
-import { TMessageInfo } from "./api/conversationTypes";
-import { selectUsersOnlineEmails } from "../user/model/";
-import MessageForm from "./ui/MessageForm/MessageForm";
-import { selectCurrentUser } from "../user/model/";
+} from "../api";
+import MessageList from "./Messages/MessageList";
+import SidebarMenu from "./SidebarMenu";
+import ConversationPlaceholder from "./ConversationPlaceholder";
+import { TMessageInfo } from "../api/conversationTypes";
+import { selectUsersOnlineEmails } from "../../user/model";
+import MessageForm from "./MessageForm/MessageForm";
+import { selectCurrentUser } from "../../user/model";
 
 const Conversation = () => {
   const { anotherUserIdParam } = useParams();
@@ -182,10 +182,6 @@ const Conversation = () => {
     }
   }, [chatData, currentUser, dispatch]);
 
-  if (!currentUser) {
-    return <ConversationPlaceholder />;
-  }
-
   return (
     <>
       {!anotherUser() ? (
@@ -232,6 +228,7 @@ const Conversation = () => {
             onDeleteMessage={handleDeleteMessage}
             onEditMessage={handleSetEditingMessageData}
             currentUser={currentUser}
+            conversationId={conversationId}
             conversationMessages={conversationMessages}
           />
 

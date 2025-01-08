@@ -2,7 +2,7 @@ import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 import { apiURLs, backendMessages } from "../../../shared/values/strValues";
-import { usersWs } from "./usersWs";
+import { useUsersWs } from "./useUsersWs";
 import {
   TEditProfileResponse,
   TOpenGetUsersConnectionResponse,
@@ -27,7 +27,7 @@ const authApi = baseApi.injectEndpoints({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         if (userEmail) {
-          usersWs.setWs(
+          useUsersWs.setWs(
             new WebSocket(
               `${websocketUrl}?userEmail=${userEmail}&token=${getTokenFromLS()}`
             )
@@ -35,7 +35,7 @@ const authApi = baseApi.injectEndpoints({
           try {
             await cacheDataLoaded;
 
-            usersWs.onmessage = (event) => {
+            useUsersWs.onmessage = (event) => {
               const data: TOpenGetUsersConnectionResponse = JSON.parse(
                 event.data
               );
@@ -65,11 +65,11 @@ const authApi = baseApi.injectEndpoints({
                 });
                 // Clear store atributes related with conversation and close web socket conn
 
-                usersWs.closeWs();
+                useUsersWs.closeWs();
               }
             };
 
-            usersWs.onerror = (error) => {
+            useUsersWs.onerror = (error) => {
               console.error("WebSocket error:", error);
             };
           } catch (err) {
@@ -79,7 +79,7 @@ const authApi = baseApi.injectEndpoints({
           // Remove websocket connection
           await cacheEntryRemoved;
 
-          usersWs.closeWs();
+          useUsersWs.closeWs();
         }
       },
       providesTags: ["Users", "Conversation"],
@@ -112,9 +112,9 @@ const authApi = baseApi.injectEndpoints({
 
             token: getTokenFromLS(),
           };
-          usersWs.send(JSON.stringify(data));
+          useUsersWs.send(JSON.stringify(data));
           resolve({ data: "Logged offline" });
-          usersWs.onerror = (error) => {
+          useUsersWs.onerror = (error) => {
             console.error("WebSocket error:", error);
             reject(new Error("Failed to log offline"));
           };

@@ -26,6 +26,7 @@ const SidebarMenu = ({
       const toastId = toast.loading("Loading...");
       const deleteConversationData = { conversationId: conversationId };
       try {
+        closeSidebarMenu();
         await deleteConversation(deleteConversationData).unwrap();
 
         toast.success(toastTexts.success.successConversationDelete);

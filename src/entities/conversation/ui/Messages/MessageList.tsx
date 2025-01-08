@@ -7,13 +7,15 @@ import MessageBox from "./MessageBox";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 interface IMessageListProps {
+  conversationId: number | null;
   conversationMessages: TMessageInfo[] | null;
-  currentUser: TUserInfo;
+  currentUser: TUserInfo | null;
   onDeleteMessage: (messageId: number) => void;
   onEditMessage: (message: TMessageInfo) => void;
 }
 
 const MessageList = ({
+  conversationId,
   conversationMessages,
   currentUser,
   onDeleteMessage,
@@ -138,14 +140,17 @@ const MessageList = ({
         }`}
       >
         <div onClick={closeContextMenu} className="relative">
-          {conversationMessages?.map((message) => (
-            <MessageBox
-              key={message.message_id}
-              currentUser={currentUser}
-              message={message}
-              handleContextMenu={handleContextMenu}
-            />
-          ))}
+          {currentUser &&
+            conversationId &&
+            conversationMessages?.map((message) => (
+              <MessageBox
+                key={message.message_id}
+                currentUser={currentUser}
+                conversationId={conversationId}
+                message={message}
+                handleContextMenu={handleContextMenu}
+              />
+            ))}
         </div>
         <div
           onClick={handleScrollDown}
@@ -171,7 +176,7 @@ const MessageList = ({
             </div>
           )}
 
-          {contextMenu.message?.sender_name === currentUser.name && (
+          {contextMenu.message?.sender_name === currentUser?.name && (
             <>
               <button
                 onClick={handleDelete}

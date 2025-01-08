@@ -9,7 +9,7 @@ import Input from "../../../../shared/ui/Input/Input";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 type TMessageFormProps = {
-  currentUser: TUserInfo;
+  currentUser: TUserInfo | null;
   conversationId: number | null;
   isMessageEdit: boolean;
   editingMessage: TMessageInfo | null;
@@ -58,6 +58,7 @@ const MessageForm = ({
             senderId: currentUser.id,
             image: messageImage,
             id: messageId,
+            seen: false,
           },
         }).unwrap();
       } else {
