@@ -97,6 +97,7 @@ const Conversation = () => {
   const [isSidebarMenuVisible, setIsSidebarMenuVisible] = useState(false);
 
   // HANDLES FUNCTIONS
+
   // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
   // MUST HAVE, because of it gives reconect to WS
   const redirectToCurrentConversation = () => {
@@ -160,7 +161,6 @@ const Conversation = () => {
   // Chat data processing(messages, members, conversationId)
   useEffect(() => {
     if (!chatData && !currentUser) return;
-
     // Open of websocket always returns members and conversationId
     if (chatData.members !== null) {
       dispatch(setCurrentConversationMembers(chatData.members));

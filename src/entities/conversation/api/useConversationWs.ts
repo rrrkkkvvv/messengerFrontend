@@ -2,7 +2,6 @@ import { customWebsocket } from "../../../shared/types/websocketType";
 
 export const useConversationWs: customWebsocket = (() => {
   let currentWs: WebSocket | null = null;
-
   return {
     setWs: (ws: WebSocket | null) => {
       if (currentWs) {

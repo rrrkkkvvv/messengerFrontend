@@ -25,7 +25,7 @@ const MainPage = () => {
   const handleResize = () => setIsMobile(window.innerWidth < 768);
   const dispatch = useAppDispatch();
 
-  // Chat connection
+  // WS get users connection
   const {
     data = {
       users: null,

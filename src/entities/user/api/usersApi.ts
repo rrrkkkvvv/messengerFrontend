@@ -4,6 +4,7 @@ import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
 import { apiURLs, backendMessages } from "../../../shared/values/strValues";
 import { useUsersWs } from "./useUsersWs";
 import {
+  TDeleteUserResponse,
   TEditProfileResponse,
   TOpenGetUsersConnectionResponse,
   TProfile,
@@ -39,6 +40,7 @@ const authApi = baseApi.injectEndpoints({
               const data: TOpenGetUsersConnectionResponse = JSON.parse(
                 event.data
               );
+
               // Initialize
               if (
                 data.message ===
@@ -99,32 +101,29 @@ const authApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["Conversation"],
     }),
-    logOffline: builder.mutation<
-      string,
-      {
-        userEmail: string;
-      }
-    >({
-      async queryFn({ userEmail }) {
+    deleteUser: builder.mutation<TDeleteUserResponse, { userId: number }>({
+      async queryFn(userId) {
         return new Promise((resolve, reject) => {
           const data = {
-            userEmail: userEmail,
+            method: "deleteUser",
+            userId: userId,
 
             token: getTokenFromLS(),
           };
+
           useUsersWs.send(JSON.stringify(data));
-          resolve({ data: "Logged offline" });
+          resolve({ data: { message: "User was deleted" } });
           useUsersWs.onerror = (error) => {
             console.error("WebSocket error:", error);
-            reject(new Error("Failed to log offline"));
+            reject(new Error("Failed to delete user"));
           };
         });
       },
       invalidatesTags: ["Users"],
     }),
+
     invalidateGetUsers: builder.mutation<string, void>({
       async queryFn() {
-        // usersWs.closeWs();
         return new Promise((resolve) => {
           resolve({ data: "Get users invalidated" });
         });
@@ -139,6 +138,6 @@ export const {
   useEditUserMutation,
   useConnectToGetUsersChanelQuery,
   useInvalidateGetUsersMutation,
-  useLogOfflineMutation,
+  useDeleteUserMutation,
 } = authApi;
 export default authApi;

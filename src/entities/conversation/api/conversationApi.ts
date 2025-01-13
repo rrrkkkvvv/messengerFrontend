@@ -9,7 +9,6 @@ import {
 } from "./conversationTypes";
 import { useConversationWs } from "./useConversationWs";
 
-// Websocket connection
 const websocketUrl = apiURLs.conversationWebsocketConn;
 
 const chatApi = baseApi.injectEndpoints({
@@ -66,7 +65,6 @@ const chatApi = baseApi.injectEndpoints({
                 backendMessages.websocket.conversationWS.sendedMessage
               ) {
                 updateCachedData((draft) => {
-                  // draft.messages = data.messages;
                   if (draft.messages) {
                     draft.messages.push(data.sended_message);
                   } else if (!draft.messages && Array.isArray(draft.messages)) {
@@ -79,7 +77,6 @@ const chatApi = baseApi.injectEndpoints({
                 backendMessages.websocket.conversationWS.editedMessage
               ) {
                 updateCachedData((draft) => {
-                  // draft.messages = data.messages;
                   const messageToEdit = draft.messages?.find(
                     (message) =>
                       message.message_id === data.edited_message.message_id
@@ -94,7 +91,6 @@ const chatApi = baseApi.injectEndpoints({
                 backendMessages.websocket.conversationWS.deletedMessage
               ) {
                 updateCachedData((draft) => {
-                  // draft.messages = data.messages;
                   draft.messages =
                     draft.messages?.filter(
                       (message) =>
@@ -113,9 +109,7 @@ const chatApi = baseApi.injectEndpoints({
                 });
                 // Clear store atributes related with conversation and close web socket conn
                 dispatch(deleteConversation());
-                if (useConversationWs) {
-                  useConversationWs.closeWs();
-                }
+                useConversationWs.closeWs();
               }
             };
 
@@ -128,7 +122,6 @@ const chatApi = baseApi.injectEndpoints({
 
           // Remove websocket connection
           await cacheEntryRemoved;
-          useConversationWs.closeWs();
         }
       },
       providesTags: ["Conversation"],

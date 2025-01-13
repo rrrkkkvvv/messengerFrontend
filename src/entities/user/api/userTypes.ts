@@ -28,7 +28,13 @@ export type TEditProfileResponse =
   | {
       message: "Editing went wrong";
     };
-
+export type TDeleteUserResponse =
+  | {
+      message: "User was deleted";
+    }
+  | {
+      message: "Deleting went wrong";
+    };
 export type TOpenGetUsersConnectionResponse =
   | {
       message: "Success get users";

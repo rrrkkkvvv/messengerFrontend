@@ -5,19 +5,18 @@ import { IoCloseOutline } from "react-icons/io5";
 import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { FormEvent, useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { useAppDispatch } from "../../../app/store/store";
 import { useEditUserMutation } from "../../../entities/user/api/";
 
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../shared/values/strValues";
 import { TProfile } from "../../../entities/user/api/";
-import {
-  selectCurrentUser,
-  setCurrentUser,
-} from "../../../entities/user/model/";
-
-const EditProfile = () => {
-  const currentUser = useAppSelector(selectCurrentUser);
+import { setCurrentUser } from "../../../entities/user/model/";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+type TEditProfileProps = {
+  currentUser: TUserInfo | null;
+};
+const EditProfile = ({ currentUser }: TEditProfileProps) => {
   const [userName, setUserName] = useState("");
   const [userPicture, setUserPicture] = useState<string | null>(null);
   const [editUser] = useEditUserMutation();

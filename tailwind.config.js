@@ -32,10 +32,20 @@ export default {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        reverseSpin: {
+          "0%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(-360deg)" },
+        },
+        scale: {
+          "0%": { transform: "scale(100%)" },
+          "50%": { transform: "scale(20%)" },
+          "100%": { transform: "scale(100%)" },
+        },
       },
 
       animation: {
-        "spin-slow": "spin 2s linear infinite",
+        reverseSpin: "reverseSpin 0.5s ease-in-out infinite",
+        scale: "scale 0.3s linear infinite",
       },
     },
   },
