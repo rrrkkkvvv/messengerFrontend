@@ -16,6 +16,8 @@ const Profile = () => {
   const [profileMode, setProfileMode] = useState<"view" | "settings" | "edit">(
     "view"
   );
+
+  const [isBackToMain, setIsBackToMain] = useState(false);
   const [isSettingProfileModeEdit, setIsSettingProfileModeEdit] =
     useState(false);
   const [isSettingProfileModeSettings, setIsSettingProfileModeSettings] =
@@ -36,6 +38,14 @@ const Profile = () => {
       setIsSettingProfileModeSettings(false);
     }, 300);
   };
+  const handleBackToMain = () => {
+    setIsBackToMain(true);
+    setTimeout(() => {
+      navigate(routes.main);
+
+      setIsBackToMain(false);
+    }, 150);
+  };
 
   const navigate = useNavigate();
 
@@ -44,12 +54,10 @@ const Profile = () => {
       {/* Navigation*/}
       <h1 className="h-20 flex px-0 lg:px-20  text-2xl justify-between text-center border border-gray-200 text-white items-center">
         <button
-          className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
-          onClick={() => {
-            navigate(routes.main);
-          }}
+          className={`text-green-400 mx-2 p-2 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
+          onClick={handleBackToMain}
         >
-          <FaArrowLeft />
+          <FaArrowLeft className={isBackToMain ? "animate-leftSlide" : ""} />
         </button>
         <div>
           {profileMode === "view"

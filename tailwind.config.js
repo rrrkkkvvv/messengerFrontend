@@ -28,6 +28,10 @@ export default {
     },
     extend: {
       keyframes: {
+        fadeIn: {
+          "0%": { opacity: 0 },
+          "100%": { opacity: 1 },
+        },
         spin: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
@@ -41,11 +45,18 @@ export default {
           "50%": { transform: "scale(20%)" },
           "100%": { transform: "scale(100%)" },
         },
+        leftSlide: {
+          "0%": { transform: "translate(0,0)" },
+          "100%": { transform: "translate(-100%,0)" },
+        },
       },
 
       animation: {
+        fadeIn: "fadeIn 0.3s ease-out",
+
         reverseSpin: "reverseSpin 0.5s ease-in-out infinite",
         scale: "scale 0.3s linear infinite",
+        leftSlide: "leftSlide 0.2s linear infinite",
       },
     },
   },
