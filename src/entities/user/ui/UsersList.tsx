@@ -19,7 +19,7 @@ const UsersList = () => {
 
   const openConversationWithUser = async (userId: number) => {
     if (currentJWT && currentUser) {
-      navigate(`${routes.conversation}/${userId}`);
+      navigate(`${routes.conversationBase}/${userId}`);
     }
   };
   return (

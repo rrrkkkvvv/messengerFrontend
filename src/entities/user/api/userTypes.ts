@@ -35,6 +35,13 @@ export type TDeleteUserResponse =
   | {
       message: "Deleting went wrong";
     };
+export type TUpdateUserResponse =
+  | {
+      message: "User was updated";
+    }
+  | {
+      message: "Updating went wrong";
+    };
 export type TOpenGetUsersConnectionResponse =
   | {
       message: "Success get users";

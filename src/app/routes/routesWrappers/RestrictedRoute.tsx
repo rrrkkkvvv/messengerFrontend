@@ -21,7 +21,7 @@ const RestrictedRoute = ({ children }: TPrivateRouteProps) => {
 
   useEffect(() => {
     const jwtToken = getTokenFromLS();
-    if (jwtToken && jwtToken !== "null") {
+    if (jwtToken) {
       refreshAuth({
         refreshUserAuth: refreshUserAuth,
         navigate: navigate,

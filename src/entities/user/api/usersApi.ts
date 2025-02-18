@@ -5,12 +5,10 @@ import { apiURLs, backendMessages } from "../../../shared/values/strValues";
 import { useUsersWs } from "./useUsersWs";
 import {
   TDeleteUserResponse,
-  TEditProfileResponse,
   TOpenGetUsersConnectionResponse,
   TProfile,
+  TUpdateUserResponse,
 } from "./userTypes";
-
-const fragmentBaseUrl = apiURLs.paths.userAPI;
 
 const websocketUrl = apiURLs.getUsersWebsocketConn;
 
@@ -87,21 +85,7 @@ const authApi = baseApi.injectEndpoints({
       providesTags: ["Users", "Conversation"],
     }),
 
-    editUser: builder.mutation<TEditProfileResponse, TProfile>({
-      query: (newUserProfile: TProfile) => ({
-        url: fragmentBaseUrl,
-        method: "POST",
-        body: JSON.stringify({
-          method: "editUser",
-
-          params: {
-            profile: newUserProfile,
-          },
-        }),
-      }),
-      invalidatesTags: ["Conversation"],
-    }),
-    deleteUser: builder.mutation<TDeleteUserResponse, { userId: number }>({
+    deleteUser: builder.mutation<TDeleteUserResponse, number>({
       async queryFn(userId) {
         return new Promise((resolve, reject) => {
           const data = {
@@ -121,11 +105,22 @@ const authApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Users"],
     }),
+    editUser: builder.mutation<TUpdateUserResponse, TProfile>({
+      async queryFn(profile) {
+        return new Promise((resolve, reject) => {
+          const data = {
+            method: "editUser",
+            updatedProfile: profile,
 
-    invalidateGetUsers: builder.mutation<string, void>({
-      async queryFn() {
-        return new Promise((resolve) => {
-          resolve({ data: "Get users invalidated" });
+            token: getTokenFromLS(),
+          };
+
+          useUsersWs.send(JSON.stringify(data));
+          resolve({ data: { message: "User was updated" } });
+          useUsersWs.onerror = (error) => {
+            console.error("WebSocket error:", error);
+            reject(new Error("Failed update user"));
+          };
         });
       },
       invalidatesTags: ["Users"],
@@ -137,7 +132,7 @@ export const {
   usePrefetch,
   useEditUserMutation,
   useConnectToGetUsersChanelQuery,
-  useInvalidateGetUsersMutation,
+
   useDeleteUserMutation,
 } = authApi;
 export default authApi;

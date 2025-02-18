@@ -6,10 +6,7 @@ import { UsersList } from "../../../entities/user/";
 import Conversation from "../../../entities/conversation/";
 import Profile from "../../../widgets/Profile";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import {
-  useConnectToGetUsersChanelQuery,
-  useInvalidateGetUsersMutation,
-} from "../../../entities/user/api/";
+import { useConnectToGetUsersChanelQuery } from "../../../entities/user/api/";
 import { skipToken } from "@reduxjs/toolkit/query";
 import {
   selectCurrentUser,
@@ -20,6 +17,7 @@ import {
 const MainPage = () => {
   const location = useLocation();
   const currentUser = useAppSelector(selectCurrentUser);
+  const isProfilePage = location.pathname === routes.profile;
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -34,36 +32,21 @@ const MainPage = () => {
   } = useConnectToGetUsersChanelQuery(
     currentUser?.email ? { userEmail: currentUser?.email } : skipToken
   );
-  const [invalidateGetUsers] = useInvalidateGetUsersMutation();
-  const handleInvalidateGetUsers = async () => {
-    try {
-      await invalidateGetUsers().unwrap();
-    } catch (error) {
-      console.error("Failed to invalidate get users:", error);
-    }
-  };
 
   useEffect(() => {
-    if (data.users && data.usersOnline) {
+    if (data.users) {
       dispatch(setUsersList(data.users));
-      dispatch(setUsersOnlineEmails(data.usersOnline));
     }
     if (data.usersOnline) {
       dispatch(setUsersOnlineEmails(data.usersOnline));
     }
-    if (data.users === null || data.usersOnline === null) {
-      handleInvalidateGetUsers();
-    }
   }, [data]);
   useEffect(() => {
-    handleInvalidateGetUsers();
-
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-  const isProfilePage = location.pathname === routes.profile;
 
   return (
     <div className="flex  ">

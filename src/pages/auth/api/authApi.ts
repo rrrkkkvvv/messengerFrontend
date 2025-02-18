@@ -3,7 +3,7 @@ import { TAuthResponse, TRefreshUserAuthResponse } from "./authTypes";
 import { apiURLs } from "../../../shared/values/strValues";
 import { TSignInUserData, TUserData } from "../../../entities/user";
 
-const fragmentBaseUrl = apiURLs.paths.userAPI;
+const fragmentBaseUrl = apiURLs.paths.authAPI;
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

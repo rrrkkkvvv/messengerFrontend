@@ -4,8 +4,7 @@ export const apiURLs = {
   conversationWebsocketConn: "ws://localhost:8080",
   getUsersWebsocketConn: "ws://localhost:8081",
   paths: {
-    userAPI: "/user_service.php",
-    chatServerAPI: "/conversation_service.php",
+    authAPI: "/auth_service.php",
   },
 };
 export const localStorageItems = {
@@ -76,6 +75,7 @@ export const backendMessages: websocketMessages = {
 export const routes = {
   auth: "/auth",
   main: "/",
-  conversation: "/conversation",
+  conversationWithUserId: "/conversation/:anotherUserIdParam",
+  conversationBase: "/conversation",
   profile: "/profile",
 };

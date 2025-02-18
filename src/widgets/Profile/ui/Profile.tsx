@@ -80,13 +80,12 @@ const Profile = () => {
           </button>
 
           <button
-            className={`text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all  hover:outline-green-200 ${
-              isSettingProfileModeEdit &&
-              (profileMode === "edit" ? "animate-scale" : "animate-scale")
-            }`}
+            className={`text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all  hover:outline-green-200`}
             onClick={handleToggleIsEdit}
           >
-            {profileMode === "edit" ? <FaEye /> : <MdModeEdit />}
+            <div className={`${isSettingProfileModeEdit && "animate-scale"}`}>
+              {profileMode === "edit" ? <FaEye /> : <MdModeEdit />}
+            </div>
           </button>
         </div>
       </h1>

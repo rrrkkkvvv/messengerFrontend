@@ -1,7 +1,6 @@
 export {
   useConnectToGetUsersChanelQuery,
   useEditUserMutation,
-  useInvalidateGetUsersMutation,
   usePrefetch,
 } from "./usersApi";
 

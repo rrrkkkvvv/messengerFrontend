@@ -70,9 +70,9 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
       }
 
       result = await editUser(profile).unwrap();
-
-      if (result.message === "User was edited") {
-        dispatch(setCurrentUser(result.user));
+      if (result.message === "User was updated") {
+        const updatedUserInfo = { ...currentUser, ...profile };
+        dispatch(setCurrentUser(updatedUserInfo));
         toast.success(toastTexts.success.successEditUser);
       } else {
         throw new Error(result.message);

@@ -60,10 +60,7 @@ export const setIsLoggedIn =
   };
 export const setJWTToken =
   (token: string | null) => async (dispatch: AppDispatch) => {
-    localStorage.setItem(
-      localStorageItems.jwtToken,
-      token ? token : JSON.stringify(token)
-    );
+    localStorage.setItem(localStorageItems.jwtToken, token ? token : "");
     dispatch(setJWTTokenState(token));
   };
 
