@@ -116,7 +116,7 @@ const MessageList = ({
       handleScrollDown();
       messagesEndRef.current?.classList.add("scroll-smooth");
     }
-  }, [conversationMessages]);
+  }, []);
 
   useEffect(() => {
     const scrollElement = messagesEndRef.current;

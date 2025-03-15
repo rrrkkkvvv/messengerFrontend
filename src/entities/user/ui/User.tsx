@@ -1,12 +1,15 @@
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
+import { FaFileImage } from "react-icons/fa6";
+import { formatLastMessageDate } from "../../../shared/utils/formatLastMessageDate";
 
 interface IUserProps {
   user: TUserInfo;
+  currentUserId: string | null;
   onClick: () => void;
   isOnline: boolean;
 }
-const User = ({ user, onClick, isOnline }: IUserProps) => {
+const User = ({ user, onClick, isOnline, currentUserId }: IUserProps) => {
   return (
     <div
       onClick={onClick}
@@ -30,9 +33,27 @@ const User = ({ user, onClick, isOnline }: IUserProps) => {
         isOnline={isOnline}
         isProfileAvatar={false}
       />
-      <div className="">
-        <div className="">{user.name}</div>
-        {/* <div className="">Last message</div> */}
+      <div>
+        <div>{user.name}</div>
+        <div className="flex gap-2">
+          {user.lastMessage?.senderId === currentUserId && <>You:</>}
+
+          {!user.lastMessage?.messageImage && user.lastMessage?.messageText ? (
+            <div>{user.lastMessage.messageText}</div>
+          ) : user.lastMessage?.messageImage &&
+            !user.lastMessage?.messageText ? (
+            <div className="flex justify-center items-center gap-2">
+              <FaFileImage /> image
+            </div>
+          ) : (
+            <></>
+          )}
+        </div>
+      </div>
+      <div className="absolute right-5 bottom-2">
+        {user.lastMessage?.sentAt && (
+          <>{formatLastMessageDate(user.lastMessage?.sentAt)}</>
+        )}
       </div>
     </div>
   );

@@ -38,7 +38,11 @@ const MessageBox = ({
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && message.senderId !== currentUser._id) {
+        if (
+          entry.isIntersecting &&
+          message.senderId !== currentUser._id &&
+          !message.seenIds.includes(currentUser._id)
+        ) {
           handleSetMessageSeen();
         }
       },

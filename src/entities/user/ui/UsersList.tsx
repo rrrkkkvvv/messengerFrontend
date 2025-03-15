@@ -1,5 +1,6 @@
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { logout, User } from "..";
+import { CiLogout } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../shared/values/strValues";
@@ -17,7 +18,7 @@ const UsersList = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const openConversationWithUser = async (userId: number) => {
+  const openConversationWithUser = async (userId: string) => {
     if (currentJWT && currentUser) {
       navigate(`${routes.conversationBase}/${userId}`);
     }
@@ -45,16 +46,20 @@ const UsersList = () => {
         </button>
         <button
           className="
-                  text-green-400
-                  ml-2
-                  px-4
-                  outline-none
-                  rounded-sm
-                  transition-all
-                  focus:outline-green-400
-                  hover:outline-green-200"
+          text-green-400
+          flex
+          gap-3
+          items-center
+          ml-2
+          px-4
+          outline-none
+          rounded-sm
+          transition-all
+          focus:outline-green-400
+          hover:outline-green-200"
           onClick={() => logout(navigate, dispatch)}
         >
+          <CiLogout className="text-2xl" />
           Logout
         </button>
       </h1>
@@ -67,6 +72,7 @@ const UsersList = () => {
             <User
               isOnline={!!isOnline}
               user={user}
+              currentUserId={currentUser?._id || null}
               onClick={() => openConversationWithUser(user._id)}
               key={user._id}
             />

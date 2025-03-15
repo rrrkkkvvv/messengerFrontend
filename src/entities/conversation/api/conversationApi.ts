@@ -5,6 +5,7 @@ import { apiURLs } from "../../../shared/values/strValues";
 import { TMessageInfo } from "./conversationTypes";
 import { deleteConversation } from "../model";
 import { TApiSocket } from "../../../shared/types/websocketType";
+import { changeLastMessage } from "../../user/model/getUsersSlice";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 let socket: TApiSocket = null;
 const chatApi = baseApi.injectEndpoints({
@@ -48,6 +49,9 @@ const chatApi = baseApi.injectEndpoints({
               });
             });
             socket.on("newMessage", (sendedMessage) => {
+              dispatch(
+                changeLastMessage(sendedMessage.conversationId, sendedMessage)
+              );
               updateCachedData((draft) => {
                 if (draft.messages) {
                   draft.messages.push(sendedMessage);
