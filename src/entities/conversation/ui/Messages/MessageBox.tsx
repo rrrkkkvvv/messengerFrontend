@@ -87,7 +87,7 @@ const MessageBox = ({
           {message.messageImage && (
             <img
               onClick={() => setImageModalOpen(true)}
-              className="max-w-96 cursor-pointer"
+              className="max-w-xs  cursor-pointer"
               src={message.messageImage}
             />
           )}
