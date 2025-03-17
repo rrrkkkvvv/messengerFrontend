@@ -224,13 +224,15 @@ const Conversation = () => {
               >
                 <HiDotsHorizontal />
               </button>
-              <button
-                type="button"
-                onClick={closeConversation}
-                className="text-green-400 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-green-200"
-              >
-                <IoCloseOutline />
-              </button>
+              {!isMobile && (
+                <button
+                  type="button"
+                  onClick={closeConversation}
+                  className="text-green-400 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-green-200"
+                >
+                  <IoCloseOutline />
+                </button>
+              )}
             </div>
           </h1>
 

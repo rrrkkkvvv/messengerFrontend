@@ -1,10 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../../app/store/store";
-import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { TMessageInfo } from "../../conversation/api/conversationTypes";
+import { TLastMessage, TUserInfo } from "../../../shared/types/UserEntityTypes";
 
+type TUser = TUserInfo | { lastMessage: TLastMessage };
+type TUsersList = TUser[];
 interface IGetUsersSliceProps {
-  usersList: TUserInfo[] | null;
+  usersList: TUsersList | null;
   usersOnlineEmails: string[] | null;
 }
 
@@ -16,7 +17,7 @@ const getUsersSlice = createSlice({
   name: "getUsers",
   initialState,
   reducers: {
-    setUsersListsState: (state, action: PayloadAction<TUserInfo[] | null>) => {
+    setUsersListsState: (state, action: PayloadAction<TUser[] | null>) => {
       state.usersList = action.payload;
     },
     setUsersOnlineEmailsState: (
@@ -37,7 +38,8 @@ const { setUsersListsState, setUsersOnlineEmailsState } = getUsersSlice.actions;
 export const changeLastMessage =
   // TODO: MISTAKE MISTAKE MISTAKE MISTAKE!!!!!!!
 
-    (conversationId: string, newLastMessage: TMessageInfo) =>
+
+    (conversationId: string, newLastMessage: TLastMessage) =>
     async (dispatch: AppDispatch, getState: () => RootState) => {
       const currentUsersList = getState().getUsers.usersList;
       // Replace lastMessage to new for users with passed conversationId
