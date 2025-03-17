@@ -107,9 +107,7 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
           className="
             h-24
             w-24
-            md:h-20
-            md:w-20
-            mb-4"
+             mb-4"
         />
 
         <div className="flex items-center justify-between gap-5">

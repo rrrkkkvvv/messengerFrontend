@@ -101,8 +101,6 @@ const Profile = () => {
      
             h-24
             w-24
-            md:h-20
-            md:w-20
             "
             />
 
