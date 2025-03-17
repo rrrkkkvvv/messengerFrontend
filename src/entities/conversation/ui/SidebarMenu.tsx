@@ -40,7 +40,7 @@ const SidebarMenu = ({
 
   return (
     <div
-      className={`absolute right-5 top-5 rounded-xl h-2/6 w-1/2 md:w-1/3 transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
+      className={`absolute right-5 top-5 rounded-xl h-2/6 w-2/3   transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
         ${
           isSidebarMenuVisible
             ? "opacity-100 scale-100 translate-0 "
@@ -55,7 +55,7 @@ const SidebarMenu = ({
         <IoCloseOutline />
       </button>
 
-      <div className="flex gap-4 justify-center items-center flex-col">
+      <div className="flex gap-4 justify-center items-center flex-col  ">
         <h1>
           <Avatar
             picture={anotherUser?.avatarURL}
@@ -63,8 +63,12 @@ const SidebarMenu = ({
             isProfileAvatar={false}
           />
         </h1>
-        <h1>{anotherUser?.name}</h1>
-        <h1>{anotherUser?.email}</h1>
+        <h1 className="text-lg sm:text-lg md:text-base lg:text-lg xl:text-xl">
+          {anotherUser?.name}
+        </h1>
+        <h1 className="text-lg sm:text-lg md:text-base lg:text-lg xl:text-xl">
+          {anotherUser?.email}
+        </h1>
         <h1>
           <button
             onClick={handleDeleteConversation}
