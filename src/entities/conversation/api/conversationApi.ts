@@ -61,6 +61,10 @@ const chatApi = baseApi.injectEndpoints({
               });
             });
             socket.on("messageUpdated", (updatedMessage) => {
+              // TODO:REMAKE BACKEND WORK WITH LAST MESSAGE
+              dispatch(
+                changeLastMessage(updatedMessage.conversationId, updatedMessage)
+              );
               updateCachedData((draft) => {
                 if (!draft.messages) return;
 

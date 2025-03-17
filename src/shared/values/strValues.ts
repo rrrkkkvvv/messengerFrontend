@@ -1,7 +1,7 @@
 export const apiURLs = {
-  baseURL: "http://localhost:3000",
+  baseURL: "https://messengerbackend-3qj2.onrender.com",
   wsServer: {
-    base: "ws://localhost:3000",
+    base: "https://messengerbackend-3qj2.onrender.com",
     namespaces: {
       users: "/users",
       conversations: "/conversations",

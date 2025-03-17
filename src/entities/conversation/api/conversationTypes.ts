@@ -1,4 +1,3 @@
-import { io, Socket } from "socket.io-client";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 export type TCreateConversationProps = {

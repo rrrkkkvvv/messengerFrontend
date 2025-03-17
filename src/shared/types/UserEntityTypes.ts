@@ -8,7 +8,10 @@ export type TUserInfo = {
   lastMessage: TLastMessage | null;
 };
 
-export type TLastMessage = Omit<TMessageInfo, "editedAt" | "seenIds">;
+export type TLastMessage = {
+  unreadMessagesCount: number;
+  seenStatus: boolean;
+} & Omit<TMessageInfo, "editedAt">;
 
 export type TUserData = {
   name: string;

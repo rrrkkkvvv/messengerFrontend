@@ -35,22 +35,24 @@ const getUsersSlice = createSlice({
 const { setUsersListsState, setUsersOnlineEmailsState } = getUsersSlice.actions;
 
 export const changeLastMessage =
-  (conversationId: string, newLastMessage: TMessageInfo) =>
-  async (dispatch: AppDispatch, getState: () => RootState) => {
-    const currentUsersList = getState().getUsers.usersList;
-    // Replace lastMessage to new for users with passed conversationId
-    const newUsersList = currentUsersList
-      ? currentUsersList.map((user) => {
-          if (user.lastMessage?.conversationId === conversationId) {
-            return { ...user, lastMessage: newLastMessage };
-          } else {
-            return user;
-          }
-        })
-      : null;
+  // TODO: MISTAKE MISTAKE MISTAKE MISTAKE!!!!!!!
 
-    dispatch(setUsersListsState(newUsersList));
-  };
+    (conversationId: string, newLastMessage: TMessageInfo) =>
+    async (dispatch: AppDispatch, getState: () => RootState) => {
+      const currentUsersList = getState().getUsers.usersList;
+      // Replace lastMessage to new for users with passed conversationId
+      const newUsersList = currentUsersList
+        ? currentUsersList.map((user) => {
+            if (user.lastMessage?.conversationId === conversationId) {
+              return { ...user, lastMessage: newLastMessage };
+            } else {
+              return user;
+            }
+          })
+        : null;
+
+      dispatch(setUsersListsState(newUsersList));
+    };
 export const setUsersList =
   (usersList: TUserInfo[] | null) => async (dispatch: AppDispatch) => {
     dispatch(setUsersListsState(usersList));

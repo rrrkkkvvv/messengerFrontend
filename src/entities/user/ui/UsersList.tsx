@@ -1,16 +1,15 @@
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { logout, User } from "..";
-import { CiLogout } from "react-icons/ci";
+import { CiCirclePlus, CiLogout } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
 import { selectUsersList, selectUsersOnlineEmails } from "../model/";
-import { selectCurrentUser, selectJWTToken } from "../model/";
+import { selectCurrentUser } from "../model/";
 
 const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
-  const currentJWT = useAppSelector(selectJWTToken);
 
   const usersList = useAppSelector(selectUsersList);
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
@@ -19,12 +18,11 @@ const UsersList = () => {
   const dispatch = useAppDispatch();
 
   const openConversationWithUser = async (userId: string) => {
-    if (currentJWT && currentUser) {
-      navigate(`${routes.conversationBase}/${userId}`);
-    }
+    navigate(`${routes.conversationBase}/${userId}`);
   };
+  const createGroupConversation = async () => {};
   return (
-    <div className=" w-full md:w-2/5 overflow-y-auto  h-dvh bg-gray-300">
+    <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden bg-gray-300">
       <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
         <button
           className="
@@ -64,7 +62,7 @@ const UsersList = () => {
         </button>
       </h1>
       {/* Users list */}
-      <div className=" text-green-200">
+      <div className="relative  max-h-full overflow-y-auto   text-green-200">
         {usersList?.map((user) => {
           let isOnline = usersOnlineEmails?.includes(user.email);
 
@@ -79,6 +77,11 @@ const UsersList = () => {
           );
         })}
       </div>
+
+      <CiCirclePlus
+        onClick={createGroupConversation}
+        className="right-4 absolute bottom-10 bg-green-900 text-green-200 hover:bg-green-800 hover:text-green-100 rounded-full box-border  text-6xl cursor-pointer  z-50"
+      />
     </div>
   );
 };
