@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../../app/store/store";
 import { TLastMessage, TUserInfo } from "../../../shared/types/UserEntityTypes";
 
-type TUser = TUserInfo | { lastMessage: TLastMessage };
+type TUser = TUserInfo & { lastMessage: TLastMessage | null };
 type TUsersList = TUser[];
 interface IGetUsersSliceProps {
   usersList: TUsersList | null;
