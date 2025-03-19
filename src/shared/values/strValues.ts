@@ -1,7 +1,9 @@
 export const apiURLs = {
-  baseURL: "https://messengerbackend-3qj2.onrender.com",
+  baseURL: import.meta.env.VITE_DEV
+    ? "http://localhost:3000"
+    : "https://messengerbackend-3qj2.onrender.com",
   wsServer: {
-    base: "https://messengerbackend-3qj2.onrender.com",
+    base: "http://localhost:3000",
     namespaces: {
       users: "/users",
       conversations: "/conversations",

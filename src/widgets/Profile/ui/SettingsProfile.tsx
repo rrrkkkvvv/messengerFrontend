@@ -41,11 +41,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
 
   return (
     <>
-      <Avatar
-        isProfileAvatar={true}
-        picture={currentUser?.avatarURL}
-        className="h-24 w-24  "
-      />
+      <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
 
       <span className="text-3xl md:text-2xl">{currentUser?.email}</span>
       <span className="text-3xl md:text-2xl">{currentUser?.name}</span>
