@@ -3,7 +3,11 @@ import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
-import { addLastMessageData, changeLastMessage } from "../model/getUsersSlice";
+import {
+  addLastMessageData,
+  changeLastMessage,
+  resetLastMessage,
+} from "../model/getUsersSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
@@ -46,6 +50,9 @@ const usersApi = baseApi.injectEndpoints({
               dispatch(
                 changeLastMessage(sendedMessage.conversationId, sendedMessage)
               );
+            });
+            socket.on("lastMessageReseted", (conversationId) => {
+              dispatch(resetLastMessage(conversationId));
             });
             socket.on("userUpdated", (updatedUser) => {
               updateCachedData((draft) => {

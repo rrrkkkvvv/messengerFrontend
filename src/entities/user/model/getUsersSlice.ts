@@ -42,8 +42,8 @@ export const changeLastMessage =
     conversationId: string,
     newLastMessage:
       | TLastMessage
-      | { conversationId: number }
-      | { seenStatus: boolean; conversationId: number }
+      | { conversationId: string }
+      | { seenStatus: boolean; conversationId: string }
   ) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     const { getUsers } = getState();
@@ -77,7 +77,44 @@ export const changeLastMessage =
 
     dispatch(setUsersListsState(newUsersList));
   };
+export const removeLastMessageData =
+  (conversationId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { getUsers } = getState();
+    const currentUsersList = getUsers.usersList;
 
+    // Remove lastMessage for users with passed conversationId
+    const newUsersList = currentUsersList
+      ? currentUsersList.map((user) => {
+          if (user.lastMessage?.conversationId !== conversationId) return user;
+          return {
+            ...user,
+            lastMessage: null,
+          };
+        })
+      : null;
+
+    dispatch(setUsersListsState(newUsersList));
+  };
+export const resetLastMessage =
+  (conversationId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { getUsers } = getState();
+    const currentUsersList = getUsers.usersList;
+
+    // Remove lastMessage for users with passed conversationId
+    const newUsersList = currentUsersList
+      ? currentUsersList.map((user) => {
+          if (user.lastMessage?.conversationId !== conversationId) return user;
+          return {
+            ...user,
+            lastMessage: { conversationId } as TLastMessage,
+          };
+        })
+      : null;
+
+    dispatch(setUsersListsState(newUsersList));
+  };
 export const addLastMessageData =
   (userId: string, conversationId: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {

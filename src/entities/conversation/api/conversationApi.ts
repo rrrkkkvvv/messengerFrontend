@@ -5,6 +5,7 @@ import { apiURLs } from "../../../shared/values/strValues";
 import { TMessageInfo } from "./conversationTypes";
 import { deleteConversation } from "../model";
 import { TApiSocket } from "../../../shared/types/websocketType";
+import { removeLastMessageData } from "../../user/model/getUsersSlice";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 let socket: TApiSocket = null;
 const chatApi = baseApi.injectEndpoints({
@@ -77,12 +78,13 @@ const chatApi = baseApi.injectEndpoints({
               });
             });
 
-            socket.on("conversationDeleted", () => {
+            socket.on("conversationDeleted", (conversationId) => {
               updateCachedData((draft) => {
                 draft.messages = null;
                 draft.members = null;
                 draft.conversationId = null;
               });
+              dispatch(removeLastMessageData(conversationId));
               // Clear store atributes related with conversation and close web socket conn
               dispatch(deleteConversation());
             });
