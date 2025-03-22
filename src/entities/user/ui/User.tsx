@@ -37,21 +37,35 @@ const User = ({ user, onClick, isOnline, currentUserId }: IUserProps) => {
       <div>
         <div>{user.name}</div>
         <div className="flex gap-5">
-          <div className="flex gap-2">
+          <div className="flex gap-2 relative">
             {user.lastMessage?.senderId === currentUserId && <>You:</>}
-
+            {/* IF NO IMAGE BUT TEXT */}
             {!user.lastMessage?.messageImage &&
             user.lastMessage?.messageText ? (
-              <div>{user.lastMessage.messageText}</div>
-            ) : user.lastMessage?.messageImage &&
-              !user.lastMessage?.messageText ? (
-              <div className="flex justify-center items-center gap-2">
-                <FaFileImage /> image
+              <div className="max-w-40 truncate">
+                {user.lastMessage.messageText}
               </div>
+            ) : // IF NO TEXT BUT IMAGE
+            user.lastMessage?.messageImage && !user.lastMessage?.messageText ? (
+              <div className="flex justify-center items-center gap-2">
+                <FaFileImage />
+              </div>
+            ) : // IF  TEXT AND IMAGE
+            user.lastMessage?.messageImage && user.lastMessage?.messageText ? (
+              <>
+                <div className="max-w-20 truncate">
+                  {user.lastMessage?.messageText}
+                </div>
+                <div className="flex justify-center items-center gap-2">
+                  <FaFileImage />
+                </div>
+              </>
             ) : (
+              // NO TEXT AND NO IMAGE
               <></>
             )}
           </div>
+
           {user.lastMessage?.senderId === currentUserId &&
             (user.lastMessage?.seenStatus ? (
               <IoCheckmarkDoneOutline className="text-xl" />
@@ -60,7 +74,7 @@ const User = ({ user, onClick, isOnline, currentUserId }: IUserProps) => {
             ))}
         </div>
       </div>
-      <div className="absolute right-10 bottom-2"></div>
+
       <div className="absolute right-5 top-2">
         {user.lastMessage?.sentAt && (
           <>{formatLastMessageDate(user.lastMessage?.sentAt)}</>

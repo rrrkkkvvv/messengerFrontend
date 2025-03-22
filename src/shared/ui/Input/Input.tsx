@@ -26,15 +26,15 @@ const Input = ({
       value={value}
       className={`
         bg-green-400
-        p-4 rounded-md
+        p-3 rounded-2xl
         placeholder:text-white 
         outline-none
         
         transition-all
         focus:border-white
-        focus:border-4
+        focus:border 
         hover:border-white
-        hover:border-2 
+        hover:border  
         ${className}
         `}
     />

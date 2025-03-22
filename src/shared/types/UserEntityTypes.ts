@@ -9,7 +9,6 @@ export type TUserInfo = {
 };
 
 export type TLastMessage = {
-  unreadMessagesCount: number;
   seenStatus: boolean;
 } & Omit<TMessageInfo, "editedAt">;
 

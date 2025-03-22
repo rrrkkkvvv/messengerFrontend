@@ -2,7 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch, RootState } from "../../../app/store/store";
 import { TLastMessage, TUserInfo } from "../../../shared/types/UserEntityTypes";
 
-type TUser = TUserInfo & { lastMessage: TLastMessage | null };
+type TUser = TUserInfo & {
+  lastMessage: TLastMessage | null;
+};
 type TUsersList = TUser[];
 interface IGetUsersSliceProps {
   usersList: TUsersList | null;
@@ -36,22 +38,69 @@ const getUsersSlice = createSlice({
 const { setUsersListsState, setUsersOnlineEmailsState } = getUsersSlice.actions;
 
 export const changeLastMessage =
-  (conversationId: string, newLastMessage: TLastMessage) =>
+  (
+    conversationId: string,
+    newLastMessage:
+      | TLastMessage
+      | { conversationId: number }
+      | { seenStatus: boolean; conversationId: number }
+  ) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
-    const currentUsersList = getState().getUsers.usersList;
+    const { getUsers } = getState();
+    const currentUsersList = getUsers.usersList;
+
     // Replace lastMessage to new for users with passed conversationId
     const newUsersList = currentUsersList
       ? currentUsersList.map((user) => {
-          if (user.lastMessage?.conversationId === conversationId) {
-            return { ...user, lastMessage: newLastMessage };
-          } else {
-            return user;
+          if (user.lastMessage?.conversationId !== conversationId) return user;
+          if (!("_id" in newLastMessage)) {
+            return {
+              ...user,
+              lastMessage:
+                "seenStatus" in newLastMessage
+                  ? {
+                      ...user.lastMessage,
+                      seenStatus: newLastMessage.seenStatus,
+                    }
+                  : null,
+            };
           }
+
+          return {
+            ...user,
+            lastMessage: {
+              ...newLastMessage,
+            },
+          };
         })
       : null;
 
     dispatch(setUsersListsState(newUsersList));
   };
+
+export const addLastMessageData =
+  (userId: string, conversationId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { getUsers } = getState();
+    const currentUsersList = getUsers.usersList;
+
+    // Replace lastMessage to new for users with passed conversationId
+    const newUsersList = currentUsersList
+      ? currentUsersList.map((user) => {
+          if (user._id !== userId) return user;
+          return {
+            ...user,
+            lastMessage: {
+              ...user.lastMessage,
+              conversationId,
+            } as TLastMessage,
+          };
+        })
+      : null;
+
+    dispatch(setUsersListsState(newUsersList));
+  };
+
 export const setUsersList =
   (usersList: TUserInfo[] | null) => async (dispatch: AppDispatch) => {
     dispatch(setUsersListsState(usersList));

@@ -62,7 +62,7 @@ const MessageBox = ({
         observer.unobserve(messageRef.current);
       }
     };
-  }, []);
+  }, [message]);
   return (
     <div
       ref={messageRef}
@@ -80,17 +80,19 @@ const MessageBox = ({
       />
 
       <div
-        className={`h-max min-w-28 text-base md:text-lg  rounded-xl text-left px-3 pt-3 pb-6 flex relative  text-white ${backgroundColor}`}
+        className={`h-max min-w-28 text-base md:text-lg  rounded-xl text-left px-3 pt-3 pb-6 flex relative   text-white ${backgroundColor}`}
       >
-        <div>
-          <span>{message.messageText && message.messageText}</span>
+        <div className="flex flex-col  items-center">
           {message.messageImage && (
             <img
               onClick={() => setImageModalOpen(true)}
-              className="max-w-xs  cursor-pointer"
+              className="max-w-52  cursor-pointer"
               src={message.messageImage}
             />
           )}
+          <div className="max-w-52 sm:max-w-96 break-words whitespace-pre-wrap text-wrap ">
+            {message.messageText && message.messageText}
+          </div>
 
           <sub className="text-xs absolute bottom-0 right-1 ">
             <div className="flex items-center gap-2">

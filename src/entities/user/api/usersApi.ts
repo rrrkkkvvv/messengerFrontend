@@ -3,7 +3,7 @@ import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
-import { changeLastMessage } from "../model/getUsersSlice";
+import { addLastMessageData, changeLastMessage } from "../model/getUsersSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
@@ -43,8 +43,6 @@ const usersApi = baseApi.injectEndpoints({
               });
             });
             socket.on("lastMessageUpdated", (sendedMessage) => {
-              console.log("lastMessageUpdated");
-
               dispatch(
                 changeLastMessage(sendedMessage.conversationId, sendedMessage)
               );
@@ -60,6 +58,12 @@ const usersApi = baseApi.injectEndpoints({
                 );
               });
             });
+            socket.on(
+              "newConversationWithUser",
+              ({ userId, conversationId }) => {
+                dispatch(addLastMessageData(userId, conversationId));
+              }
+            );
             socket.on("userDeleted", (deletedUserId) => {
               updateCachedData((draft) => {
                 if (!draft.users) return;
