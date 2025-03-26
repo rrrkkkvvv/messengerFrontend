@@ -63,19 +63,31 @@ const UsersList = () => {
       </h1>
       {/* Users list */}
       <div className="relative  max-h-full overflow-y-auto   text-green-200">
-        {usersList?.map((user) => {
-          let isOnline = usersOnlineEmails?.includes(user.email);
+        {usersList &&
+          [...usersList]
+            .sort((a, b) => {
+              const timeA = a.lastMessage?.sentAt
+                ? new Date(a.lastMessage.sentAt).getTime()
+                : 0;
+              const timeB = b.lastMessage?.sentAt
+                ? new Date(b.lastMessage.sentAt).getTime()
+                : 0;
 
-          return (
-            <User
-              isOnline={!!isOnline}
-              user={user}
-              currentUserId={currentUser?._id || null}
-              onClick={() => openConversationWithUser(user._id)}
-              key={user._id}
-            />
-          );
-        })}
+              return timeB - timeA;
+            })
+            .map((user) => {
+              let isOnline = usersOnlineEmails?.includes(user.email);
+
+              return (
+                <User
+                  isOnline={!!isOnline}
+                  user={user}
+                  currentUserId={currentUser?._id || null}
+                  onClick={() => openConversationWithUser(user._id)}
+                  key={user._id}
+                />
+              );
+            })}
       </div>
 
       <CiCirclePlus

@@ -1,4 +1,4 @@
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import SubmitButton from "../../../../shared/ui/Button/SubmitButton";
 import { IoCloseOutline } from "react-icons/io5";
@@ -7,6 +7,10 @@ import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 import Input from "../../../../shared/ui/Input/Input";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
+import {
+  useStartTypingMutation,
+  useStopTypingMutation,
+} from "../../api/conversationApi";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -27,9 +31,14 @@ const MessageForm = ({
   const [messageId, setMessageId] = useState<string | null>(null);
 
   const [messageImage, setMessageImage] = useState<string>();
+
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
+  const [startTyping] = useStartTypingMutation();
+  const [stopTyping] = useStopTypingMutation();
 
+  const [isTyping, setIsTyping] = useState(false);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const handleClearMessage = () => {
     handleResetIsEditingMessage();
     setMessageId(null);
@@ -39,8 +48,23 @@ const MessageForm = ({
   const handleSetMessageImage = (url: string) => {
     setMessageImage(url);
   };
-  const handleInputChange = (e: React.FormEvent<HTMLInputElement>) => {
+
+  const handleInputChange = async (e: React.FormEvent<HTMLInputElement>) => {
     setMessageText(e.currentTarget.value);
+    if (!conversationId) return;
+    if (!isTyping) {
+      startTyping({ conversationId }).unwrap();
+      setIsTyping(true);
+    }
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Запускаем новый таймер на 2 секунды перед отправкой stopTyping
+    typingTimeoutRef.current = setTimeout(() => {
+      stopTyping({ conversationId }).unwrap();
+      setIsTyping(false); // Сбрасываем флаг, чтобы при следующем вводе снова отправить startTyping
+    }, 750);
   };
 
   const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {

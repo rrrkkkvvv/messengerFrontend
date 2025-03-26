@@ -28,6 +28,13 @@ export default {
     },
     extend: {
       keyframes: {
+        dots: {
+          "0%": { content: "''" },
+          "25%": { content: "'.'" },
+          "50%": { content: "'..'" },
+          "75%": { content: "'...'" },
+        },
+
         fadeIn: {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },
@@ -53,6 +60,7 @@ export default {
 
       animation: {
         fadeIn: "fadeIn 0.3s ease-out",
+        dots: "dots 1.5s steps(4) infinite",
 
         reverseSpin: "reverseSpin 0.5s ease-in-out infinite",
         scale: "scale 0.3s linear infinite",

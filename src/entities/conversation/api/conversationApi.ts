@@ -57,6 +57,7 @@ const chatApi = baseApi.injectEndpoints({
                 }
               });
             });
+
             socket.on("messageUpdated", (updatedMessage) => {
               updateCachedData((draft) => {
                 if (!draft.messages) return;
@@ -98,7 +99,32 @@ const chatApi = baseApi.injectEndpoints({
       },
       providesTags: ["Conversation"],
     }),
-
+    startTyping: builder.mutation<
+      string,
+      {
+        conversationId: string;
+      }
+    >({
+      async queryFn({ conversationId }) {
+        return new Promise((resolve) => {
+          socket?.emit("userTyping", { conversationId });
+          resolve({ data: "Typing" });
+        });
+      },
+    }),
+    stopTyping: builder.mutation<
+      string,
+      {
+        conversationId: string;
+      }
+    >({
+      async queryFn({ conversationId }) {
+        return new Promise((resolve) => {
+          socket?.emit("userStopTyping", { conversationId });
+          resolve({ data: "Stop typing" });
+        });
+      },
+    }),
     sendMessage: builder.mutation<
       string,
       {
@@ -204,4 +230,6 @@ export const {
   useEditMessageMutation,
   useSetSeenMessageMutation,
   useLeaveConversationConnectMutation,
+  useStartTypingMutation,
+  useStopTypingMutation,
 } = chatApi;

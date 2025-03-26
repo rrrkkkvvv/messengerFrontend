@@ -3,9 +3,11 @@ import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
+import { changeConversationUserTypingStatus } from "../../conversation/model/conversationSlice";
 import {
   addLastMessageData,
   changeLastMessage,
+  changeUserTypingStatus,
   resetLastMessage,
 } from "../model/getUsersSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
@@ -65,6 +67,31 @@ const usersApi = baseApi.injectEndpoints({
                 );
               });
             });
+            socket.on(
+              "userTypingStatusUpdate",
+              ({ conversationId, userId, typingStatus }) => {
+                dispatch(
+                  changeConversationUserTypingStatus(
+                    conversationId,
+                    userId,
+                    typingStatus
+                  )
+                );
+                dispatch(changeUserTypingStatus(userId, typingStatus));
+
+                // updateCachedData((draft) => {
+                //   if (draft.users) {
+                //     draft.users = draft.users.map((user) => {
+                //       if (user._id !== userId) return user;
+                //       return {
+                //         ...user,
+                //         isTyping: typingStatus,
+                //       };
+                //     });
+                //   }
+                // });
+              }
+            );
             socket.on(
               "newConversationWithUser",
               ({ userId, conversationId }) => {

@@ -115,6 +115,24 @@ export const resetLastMessage =
 
     dispatch(setUsersListsState(newUsersList));
   };
+export const changeUserTypingStatus =
+  (userId: string, typingStatus: boolean) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { getUsers } = getState();
+    const currentUsersList = getUsers.usersList;
+
+    const newUsersList = currentUsersList
+      ? currentUsersList.map((user) => {
+          if (user._id !== userId) return user;
+          return {
+            ...user,
+            isTyping: typingStatus,
+          };
+        })
+      : null;
+
+    dispatch(setUsersListsState(newUsersList));
+  };
 export const addLastMessageData =
   (userId: string, conversationId: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {

@@ -2,6 +2,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
+import { FaCircle } from "react-icons/fa6";
 
 import {
   selectCurrentConversationId,
@@ -214,7 +215,20 @@ const Conversation = () => {
                 picture={anotherUser()?.avatarURL}
                 isOnline={isAnotherUserOnline()}
               />
-              {anotherUser()?.name}
+              <div className="flex flex-col ">
+                <div className="text-lg">{anotherUser()?.name}</div>
+                {/* anotherUser()?.isTyping */}
+                {anotherUser()?.isTyping && (
+                  <div className="text-green-150 select-none  flex items-center  ">
+                    <span className="text-lg">is typing</span>
+                    <div className="flex gap-0.5  pt-4">
+                      <FaCircle className="h-1 w-1 duration-100 animate-bounce" />
+                      <FaCircle className="h-1 w-1 duration-200 animate-bounce" />
+                      <FaCircle className="h-1  w-1 duration-300 animate-bounce" />
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="">
               <button

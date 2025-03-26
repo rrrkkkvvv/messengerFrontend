@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TMessageInfo } from "../api/conversationTypes";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { AppDispatch, RootState } from "../../../app/store/store";
 
 interface ICurrentConversationSliceProps {
   members: TUserInfo[] | null;
@@ -115,7 +116,25 @@ export const setCurrentConversationExists = createAsyncThunk(
     dispatch(setCurrentConversationStatusState({ newStatus: "exists" }));
   }
 );
+export const changeConversationUserTypingStatus =
+  (conversationId: string, userId: string, typingStatus: boolean) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { currentConversation } = getState();
+    if (currentConversation.conversationId !== conversationId) return;
+    const membersList = currentConversation.members;
+    // Remove lastMessage for users with passed conversationId
+    const newMembersList = membersList
+      ? membersList.map((user) => {
+          if (user._id !== userId) return user;
+          return {
+            ...user,
+            isTyping: typingStatus,
+          };
+        })
+      : null;
 
+    dispatch(setCurrentConversationMembers(newMembersList));
+  };
 export const {
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,
