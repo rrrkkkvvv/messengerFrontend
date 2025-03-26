@@ -122,7 +122,6 @@ export const changeConversationUserTypingStatus =
     const { currentConversation } = getState();
     if (currentConversation.conversationId !== conversationId) return;
     const membersList = currentConversation.members;
-    // Remove lastMessage for users with passed conversationId
     const newMembersList = membersList
       ? membersList.map((user) => {
           if (user._id !== userId) return user;
