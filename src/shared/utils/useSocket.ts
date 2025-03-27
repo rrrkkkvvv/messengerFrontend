@@ -3,6 +3,7 @@ import { TUseSocket } from "../types/websocketType";
 import getTokenFromLS from "./getTokenFromLS";
 
 export const useSocket: TUseSocket = (url: string) => {
+  console.log(url);
   const socket = io(url, {
     auth: {
       token: getTokenFromLS(),
