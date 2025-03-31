@@ -124,6 +124,21 @@ const usersApi = baseApi.injectEndpoints({
       },
       providesTags: ["Users", "Conversation"],
     }),
+    createGroupConversation: builder.mutation<
+      string,
+      {
+        userIds: string[];
+        name: string;
+        creatorId: string;
+      }
+    >({
+      async queryFn({ name, userIds, creatorId }) {
+        return new Promise((resolve) => {
+          socket?.emit("createGroupConversation", { name, userIds, creatorId });
+          resolve({ data: "Created" });
+        });
+      },
+    }),
 
     deleteUser: builder.mutation<TDeleteUserResponse, void>({
       async queryFn() {
@@ -163,6 +178,7 @@ export const {
   useUpdateUserMutation,
   useConnectToGetUsersChanelQuery,
   useDeleteUserMutation,
+  useCreateGroupConversationMutation,
 } = usersApi;
 
 export default usersApi;

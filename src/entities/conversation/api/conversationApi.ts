@@ -8,6 +8,7 @@ import { TApiSocket } from "../../../shared/types/websocketType";
 import { removeLastMessageData } from "../../user/model/getUsersSlice";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 let socket: TApiSocket = null;
+
 const chatApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToChatChanel: builder.query<
@@ -99,6 +100,7 @@ const chatApi = baseApi.injectEndpoints({
       },
       providesTags: ["Conversation"],
     }),
+
     startTyping: builder.mutation<
       string,
       {

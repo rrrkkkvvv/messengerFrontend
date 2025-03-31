@@ -9,8 +9,15 @@ interface IUserProps {
   currentUserId: string | null;
   onClick: () => void;
   isOnline: boolean;
+  isUserSelectedForGroup: boolean;
 }
-const User = ({ user, onClick, isOnline, currentUserId }: IUserProps) => {
+const User = ({
+  user,
+  onClick,
+  isOnline,
+  currentUserId,
+  isUserSelectedForGroup,
+}: IUserProps) => {
   return (
     <div
       onClick={onClick}
@@ -33,6 +40,7 @@ const User = ({ user, onClick, isOnline, currentUserId }: IUserProps) => {
         picture={user.avatarURL}
         isOnline={isOnline}
         isProfileAvatar={false}
+        isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div>
         <div>{user.name}</div>

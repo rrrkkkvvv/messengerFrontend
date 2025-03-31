@@ -1,26 +1,55 @@
+import { FaCheck } from "react-icons/fa6";
+
 interface AvatarProps {
   picture: string | null | undefined;
   isProfileAvatar: boolean;
   isOnline?: boolean;
+  isUserSelectedForGroup?: boolean;
 }
-const Avatar = ({ picture, isOnline, isProfileAvatar }: AvatarProps) => {
+const Avatar = ({
+  picture,
+  isOnline,
+  isProfileAvatar,
+  isUserSelectedForGroup,
+}: AvatarProps) => {
   return (
-    <div>
+    <div className="relative">
       {!isProfileAvatar && (
         <div
           className={`
-          absolute
-          rounded-full
-          
-          h-3
-          w-3
-          z-10
-
-      ${isOnline ? "bg-green-400" : "bg-gray-100"}
-      `}
+            absolute
+            rounded-full
+            
+            h-3
+            w-3
+            z-10
+  
+        ${isOnline ? "bg-green-400" : "bg-gray-100"}
+        `}
         ></div>
       )}
-
+      {isUserSelectedForGroup && (
+        <div
+          className={`
+            absolute
+            rounded-full
+            bottom-0
+            right-0
+            h-5
+            w-5
+            z-20
+            bg-green-700
+            flex
+            items-center
+            text-center
+            justify-center
+            text-white
+            animate-fadeIn
+        `}
+        >
+          <FaCheck />
+        </div>
+      )}
       <img
         className={`
           relative

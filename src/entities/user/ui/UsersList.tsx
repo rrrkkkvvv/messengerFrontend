@@ -3,26 +3,71 @@ import { logout, User } from "..";
 import { CiCirclePlus, CiLogout } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
-import { routes } from "../../../shared/values/strValues";
+import { routes, toastTexts } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
 import { selectUsersList, selectUsersOnlineEmails } from "../model/";
 import { selectCurrentUser } from "../model/";
+import Input from "../../../shared/ui/Input/Input";
+import { FormEvent, useState } from "react";
+import { useCreateGroupConversationMutation } from "../api/usersApi";
+import toast from "react-hot-toast";
+import SubmitButton from "../../../shared/ui/Button/SubmitButton";
 
 const UsersList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
-
   const usersList = useAppSelector(selectUsersList);
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
-
+  const [createGroupConversation] = useCreateGroupConversationMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  const [isGroupCreating, setIsGroupCreating] = useState(false);
+  const [groupNameValue, setGroupNameValue] = useState("");
+  const [groupMembersList, setGroupMembersList] = useState<string[]>([]);
+  const toggleUserToGroup = (userId: string) => {
+    if (!groupMembersList.includes(userId)) {
+      setGroupMembersList([userId, ...groupMembersList]);
+    } else {
+      setGroupMembersList(
+        groupMembersList.filter((memberId) => userId !== memberId)
+      );
+    }
+  };
 
   const openConversationWithUser = async (userId: string) => {
     navigate(`${routes.conversationBase}/${userId}`);
   };
-  const createGroupConversation = async () => {};
+  const handleToggleIsGroupCreating = () => {
+    setIsGroupCreating((prev) => !prev);
+    setGroupMembersList([]);
+    setGroupNameValue("");
+  };
+  const handleChangeGroupName = (e: React.FormEvent<HTMLInputElement>) => {
+    setGroupNameValue(e.currentTarget.value);
+  };
+  const createGroup = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (
+      !groupMembersList.length ||
+      !groupNameValue.trim().length ||
+      !currentUser
+    ) {
+      toast.error(toastTexts.error.errorGroupCreate);
+      return;
+    }
+
+    await createGroupConversation({
+      userIds: [...groupMembersList, currentUser._id],
+      creatorId: currentUser._id,
+      name: groupNameValue,
+    }).unwrap();
+    toast(toastTexts.success.successGroupCreate);
+    setIsGroupCreating(false);
+    setGroupMembersList([]);
+    setGroupNameValue("");
+  };
   return (
-    <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden bg-gray-300">
+    <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-300">
       <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
         <button
           className="
@@ -61,6 +106,24 @@ const UsersList = () => {
           Logout
         </button>
       </h1>
+      {isGroupCreating && (
+        <form
+          className="w-full animate-dropDown  text-green-400 flex justify-center items-center flex-col gap-2"
+          onSubmit={createGroup}
+        >
+          <h3>Create group conversation</h3>
+          <Input
+            type="text"
+            required
+            onChange={handleChangeGroupName}
+            value={groupNameValue}
+            placeholder="Name your group"
+            className="w-2/3 md:w-1/2 hover:border h-9 text-white"
+          />
+          <SubmitButton className="py-2 px-5" children="Create" />
+          <h4>Select users for group</h4>
+        </form>
+      )}
       {/* Users list */}
       <div className="relative  max-h-full overflow-y-auto   text-green-200">
         {usersList &&
@@ -83,15 +146,19 @@ const UsersList = () => {
                   isOnline={!!isOnline}
                   user={user}
                   currentUserId={currentUser?._id || null}
-                  onClick={() => openConversationWithUser(user._id)}
+                  isUserSelectedForGroup={groupMembersList.includes(user._id)}
+                  onClick={() =>
+                    isGroupCreating
+                      ? toggleUserToGroup(user._id)
+                      : openConversationWithUser(user._id)
+                  }
                   key={user._id}
                 />
               );
             })}
       </div>
-
       <CiCirclePlus
-        onClick={createGroupConversation}
+        onClick={handleToggleIsGroupCreating}
         className="right-4 absolute bottom-10 bg-green-900 text-green-200 hover:bg-green-800 hover:text-green-100 rounded-full box-border  text-6xl cursor-pointer  z-50"
       />
     </div>

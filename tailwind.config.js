@@ -34,7 +34,10 @@ export default {
           "50%": { content: "'..'" },
           "75%": { content: "'...'" },
         },
-
+        dropDown: {
+          "0%": { opacity: 0, height: 0 },
+          "100%": { opacity: 1, height: "150px" },
+        },
         fadeIn: {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },
@@ -60,6 +63,7 @@ export default {
 
       animation: {
         fadeIn: "fadeIn 0.3s ease-out",
+        dropDown: "dropDown 0.3s ease-out",
         dots: "dots 1.5s steps(4) infinite",
 
         reverseSpin: "reverseSpin 0.5s ease-in-out infinite",

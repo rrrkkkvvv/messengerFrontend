@@ -32,9 +32,12 @@ export const toastTexts = {
     successSignup: "Signed up",
     successSignin: "Signed in",
     successEditUser: "Edited",
+    successGroupCreate: "Creating new group",
     successConversationDelete: "Chat was successfully deleted",
   },
+
   error: {
+    errorGroupCreate: "Not enough data for create group",
     errorConversationDelete: "Chat deleting error",
     errorEditUser: "Data must be different and valid",
     errorAuth: "Authentication error",
