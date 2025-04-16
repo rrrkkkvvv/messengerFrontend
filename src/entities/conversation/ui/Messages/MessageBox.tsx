@@ -5,11 +5,13 @@ import { formatTime } from "../../../../shared/utils/formatTime";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes.ts";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { useSetSeenMessageMutation } from "../../api/conversationApi.ts";
+import Avatar from "../../../../shared/ui/Avatar/Avatar.tsx";
 
 type TMessageBoxProps = {
   conversationId: string;
   message: TMessageInfo;
   currentUser: TUserInfo;
+  isGroup: boolean;
   handleContextMenu: (
     e: MouseEvent,
     message: TMessageInfo,
@@ -21,6 +23,7 @@ const MessageBox = ({
   currentUser,
   conversationId,
   handleContextMenu,
+  isGroup,
 }: TMessageBoxProps) => {
   const [imageModalOpen, setImageModalOpen] = useState<boolean>(false);
   const messageRef = useRef<HTMLDivElement>(null);
@@ -78,10 +81,26 @@ const MessageBox = ({
         isOpen={imageModalOpen}
         src={message.messageImage}
       />
-
+      {!isCurrentUser && isGroup && (
+        <>
+          <Avatar
+            hideOnline={true}
+            isProfileAvatar={false}
+            picture={message.sender.avatarURL}
+            isMessageAvatar={true}
+          />
+        </>
+      )}
       <div
-        className={`h-max min-w-28 text-base md:text-lg  rounded-xl text-left px-3 pt-3 pb-6 flex relative   text-white ${backgroundColor}`}
+        className={`h-max min-w-28 text-base md:text-lg  rounded-xl text-left px-3 pt-3 pb-6 flex  relative   text-white ${backgroundColor} ${
+          message.messageImage && "pt-5"
+        }`}
       >
+        {!isCurrentUser && isGroup && (
+          <div className="text-sm text-green-300 absolute top-0 left-2">
+            {message.sender.name}
+          </div>
+        )}
         <div className="flex flex-col  items-center">
           {message.messageImage && (
             <img

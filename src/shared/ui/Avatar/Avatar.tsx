@@ -4,17 +4,23 @@ interface AvatarProps {
   picture: string | null | undefined;
   isProfileAvatar: boolean;
   isOnline?: boolean;
+  isGroup?: boolean;
+  hideOnline?: boolean;
+  isMessageAvatar?: boolean;
   isUserSelectedForGroup?: boolean;
 }
 const Avatar = ({
   picture,
   isOnline,
+  isGroup,
   isProfileAvatar,
   isUserSelectedForGroup,
+  hideOnline,
+  isMessageAvatar,
 }: AvatarProps) => {
   return (
     <div className="relative">
-      {!isProfileAvatar && (
+      {!isGroup && !isProfileAvatar && !hideOnline && (
         <div
           className={`
             absolute
@@ -61,12 +67,18 @@ const Avatar = ({
           ${
             isProfileAvatar
               ? "h-20 w-20 md:h-24 md:w-24"
+              : isMessageAvatar
+              ? "h-9 w-9"
               : "h-9 w-9 md:h-11 md:w-11"
           } 
           `}
         src={
           // if picture exists use it, else using placeholder
-          picture ? picture : "/icons/placeholder.jpg"
+          picture
+            ? picture
+            : isGroup
+            ? "/icons/groupChatPlaceholder.png"
+            : "/icons/placeholder.jpg"
         }
         alt="avatar"
       />

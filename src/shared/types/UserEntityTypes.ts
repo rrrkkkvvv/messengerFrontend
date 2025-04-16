@@ -6,11 +6,13 @@ export type TUserInfo = {
   email: string;
   avatarURL: string | null;
   lastMessage: TLastMessage | null;
+  conversationId: string | null;
   isTyping: boolean;
 };
 
 export type TLastMessage = {
   seenStatus: boolean;
+  sender?: TUserInfo;
 } & Omit<TMessageInfo, "editedAt">;
 
 export type TUserData = {

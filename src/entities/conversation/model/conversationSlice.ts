@@ -8,12 +8,18 @@ interface ICurrentConversationSliceProps {
   messages: TMessageInfo[] | null;
   conversationId: string | null;
   status: "exists" | "absent";
+  name: string | null;
+  creatorId: string | null;
+  avatarURL: string | null;
 }
 
 const initialState: ICurrentConversationSliceProps = {
   members: null,
   messages: null,
   conversationId: null,
+  avatarURL: null,
+  name: null,
+  creatorId: null,
   status: "exists",
 };
 
@@ -25,6 +31,9 @@ const currentConversationSlice = createSlice({
       state.conversationId = null;
       state.members = null;
       state.messages = null;
+      state.creatorId = null;
+      state.name = null;
+      state.avatarURL = null;
     },
 
     setCurrentConversationStatusState(
@@ -51,12 +60,27 @@ const currentConversationSlice = createSlice({
     ) {
       state.conversationId = action.payload.conversationId;
     },
+    setCurrentConversationGroupInfoState(
+      state,
+      action: PayloadAction<{
+        avatarURL: string | null;
+        creatorId: string | null;
+        name: string | null;
+      }>
+    ) {
+      state.avatarURL = action.payload.avatarURL;
+      state.creatorId = action.payload.creatorId;
+      state.name = action.payload.name;
+    },
   },
   selectors: {
     selectCurrentConversationMessages: (state) => state.messages,
     selectCurrentConversationMembers: (state) => state.members,
     selectCurrentConversationId: (state) => state.conversationId,
     selectCurrentConversationStatus: (state) => state.status,
+    selectCurrentConversationAvatarURL: (state) => state.avatarURL,
+    selectCurrentConversationCreatorId: (state) => state.creatorId,
+    selectCurrentConversationName: (state) => state.name,
   },
 });
 
@@ -65,6 +89,7 @@ const {
   setCurrentConversationMessagesState,
   setCurrentConversationIdState,
   setCurrentConversationStatusState,
+  setCurrentConversationGroupInfoState,
 } = currentConversationSlice.actions;
 export const { resetCurrentConversation } = currentConversationSlice.actions;
 export const setCurrentConversationMessages = createAsyncThunk(
@@ -75,6 +100,23 @@ export const setCurrentConversationMessages = createAsyncThunk(
     } else {
       dispatch(setCurrentConversationMessagesState({ messages: null }));
     }
+  }
+);
+type TSetCurrentConversationGroupInfoArgs = {
+  avatarURL: string | null;
+  creatorId: string | null;
+  name: string | null;
+};
+
+export const setCurrentConversationGroupInfo = createAsyncThunk(
+  "setCurrentConversationGroupInfo",
+  (
+    { avatarURL, creatorId, name }: TSetCurrentConversationGroupInfoArgs,
+    { dispatch }
+  ) => {
+    dispatch(
+      setCurrentConversationGroupInfoState({ avatarURL, creatorId, name })
+    );
   }
 );
 export const setCurrentConversationMembers = createAsyncThunk(
@@ -139,6 +181,9 @@ export const {
   selectCurrentConversationMessages,
   selectCurrentConversationId,
   selectCurrentConversationStatus,
+  selectCurrentConversationAvatarURL,
+  selectCurrentConversationCreatorId,
+  selectCurrentConversationName,
 } = currentConversationSlice.selectors;
 const currentConversationReducer = currentConversationSlice.reducer;
 export default currentConversationReducer;

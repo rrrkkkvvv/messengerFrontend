@@ -5,10 +5,17 @@ import { apiURLs } from "../../../shared/values/strValues";
 import { TMessageInfo } from "./conversationTypes";
 import { deleteConversation } from "../model";
 import { TApiSocket } from "../../../shared/types/websocketType";
-import { removeLastMessageData } from "../../user/model/getUsersSlice";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 let socket: TApiSocket = null;
-
+type TConnectToChatArgs =
+  | {
+      isGroup: false;
+      userId: string | null;
+    }
+  | {
+      isGroup: true;
+      conversationId: string | null;
+    };
 const chatApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToChatChanel: builder.query<
@@ -16,87 +23,105 @@ const chatApi = baseApi.injectEndpoints({
         messages: TMessageInfo[] | null;
         members: TUserInfo[] | null;
         conversationId: string | null;
+        avatarURL: string | null;
+        creatorId: string | null;
+        name: string | null;
       },
-      { userId: string | null }
+      TConnectToChatArgs
     >({
       queryFn: () => ({
         data: {
           members: null,
           messages: null,
           conversationId: null,
+          avatarURL: null,
+          creatorId: null,
+          name: null,
         },
       }),
       async onCacheEntryAdded(
-        { userId },
+        args,
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
       ) {
-        if (userId !== null) {
-          socket = useSocket(wsUrl);
-          socket.emit("joinConversation", { userId });
-
-          try {
-            await cacheDataLoaded;
-            socket.on("unauthorized", ({ message }) => {
-              throw new Error("Unauthorized: " + message);
-            });
-            socket.on("connect", () => {
-              // console.log("Connected to WebSocket");
-            });
-            socket.on("conversationData", (conversationData) => {
-              updateCachedData((draft) => {
-                draft.members = conversationData.members;
-                draft.conversationId = conversationData._id;
-                draft.messages = conversationData.messages;
-              });
-            });
-            socket.on("newMessage", (sendedMessage) => {
-              updateCachedData((draft) => {
-                if (draft.messages) {
-                  draft.messages.push(sendedMessage);
-                } else {
-                  draft.messages = [sendedMessage];
-                }
-              });
-            });
-
-            socket.on("messageUpdated", (updatedMessage) => {
-              updateCachedData((draft) => {
-                if (!draft.messages) return;
-
-                draft.messages = draft.messages.map((message) =>
-                  message._id === updatedMessage._id
-                    ? { ...message, ...updatedMessage }
-                    : message
-                );
-              });
-            });
-            socket.on("messageDeleted", (messageId) => {
-              updateCachedData((draft) => {
-                if (!draft.messages) return;
-
-                draft.messages = draft.messages.filter(
-                  (message) => message._id !== messageId
-                );
-              });
-            });
-
-            socket.on("conversationDeleted", (conversationId) => {
-              updateCachedData((draft) => {
-                draft.messages = null;
-                draft.members = null;
-                draft.conversationId = null;
-              });
-              dispatch(removeLastMessageData(conversationId));
-              // Clear store atributes related with conversation and close web socket conn
-              dispatch(deleteConversation());
-            });
-          } catch (err) {
-            console.error("Failed to connect to WebSocket:", err);
-          }
-
-          // Remove websocket connection
-          await cacheEntryRemoved;
+        const { isGroup } = args;
+        if (socket) {
+          socket.disconnect();
         }
+        socket = useSocket(wsUrl);
+        if ((isGroup && !args.conversationId) || (!isGroup && !args.userId))
+          return;
+        socket.emit(
+          "joinConversation",
+          isGroup
+            ? { isGroup, conversationId: args.conversationId }
+            : { userId: args.userId }
+        );
+        try {
+          await cacheDataLoaded;
+          socket.on("unauthorized", ({ message }) => {
+            throw new Error("Unauthorized: " + message);
+          });
+          socket.on("connect", () => {
+            // console.log("Connected to WebSocket");
+          });
+          socket.on("conversationData", (conversationData) => {
+            updateCachedData((draft) => {
+              draft.members = conversationData.members;
+              draft.conversationId = conversationData._id;
+              draft.messages = conversationData.messages;
+              if (conversationData.isGroup) {
+                draft.name = conversationData.name;
+                draft.creatorId = conversationData.creatorId;
+                draft.avatarURL = conversationData.avatarURL;
+              }
+            });
+          });
+          socket.on("newMessage", (sendedMessage) => {
+            updateCachedData((draft) => {
+              if (draft.messages) {
+                draft.messages.push(sendedMessage);
+              } else {
+                draft.messages = [sendedMessage];
+              }
+            });
+          });
+
+          socket.on("messageUpdated", (updatedMessage) => {
+            updateCachedData((draft) => {
+              if (!draft.messages) return;
+
+              draft.messages = draft.messages.map((message) =>
+                message._id === updatedMessage._id
+                  ? { ...message, ...updatedMessage }
+                  : message
+              );
+            });
+          });
+          socket.on("messageDeleted", (messageId) => {
+            updateCachedData((draft) => {
+              if (!draft.messages) return;
+
+              draft.messages = draft.messages.filter(
+                (message) => message._id !== messageId
+              );
+            });
+          });
+
+          socket.on("conversationDeleted", (conversationId) => {
+            updateCachedData((draft) => {
+              draft.messages = null;
+              draft.members = null;
+              draft.conversationId = null;
+            });
+            // Clear store atributes related with conversation and close web socket conn
+            dispatch(deleteConversation());
+          });
+        } catch (err) {
+          console.error("Failed to connect to WebSocket:", err);
+        }
+
+        // Remove websocket connection
+        await cacheEntryRemoved;
       },
       providesTags: ["Conversation"],
     }),

@@ -12,6 +12,7 @@ interface IMessageListProps {
   currentUser: TUserInfo | null;
   onDeleteMessage: (messageId: string) => void;
   onEditMessage: (message: TMessageInfo) => void;
+  isGroup: boolean;
 }
 
 const MessageList = ({
@@ -20,6 +21,7 @@ const MessageList = ({
   currentUser,
   onDeleteMessage,
   onEditMessage,
+  isGroup,
 }: IMessageListProps) => {
   const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
   const [contextMenu, setContextMenu] = useState<{
@@ -142,15 +144,18 @@ const MessageList = ({
         <div onClick={closeContextMenu} className="relative">
           {currentUser &&
             conversationId &&
-            conversationMessages?.map((message) => (
-              <MessageBox
-                key={message._id}
-                currentUser={currentUser}
-                conversationId={conversationId}
-                message={message}
-                handleContextMenu={handleContextMenu}
-              />
-            ))}
+            conversationMessages?.map((message) => {
+              return (
+                <MessageBox
+                  key={message._id}
+                  isGroup={isGroup}
+                  currentUser={currentUser}
+                  conversationId={conversationId}
+                  message={message}
+                  handleContextMenu={handleContextMenu}
+                />
+              );
+            })}
         </div>
         <div
           onClick={handleScrollDown}

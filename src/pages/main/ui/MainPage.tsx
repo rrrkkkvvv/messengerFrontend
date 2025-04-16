@@ -2,7 +2,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { routes } from "../../../shared/values/strValues";
 
-import { UsersList } from "../../../entities/user/";
 import Conversation from "../../../entities/conversation/";
 import Profile from "../../../widgets/Profile";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
@@ -10,9 +9,10 @@ import { useConnectToGetUsersChanelQuery } from "../../../entities/user/api/";
 import { skipToken } from "@reduxjs/toolkit/query";
 import {
   selectCurrentUser,
-  setUsersList,
+  setContactsList,
   setUsersOnlineEmails,
 } from "../../../entities/user/model/";
+import { ContactsList } from "../../../entities/user";
 
 const MainPage = () => {
   const location = useLocation();
@@ -26,7 +26,7 @@ const MainPage = () => {
   // WS get users connection
   const {
     data = {
-      users: null,
+      contactsData: null,
       usersOnline: null,
     },
   } = useConnectToGetUsersChanelQuery(
@@ -34,8 +34,8 @@ const MainPage = () => {
   );
 
   useEffect(() => {
-    if (data.users) {
-      dispatch(setUsersList(data.users));
+    if (data.contactsData) {
+      dispatch(setContactsList(data.contactsData));
     }
     if (data.usersOnline) {
       dispatch(setUsersOnlineEmails(data.usersOnline));
@@ -54,7 +54,7 @@ const MainPage = () => {
         <Outlet />
       ) : (
         <>
-          {isProfilePage ? <Profile /> : <UsersList />}
+          {isProfilePage ? <Profile /> : <ContactsList />}
 
           <Conversation />
         </>

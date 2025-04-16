@@ -1,8 +1,7 @@
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
-import { FaCircle } from "react-icons/fa6";
 
 import {
   selectCurrentConversationId,
@@ -31,22 +30,42 @@ import { selectUsersOnlineEmails } from "../../user/model";
 import MessageForm from "./MessageForm/MessageForm";
 import { selectCurrentUser } from "../../user/model";
 import { IoCloseOutline } from "react-icons/io5";
-import { resetCurrentConversation } from "../model/conversationSlice";
+import {
+  resetCurrentConversation,
+  selectCurrentConversationAvatarURL,
+  selectCurrentConversationCreatorId,
+  selectCurrentConversationName,
+  setCurrentConversationGroupInfo,
+} from "../model/conversationSlice";
 import { useLeaveConversationConnectMutation } from "../api/conversationApi";
+import TypingUser from "../../user/ui/TypingUser";
 
 const Conversation = () => {
-  const { anotherUserIdParam } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const anotherUserIdParam = searchParams.get("anotherUserIdParam");
+  const conversationIdParam = searchParams.get("conversationIdParam");
+
   const location = useLocation();
 
   const currentUser = useAppSelector(selectCurrentUser);
-
   const conversationStatus = useAppSelector(selectCurrentConversationStatus);
+
+  const conversationName = useAppSelector(selectCurrentConversationName);
+  const conversationAvatarURL = useAppSelector(
+    selectCurrentConversationAvatarURL
+  );
+  const conversationCreatorId = useAppSelector(
+    selectCurrentConversationCreatorId
+  );
+
   const conversationId = useAppSelector(selectCurrentConversationId);
   const conversationMembers = useAppSelector(selectCurrentConversationMembers);
   const conversationMessages = useAppSelector(
     selectCurrentConversationMessages
   );
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
+
   const [leaveConversationConn] = useLeaveConversationConnectMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -79,10 +98,21 @@ const Conversation = () => {
       messages: null,
       members: null,
       conversationId: null,
+      avatarURL: null,
+      creatorId: null,
+      name: null,
     },
-  } = useConnectToChatChanelQuery({
-    userId: anotherUserIdParam || null,
-  });
+  } = useConnectToChatChanelQuery(
+    anotherUserIdParam
+      ? {
+          userId: anotherUserIdParam,
+          isGroup: false,
+        }
+      : {
+          conversationId: conversationIdParam,
+          isGroup: true,
+        }
+  );
   const [invalidateConversation] = useInvalidateConversationMutation();
 
   // STATES
@@ -106,10 +136,14 @@ const Conversation = () => {
   // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
   // MUST HAVE, because of it gives reconect to WS
   const redirectToCurrentConversation = () => {
-    if (!location.pathname.startsWith("/conversation/")) {
-      let anotherUserData = anotherUser();
-      if (anotherUserData) {
-        navigate("/conversation/" + anotherUserData._id);
+    if (!location.pathname.startsWith("/conversation?")) {
+      if (conversationName && conversationId) {
+        navigate("/conversation?conversationIdParam=" + conversationId);
+      } else {
+        let anotherUserData = anotherUser();
+        if (anotherUserData) {
+          navigate("/conversation?anotherUserIdParam=" + anotherUserData._id);
+        }
       }
     }
   };
@@ -166,6 +200,18 @@ const Conversation = () => {
   // Chat data processing(messages, members, conversationId)
   useEffect(() => {
     if (!chatData && !currentUser) return;
+
+    dispatch(
+      setCurrentConversationGroupInfo({
+        avatarURL: chatData.avatarURL ? chatData.avatarURL : null,
+        creatorId: chatData.creatorId,
+        name: chatData.name,
+      })
+    );
+
+    // dispatch(setCurrentConversationMessages(chatData.messages));
+    // dispatch(setCurrentConversationMembers(chatData.members));
+    // dispatch(setCurrentConversationId(chatData.conversationId));
     // Open of websocket always returns members and conversationId
     if (chatData.members !== null) {
       dispatch(setCurrentConversationMembers(chatData.members));
@@ -189,7 +235,7 @@ const Conversation = () => {
 
   return (
     <>
-      {!anotherUser() ? (
+      {!anotherUser() && !conversationName ? (
         <ConversationPlaceholder />
       ) : (
         <div
@@ -212,21 +258,29 @@ const Conversation = () => {
             <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
               <Avatar
                 isProfileAvatar={false}
-                picture={anotherUser()?.avatarURL}
+                isGroup={!!conversationName}
+                picture={
+                  conversationName
+                    ? conversationAvatarURL
+                    : anotherUser()?.avatarURL
+                }
                 isOnline={isAnotherUserOnline()}
               />
               <div className="flex flex-col ">
-                <div className="text-lg">{anotherUser()?.name}</div>
-                {/* anotherUser()?.isTyping */}
-                {anotherUser()?.isTyping && (
-                  <div className="text-green-150 select-none  flex items-center  ">
-                    <span className="text-lg">is typing</span>
-                    <div className="flex gap-0.5  pt-4">
-                      <FaCircle className="h-1 w-1 duration-100 animate-bounce" />
-                      <FaCircle className="h-1 w-1 duration-200 animate-bounce" />
-                      <FaCircle className="h-1  w-1 duration-300 animate-bounce" />
-                    </div>
-                  </div>
+                <div className="text-lg">
+                  {conversationName ? conversationName : anotherUser()?.name}
+                </div>
+                {conversationCreatorId && conversationMembers ? (
+                  <TypingUser
+                    groupTypingStatuses={true}
+                    userTypingIds={conversationMembers
+                      .filter((user) => user.isTyping)
+                      .map((user) => {
+                        return user._id;
+                      })}
+                  />
+                ) : (
+                  anotherUser()?.isTyping && <TypingUser />
                 )}
               </div>
             </div>
@@ -252,6 +306,7 @@ const Conversation = () => {
 
           {/* MESSAGES */}
           <MessageList
+            isGroup={!!conversationCreatorId}
             onDeleteMessage={handleDeleteMessage}
             onEditMessage={handleSetEditingMessageData}
             currentUser={currentUser}
@@ -269,11 +324,16 @@ const Conversation = () => {
           />
 
           <SidebarMenu
+            avatarURL={conversationAvatarURL}
+            creatorId={conversationCreatorId}
+            members={conversationMembers}
+            name={conversationName}
             isAnotherUserOnline={isAnotherUserOnline()}
             isSidebarMenuVisible={isSidebarMenuVisible}
             closeSidebarMenu={handleCloseSidebarMenu}
             anotherUser={anotherUser()}
             conversationId={conversationId}
+            usersOnlineEmails={usersOnlineEmails}
           />
         </div>
       )}

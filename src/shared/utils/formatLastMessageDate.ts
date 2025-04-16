@@ -26,8 +26,14 @@ export const formatLastMessageDate = (dateInput: Date | string): string => {
 
     return `${hoursStr}:${minutesStr}`;
   } else {
-    return `${parsedDate.getDate()}.${
-      parsedDate.getMonth() + 1
+    return `${
+      parsedDate.getDate() <= 9
+        ? "0" + parsedDate.getDate()
+        : parsedDate.getDate()
+    }.${
+      parsedDate.getMonth() + 1 <= 9
+        ? "0" + (parsedDate.getMonth() + 1)
+        : parsedDate.getMonth() + 1
     }.${parsedDate.getFullYear()}`;
   }
 };

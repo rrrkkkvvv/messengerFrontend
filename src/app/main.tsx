@@ -14,7 +14,7 @@ import Conversation from "../entities/conversation";
 import Profile from "../widgets/Profile";
 import ErrorPage from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
-import { UsersList } from "../entities/user";
+import { ContactsList } from "../entities/user";
 
 const router = createBrowserRouter([
   {
@@ -39,10 +39,10 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <UsersList />,
+        element: <ContactsList />,
       },
       {
-        path: routes.conversationWithUserId,
+        path: routes.conversationBase,
         element: <Conversation />,
       },
       {

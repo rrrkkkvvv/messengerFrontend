@@ -1,16 +1,22 @@
+import toast from "react-hot-toast";
 import baseApi from "../../../app/api/baseApi";
-import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { TProfile } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
-import { apiURLs } from "../../../shared/values/strValues";
+import { apiURLs, toastTexts } from "../../../shared/values/strValues";
 import { changeConversationUserTypingStatus } from "../../conversation/model/conversationSlice";
 import {
-  addLastMessageData,
+  addGroupToContacts,
+  createChatWithUser,
   changeLastMessage,
   changeUserTypingStatus,
   resetLastMessage,
-} from "../model/getUsersSlice";
+} from "../model/getContactsSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
+import {
+  TContactsList,
+  TGroupConversation,
+} from "../../../shared/types/Contact";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
 let socket: TApiSocket = null;
@@ -18,11 +24,14 @@ let socket: TApiSocket = null;
 const usersApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToGetUsersChanel: builder.query<
-      { users: TUserInfo[] | null; usersOnline: string[] | null | null },
+      {
+        contactsData: TContactsList | null;
+        usersOnline: string[] | null | null;
+      },
       { userEmail: string }
     >({
       queryFn: () => ({
-        data: { users: null, message: null, usersOnline: null },
+        data: { contactsData: null, message: null, usersOnline: null },
       }),
       async onCacheEntryAdded(
         { userEmail },
@@ -56,11 +65,12 @@ const usersApi = baseApi.injectEndpoints({
             socket.on("lastMessageReseted", (conversationId) => {
               dispatch(resetLastMessage(conversationId));
             });
+
             socket.on("userUpdated", (updatedUser) => {
               updateCachedData((draft) => {
-                if (!draft.users) return;
+                if (!draft.contactsData) return;
 
-                draft.users = draft.users.map((user) =>
+                draft.contactsData = draft.contactsData.map((user) =>
                   user._id === updatedUser._id
                     ? { ...user, ...updatedUser }
                     : user
@@ -77,7 +87,9 @@ const usersApi = baseApi.injectEndpoints({
                     typingStatus
                   )
                 );
-                dispatch(changeUserTypingStatus(userId, typingStatus));
+                dispatch(
+                  changeUserTypingStatus(userId, conversationId, typingStatus)
+                );
 
                 // updateCachedData((draft) => {
                 //   if (draft.users) {
@@ -95,14 +107,23 @@ const usersApi = baseApi.injectEndpoints({
             socket.on(
               "newConversationWithUser",
               ({ userId, conversationId }) => {
-                dispatch(addLastMessageData(userId, conversationId));
+                dispatch(createChatWithUser(userId, conversationId));
+              }
+            );
+
+            socket.on(
+              "newGroupWithUser",
+              (newGroupConvesation: TGroupConversation) => {
+                dispatch(addGroupToContacts(newGroupConvesation));
+                toast.success(toastTexts.success.successGroupCreate);
+                // dispatch();
               }
             );
             socket.on("userDeleted", (deletedUserId) => {
               updateCachedData((draft) => {
-                if (!draft.users) return;
+                if (!draft.contactsData) return;
 
-                draft.users = draft.users.filter(
+                draft.contactsData = draft.contactsData.filter(
                   (user) => user._id !== deletedUserId
                 );
               });
@@ -110,7 +131,7 @@ const usersApi = baseApi.injectEndpoints({
 
             socket.on("usersData", (data) => {
               updateCachedData((draft) => {
-                draft.users = data.users;
+                draft.contactsData = data.users;
                 draft.usersOnline = data.usersOnline;
               });
             });

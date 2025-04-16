@@ -1,23 +1,24 @@
-import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
-import { FaCircle, FaFileImage } from "react-icons/fa6";
+import { FaFileImage } from "react-icons/fa6";
 import { formatLastMessageDate } from "../../../shared/utils/formatLastMessageDate";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
+import { TContact } from "../../../shared/types/Contact";
+import TypingUser from "./TypingUser";
 
-interface IUserProps {
-  user: TUserInfo;
+interface IContactProps {
+  contact: TContact;
   currentUserId: string | null;
   onClick: () => void;
   isOnline: boolean;
   isUserSelectedForGroup: boolean;
 }
-const User = ({
-  user,
+const Contact = ({
+  contact,
   onClick,
   isOnline,
   currentUserId,
   isUserSelectedForGroup,
-}: IUserProps) => {
+}: IContactProps) => {
   return (
     <div
       onClick={onClick}
@@ -37,46 +38,53 @@ const User = ({
                     p-2"
     >
       <Avatar
-        picture={user.avatarURL}
+        isGroup={contact.type === "group"}
+        picture={contact.avatarURL}
         isOnline={isOnline}
         isProfileAvatar={false}
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div>
-        <div>{user.name}</div>
+        <div>{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
-            {user.isTyping ? (
-              <div className="text-green-150 select-none  flex items-center  ">
-                <span className="text-lg">is typing</span>
-                <div className="flex gap-0.5  pt-4">
-                  <FaCircle className="h-1 w-1 duration-100 animate-bounce" />
-                  <FaCircle className="h-1 w-1 duration-200 animate-bounce" />
-                  <FaCircle className="h-1  w-1 duration-300 animate-bounce" />
-                </div>
-              </div>
+            {contact.type === "single" && contact.isTyping ? (
+              <TypingUser />
+            ) : contact.type === "group" && contact.usersTypingIds?.length ? (
+              <TypingUser
+                groupTypingStatuses={true}
+                userTypingIds={contact.usersTypingIds}
+              />
             ) : (
               <>
-                {user.lastMessage?.senderId === currentUserId && <>You:</>}
+                {contact.lastMessage?.senderId === currentUserId ? (
+                  <>You:</>
+                ) : (
+                  contact.type === "group" &&
+                  contact.lastMessage?.sender && (
+                    <>{contact.lastMessage.sender.name}:</>
+                  )
+                )}
+
                 {
                   // {/* IF NO IMAGE BUT TEXT */}
-                  !user.lastMessage?.messageImage &&
-                  user.lastMessage?.messageText ? (
+                  !contact.lastMessage?.messageImage &&
+                  contact.lastMessage?.messageText ? (
                     <div className="max-w-40 truncate">
-                      {user.lastMessage.messageText}
+                      {contact.lastMessage.messageText}
                     </div>
                   ) : // IF NO TEXT BUT IMAGE
-                  user.lastMessage?.messageImage &&
-                    !user.lastMessage?.messageText ? (
+                  contact.lastMessage?.messageImage &&
+                    !contact.lastMessage?.messageText ? (
                     <div className="flex justify-center items-center gap-2">
                       <FaFileImage />
                     </div>
                   ) : // IF  TEXT AND IMAGE
-                  user.lastMessage?.messageImage &&
-                    user.lastMessage?.messageText ? (
+                  contact.lastMessage?.messageImage &&
+                    contact.lastMessage?.messageText ? (
                     <>
                       <div className="max-w-20 truncate">
-                        {user.lastMessage?.messageText}
+                        {contact.lastMessage?.messageText}
                       </div>
                       <div className="flex justify-center items-center gap-2">
                         <FaFileImage />
@@ -91,9 +99,10 @@ const User = ({
             )}
           </div>
 
-          {!user.isTyping &&
-            user.lastMessage?.senderId === currentUserId &&
-            (user.lastMessage?.seenStatus ? (
+          {contact.type === "single" &&
+            !contact.isTyping &&
+            contact.lastMessage?.senderId === currentUserId &&
+            (contact.lastMessage?.seenStatus ? (
               <IoCheckmarkDoneOutline className="text-xl" />
             ) : (
               <IoCheckmarkOutline className="text-xl" />
@@ -102,12 +111,12 @@ const User = ({
       </div>
 
       <div className="absolute right-5 top-2">
-        {user.lastMessage?.sentAt && (
-          <>{formatLastMessageDate(user.lastMessage?.sentAt)}</>
+        {contact.lastMessage?.sentAt && (
+          <>{formatLastMessageDate(contact.lastMessage?.sentAt)}</>
         )}
       </div>
     </div>
   );
 };
 
-export default User;
+export default Contact;

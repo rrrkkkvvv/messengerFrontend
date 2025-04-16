@@ -32,7 +32,8 @@ export const toastTexts = {
     successSignup: "Signed up",
     successSignin: "Signed in",
     successEditUser: "Edited",
-    successGroupCreate: "Creating new group",
+    successGroupCreating: "Creating new group",
+    successGroupCreate: "A group with you was created",
     successConversationDelete: "Chat was successfully deleted",
   },
 
@@ -92,7 +93,7 @@ export const backendMessages: websocketMessages = {
 export const routes = {
   auth: "/auth",
   main: "/",
-  conversationWithUserId: "/conversation/:anotherUserIdParam",
+  conversation: "/conversation/:conversationIdParam",
   conversationBase: "/conversation",
   profile: "/profile",
 };

@@ -9,9 +9,9 @@ export {
   setJWTToken,
 } from "./userSlice";
 export {
-  default as getUsersReducer,
-  selectUsersList,
+  default as contactsListReducer,
+  selectContactsList,
   selectUsersOnlineEmails,
-  setUsersList,
+  setContactsList,
   setUsersOnlineEmails,
-} from "./getUsersSlice";
+} from "./getContactsSlice";

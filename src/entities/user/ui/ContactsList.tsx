@@ -1,21 +1,22 @@
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { logout, User } from "..";
+import { Contact, logout } from "..";
 import { CiCirclePlus, CiLogout } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
 import { routes, toastTexts } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
-import { selectUsersList, selectUsersOnlineEmails } from "../model/";
-import { selectCurrentUser } from "../model/";
+import { selectContactsList, selectUsersOnlineEmails } from "../model";
+import { selectCurrentUser } from "../model";
 import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useState } from "react";
 import { useCreateGroupConversationMutation } from "../api/usersApi";
 import toast from "react-hot-toast";
 import SubmitButton from "../../../shared/ui/Button/SubmitButton";
+import { TContact } from "../../../shared/types/Contact";
 
-const UsersList = () => {
+const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
-  const usersList = useAppSelector(selectUsersList);
+  const contactsList = useAppSelector(selectContactsList);
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
   const [createGroupConversation] = useCreateGroupConversationMutation();
   const navigate = useNavigate();
@@ -34,8 +35,12 @@ const UsersList = () => {
     }
   };
 
-  const openConversationWithUser = async (userId: string) => {
-    navigate(`${routes.conversationBase}/${userId}`);
+  const openConversation = async (contact: TContact) => {
+    if (contact.type === "group") {
+      navigate(`${routes.conversationBase}?conversationIdParam=${contact._id}`);
+    } else {
+      navigate(`${routes.conversationBase}?anotherUserIdParam=${contact._id}`);
+    }
   };
   const handleToggleIsGroupCreating = () => {
     setIsGroupCreating((prev) => !prev);
@@ -61,7 +66,7 @@ const UsersList = () => {
       creatorId: currentUser._id,
       name: groupNameValue,
     }).unwrap();
-    toast(toastTexts.success.successGroupCreate);
+    toast(toastTexts.success.successGroupCreating);
     setIsGroupCreating(false);
     setGroupMembersList([]);
     setGroupNameValue("");
@@ -126,9 +131,10 @@ const UsersList = () => {
       )}
       {/* Users list */}
       <div className="relative  max-h-full overflow-y-auto   text-green-200">
-        {usersList &&
-          [...usersList]
+        {contactsList &&
+          [...contactsList]
             .sort((a, b) => {
+              // ALSO SORT BY CREATED_AT IF IT WAS CREATED AND HAVE NO MESSAGES
               const timeA = a.lastMessage?.sentAt
                 ? new Date(a.lastMessage.sentAt).getTime()
                 : 0;
@@ -138,21 +144,25 @@ const UsersList = () => {
 
               return timeB - timeA;
             })
-            .map((user) => {
-              let isOnline = usersOnlineEmails?.includes(user.email);
+            .map((contact) => {
+              let isOnline =
+                contact.type === "single" &&
+                usersOnlineEmails?.includes(contact.email);
 
               return (
-                <User
+                <Contact
                   isOnline={!!isOnline}
-                  user={user}
+                  contact={contact}
                   currentUserId={currentUser?._id || null}
-                  isUserSelectedForGroup={groupMembersList.includes(user._id)}
+                  isUserSelectedForGroup={groupMembersList.includes(
+                    contact._id
+                  )}
                   onClick={() =>
                     isGroupCreating
-                      ? toggleUserToGroup(user._id)
-                      : openConversationWithUser(user._id)
+                      ? toggleUserToGroup(contact._id)
+                      : openConversation(contact)
                   }
-                  key={user._id}
+                  key={contact._id}
                 />
               );
             })}
@@ -165,4 +175,4 @@ const UsersList = () => {
   );
 };
 
-export default UsersList;
+export default ContactsList;
