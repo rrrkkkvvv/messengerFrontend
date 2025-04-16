@@ -53,7 +53,7 @@ const SidebarMenu = ({
 
   return (
     <div
-      className={`absolute right-5 top-5 rounded-xl   w-2/3 md:w-2/4 p-5  transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
+      className={`absolute right-5 top-5 rounded-xl   w-4/5  md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
         ${
           isSidebarMenuVisible
             ? "opacity-100 scale-100 translate-0 "

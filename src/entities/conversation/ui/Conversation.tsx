@@ -201,19 +201,16 @@ const Conversation = () => {
   useEffect(() => {
     if (!chatData && !currentUser) return;
 
-    dispatch(
-      setCurrentConversationGroupInfo({
-        avatarURL: chatData.avatarURL ? chatData.avatarURL : null,
-        creatorId: chatData.creatorId,
-        name: chatData.name,
-      })
-    );
-
-    // dispatch(setCurrentConversationMessages(chatData.messages));
-    // dispatch(setCurrentConversationMembers(chatData.members));
-    // dispatch(setCurrentConversationId(chatData.conversationId));
     // Open of websocket always returns members and conversationId
     if (chatData.members !== null) {
+      dispatch(
+        setCurrentConversationGroupInfo({
+          avatarURL: chatData.avatarURL ? chatData.avatarURL : null,
+          creatorId: chatData.creatorId,
+          name: chatData.name,
+        })
+      );
+
       dispatch(setCurrentConversationMembers(chatData.members));
       dispatch(setCurrentConversationId(chatData.conversationId));
     }
