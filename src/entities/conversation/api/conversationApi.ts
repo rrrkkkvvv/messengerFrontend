@@ -107,7 +107,7 @@ const chatApi = baseApi.injectEndpoints({
             });
           });
 
-          socket.on("conversationDeleted", (conversationId) => {
+          socket.on("conversationDeleted", () => {
             updateCachedData((draft) => {
               draft.messages = null;
               draft.members = null;
