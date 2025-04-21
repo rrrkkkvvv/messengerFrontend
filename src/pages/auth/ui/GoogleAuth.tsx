@@ -9,12 +9,13 @@ import {
   setIsLoggedIn,
   setJWTToken,
 } from "../../../entities/user/model/";
+import { FC } from "react";
 
 interface GoogleLoginComponentProps {
   text?: string;
 }
 
-const GoogleAuth: React.FC<GoogleLoginComponentProps> = () => {
+const GoogleAuth: FC<GoogleLoginComponentProps> = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 

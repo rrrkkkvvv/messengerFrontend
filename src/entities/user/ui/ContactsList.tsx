@@ -47,7 +47,7 @@ const ContactsList = () => {
     setGroupMembersList([]);
     setGroupNameValue("");
   };
-  const handleChangeGroupName = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleChangeGroupName = (e: FormEvent<HTMLInputElement>) => {
     setGroupNameValue(e.currentTarget.value);
   };
   const createGroup = async (event: FormEvent<HTMLFormElement>) => {

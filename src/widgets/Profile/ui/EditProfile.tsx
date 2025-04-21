@@ -34,7 +34,7 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
       setUserPicture(currentUser.avatarURL);
     }
   };
-  const handleInputChange = (event: React.FormEvent<HTMLInputElement>) => {
+  const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setUserName(event.currentTarget.value);
   };
   const handleRemoveUserPicture = () => {

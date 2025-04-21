@@ -1,11 +1,11 @@
-import React, { ChangeEvent, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { IoMdImages } from "react-icons/io";
 
 interface UploadButtonProps {
   onUpload: (url: string) => void;
 }
 
-const UploadButton: React.FC<UploadButtonProps> = ({ onUpload }) => {
+const UploadButton: FC<UploadButtonProps> = ({ onUpload }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {

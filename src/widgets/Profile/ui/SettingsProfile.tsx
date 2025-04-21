@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { FormEvent, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
@@ -20,7 +20,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
   const [confirmUserEmailText, setConfirmUserEmailText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUserEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleUserEmailChange = (e: FormEvent<HTMLInputElement>) => {
     setConfirmUserEmailText(e.currentTarget.value);
   };
   const handleDeleteAccount = async () => {

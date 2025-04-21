@@ -33,12 +33,14 @@ export const toastTexts = {
     successSignin: "Signed in",
     successEditUser: "Edited",
     successGroupCreating: "Creating new group",
+    successKickUser: "User was kicked",
     successGroupCreate: "A group with you was created",
     successConversationDelete: "Chat was successfully deleted",
   },
 
   error: {
     errorGroupCreate: "Not enough data for create group",
+    errorKickUser: "Cannot kick user now",
     errorConversationDelete: "Chat deleting error",
     errorEditUser: "Data must be different and valid",
     errorAuth: "Authentication error",

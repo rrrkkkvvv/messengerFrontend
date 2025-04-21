@@ -131,7 +131,6 @@ const Conversation = () => {
     if (!conversationId) return;
     await leaveConversationConn(conversationId).unwrap();
     dispatch(resetCurrentConversation());
-    navigate(routes.main);
   };
   // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
   // MUST HAVE, because of it gives reconect to WS

@@ -1,6 +1,6 @@
 export {
   default as currentConversationReducer,
-  deleteConversation,
+  resetCurrentConversation as deleteCurrentConversation,
   selectCurrentConversationId,
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,

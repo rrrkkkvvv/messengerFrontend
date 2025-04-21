@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, ReactNode, FC } from "react";
 import { IoCloseOutline } from "react-icons/io5";
 
 interface ModalProps {
   isOpen?: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const Modal: FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

@@ -28,7 +28,7 @@ const AuthPage = () => {
 
   const handleInputChange = (
     type: "password" | "name" | "email",
-    e: React.FormEvent<HTMLInputElement>
+    e: FormEvent<HTMLInputElement>
   ) => {
     if (type === "email") {
       setEmail(e.currentTarget.value);

@@ -24,3 +24,16 @@ export type TConversationData = {
   messages: TMessageInfo[];
   members: TUserInfo[];
 };
+export type TEditGroupInfo = {
+  _id: string;
+  creatorId: string;
+  name?: string;
+  avatarURL?: string | null;
+};
+export type TUpdateGroupResponse =
+  | {
+      message: "Group was updated";
+    }
+  | {
+      message: "Updating went wrong";
+    };

@@ -2,8 +2,11 @@ import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
-import { TMessageInfo } from "./conversationTypes";
-import { deleteConversation } from "../model";
+import {
+  TEditGroupInfo,
+  TMessageInfo,
+  TUpdateGroupResponse,
+} from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 let socket: TApiSocket = null;
@@ -41,7 +44,7 @@ const chatApi = baseApi.injectEndpoints({
       }),
       async onCacheEntryAdded(
         args,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         const { isGroup } = args;
         if (socket) {
@@ -105,16 +108,6 @@ const chatApi = baseApi.injectEndpoints({
                 (message) => message._id !== messageId
               );
             });
-          });
-
-          socket.on("conversationDeleted", () => {
-            updateCachedData((draft) => {
-              draft.messages = null;
-              draft.members = null;
-              draft.conversationId = null;
-            });
-            // Clear store atributes related with conversation and close web socket conn
-            dispatch(deleteConversation());
           });
         } catch (err) {
           console.error("Failed to connect to WebSocket:", err);
@@ -228,6 +221,56 @@ const chatApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Conversation"],
     }),
+    kickUserFromConversation: builder.mutation<
+      string,
+      {
+        conversationId: string;
+        kickedUserId: string;
+      }
+    >({
+      async queryFn({ conversationId, kickedUserId }) {
+        return new Promise((resolve) => {
+          socket?.emit("kickUserFromConversation", {
+            conversationId,
+            kickedUserId,
+          });
+          resolve({ data: "User was kicked" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
+    leaveFromConversation: builder.mutation<
+      string,
+      {
+        conversationId: string;
+      }
+    >({
+      async queryFn({ conversationId }) {
+        return new Promise((resolve) => {
+          socket?.emit("leaveFromConversation", {
+            conversationId,
+          });
+          resolve({ data: "Leaved from conversation" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
+    updateGroupConversation: builder.mutation<
+      TUpdateGroupResponse,
+      TEditGroupInfo
+    >({
+      async queryFn(groupInfo) {
+        return new Promise((resolve) => {
+          const data = {
+            updatedGroupInfo: groupInfo,
+          };
+
+          socket?.emit("updateGroupConversation", data);
+          resolve({ data: { message: "Group was updated" } });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
     leaveConversationConnect: builder.mutation<string, string>({
       async queryFn(conversationId) {
         return new Promise((resolve) => {
@@ -249,9 +292,11 @@ const chatApi = baseApi.injectEndpoints({
 });
 
 export const {
+  useUpdateGroupConversationMutation,
   useConnectToChatChanelQuery,
   useDeleteConversationMutation,
   useInvalidateConversationMutation,
+  useLeaveFromConversationMutation,
   useSendMessageMutation,
   useDeleteMessageMutation,
   useEditMessageMutation,
@@ -259,4 +304,5 @@ export const {
   useLeaveConversationConnectMutation,
   useStartTypingMutation,
   useStopTypingMutation,
+  useKickUserFromConversationMutation,
 } = chatApi;

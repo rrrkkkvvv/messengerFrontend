@@ -1,3 +1,4 @@
+import { FC } from "react";
 import Modal from "../Modal/Modal";
 
 interface ImageModalProps {
@@ -6,7 +7,7 @@ interface ImageModalProps {
   onClose: () => void;
 }
 
-const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, src }) => {
+const ImageModal: FC<ImageModalProps> = ({ isOpen, onClose, src }) => {
   if (!src) {
     return null;
   }

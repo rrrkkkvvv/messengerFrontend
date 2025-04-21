@@ -4,13 +4,20 @@ import { TProfile } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs, toastTexts } from "../../../shared/values/strValues";
-import { changeConversationUserTypingStatus } from "../../conversation/model/conversationSlice";
+import {
+  changeConversationUserTypingStatus,
+  kickUserFromCurrentConversation,
+  updateCurrentConversationInfo,
+} from "../../conversation/model/conversationSlice";
 import {
   addGroupToContacts,
   createChatWithUser,
   changeLastMessage,
   changeUserTypingStatus,
   resetLastMessage,
+  deleteConversation,
+  updateGroupContact,
+  deleteMemberFromContact,
 } from "../model/getContactsSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
 import {
@@ -77,6 +84,10 @@ const usersApi = baseApi.injectEndpoints({
                 );
               });
             });
+            socket.on("groupConversationUpdated", (updatedGroupInfo) => {
+              dispatch(updateCurrentConversationInfo(updatedGroupInfo));
+              dispatch(updateGroupContact(updatedGroupInfo));
+            });
             socket.on(
               "userTypingStatusUpdate",
               ({ conversationId, userId, typingStatus }) => {
@@ -124,11 +135,23 @@ const usersApi = baseApi.injectEndpoints({
                 if (!draft.contactsData) return;
 
                 draft.contactsData = draft.contactsData.filter(
-                  (user) => user._id !== deletedUserId
+                  (contact) =>
+                    contact.type === "single" && contact._id !== deletedUserId
                 );
               });
             });
-
+            socket.on("conversationDeleted", ({ conversationId, isGroup }) => {
+              dispatch(deleteConversation(conversationId, isGroup));
+            });
+            socket.on(
+              "kickedUserFromConversation",
+              ({ conversationId, kickedUserId }) => {
+                dispatch(deleteMemberFromContact(conversationId, kickedUserId));
+                dispatch(
+                  kickUserFromCurrentConversation(conversationId, kickedUserId)
+                );
+              }
+            );
             socket.on("usersData", (data) => {
               updateCachedData((draft) => {
                 draft.contactsData = data.users;

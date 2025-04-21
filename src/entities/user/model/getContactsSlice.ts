@@ -6,6 +6,8 @@ import {
   TContactsList,
   TGroupConversation,
 } from "../../../shared/types/Contact";
+import { deleteCurrentConversation } from "../../conversation/model";
+import { TEditGroupInfo } from "../../conversation/api/conversationTypes";
 
 interface IConversationsListSliceProps {
   contactsList: TContactsList | null;
@@ -226,6 +228,76 @@ export const setContactsList =
 export const setUsersOnlineEmails =
   (usersOnlineEmails: string[] | null) => async (dispatch: AppDispatch) => {
     dispatch(setUsersOnlineEmailsState(usersOnlineEmails));
+  };
+export const deleteConversation =
+  (conversationId: string, isGroup: boolean) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      contactsList: { contactsList },
+      currentConversation,
+    } = getState();
+    if (currentConversation.conversationId === conversationId) {
+      dispatch(deleteCurrentConversation());
+    }
+    if (!contactsList) return;
+    if (isGroup) {
+      let newContactsList = contactsList.filter(
+        (contact) => contact._id !== conversationId
+      );
+      dispatch(setContactsListsState(newContactsList));
+    } else {
+      let newContactsList = contactsList.map((contact) => {
+        if (contact.lastMessage?.conversationId !== conversationId)
+          return contact;
+
+        return { ...contact, lastMessage: null };
+      });
+
+      dispatch(setContactsListsState(newContactsList));
+    }
+  };
+export const updateGroupContact =
+  (updatedInfo: TEditGroupInfo) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      contactsList: { contactsList },
+    } = getState();
+    if (!contactsList) return;
+    const newContactsList = contactsList.map((contact) => {
+      if (contact._id === updatedInfo._id && contact.type === "group") {
+        return { ...contact, ...updatedInfo };
+      } else {
+        return contact;
+      }
+    });
+    dispatch(setContactsListsState(newContactsList));
+  };
+export const deleteMemberFromContact =
+  (conversationId: string, kickedUserId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      contactsList: { contactsList },
+      currentUser: { currentUser },
+    } = getState();
+    if (!contactsList) return;
+    if (currentUser?._id === kickedUserId) {
+      const newContactsList = contactsList.filter(
+        (contact) => contact._id !== conversationId && contact.type !== "group"
+      );
+      dispatch(setContactsListsState(newContactsList));
+      return;
+    }
+    const newContactsList = contactsList.map((contact) => {
+      if (contact._id === conversationId && contact.type === "group") {
+        return {
+          ...contact,
+          userIds: contact.userIds.filter((userId) => userId !== kickedUserId),
+        };
+      } else {
+        return contact;
+      }
+    });
+    dispatch(setContactsListsState(newContactsList));
   };
 
 export const { selectContactsList, selectUsersOnlineEmails } =

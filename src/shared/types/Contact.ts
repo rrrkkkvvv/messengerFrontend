@@ -6,7 +6,7 @@ export type TUserPreview = TUserInfo & {
 type TGroupConversationPreview = {
   type: "group";
   isGroup: boolean;
-  avatarURL: string;
+  avatarURL: string | null;
   _id: string;
   userIds: string[];
   name: string;

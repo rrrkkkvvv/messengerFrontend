@@ -1,9 +1,11 @@
+import { FormEvent, MouseEvent } from "react";
+
 type InputPropsType = {
   type: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.FormEvent<HTMLInputElement>) => void;
-  onClick?: (e: React.MouseEvent<HTMLInputElement>) => void;
+  onChange?: (e: FormEvent<HTMLInputElement>) => void;
+  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
   className?: string;
   required?: boolean;
 };

@@ -49,7 +49,7 @@ const MessageForm = ({
     setMessageImage(url);
   };
 
-  const handleInputChange = async (e: React.FormEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: FormEvent<HTMLInputElement>) => {
     setMessageText(e.currentTarget.value);
     if (!conversationId) return;
     if (!isTyping) {

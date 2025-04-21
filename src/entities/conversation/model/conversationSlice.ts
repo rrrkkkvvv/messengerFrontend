@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TMessageInfo } from "../api/conversationTypes";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { AppDispatch, RootState } from "../../../app/store/store";
+import { TGroupConversation } from "../../../shared/types/Contact";
 
 interface ICurrentConversationSliceProps {
   members: TUserInfo[] | null;
@@ -27,7 +28,7 @@ const currentConversationSlice = createSlice({
   name: "currentConversation",
   initialState,
   reducers: {
-    resetCurrentConversation(state) {
+    resetCurrentConversationState(state) {
       state.conversationId = null;
       state.members = null;
       state.messages = null;
@@ -63,14 +64,18 @@ const currentConversationSlice = createSlice({
     setCurrentConversationGroupInfoState(
       state,
       action: PayloadAction<{
-        avatarURL: string | null;
+        avatarURL?: string | null;
         creatorId: string | null;
-        name: string | null;
+        name?: string | null;
       }>
     ) {
-      state.avatarURL = action.payload.avatarURL;
+      if (typeof action.payload.avatarURL !== "undefined") {
+        state.avatarURL = action.payload.avatarURL;
+      }
+      if (typeof action.payload.name !== "undefined") {
+        state.name = action.payload.name;
+      }
       state.creatorId = action.payload.creatorId;
-      state.name = action.payload.name;
     },
   },
   selectors: {
@@ -91,7 +96,8 @@ const {
   setCurrentConversationStatusState,
   setCurrentConversationGroupInfoState,
 } = currentConversationSlice.actions;
-export const { resetCurrentConversation } = currentConversationSlice.actions;
+export const { resetCurrentConversationState } =
+  currentConversationSlice.actions;
 export const setCurrentConversationMessages = createAsyncThunk(
   "setCurrentConversationMessages",
   (messages: TMessageInfo[] | null, { dispatch }) => {
@@ -139,18 +145,11 @@ export const setCurrentConversationId = createAsyncThunk(
     }
   }
 );
+export const resetCurrentConversation = () => async (dispatch: AppDispatch) => {
+  dispatch(resetCurrentConversationState());
 
-export const deleteConversation = createAsyncThunk(
-  "deleteConversation",
-  (_, { dispatch }) => {
-    dispatch(setCurrentConversationIdState({ conversationId: null }));
-
-    dispatch(setCurrentConversationMessagesState({ messages: null }));
-
-    dispatch(setCurrentConversationMembersState({ members: null }));
-    dispatch(setCurrentConversationStatusState({ newStatus: "absent" }));
-  }
-);
+  dispatch(setCurrentConversationStatusState({ newStatus: "absent" }));
+};
 
 export const setCurrentConversationExists = createAsyncThunk(
   "setCurrentConversationExists",
@@ -158,6 +157,34 @@ export const setCurrentConversationExists = createAsyncThunk(
     dispatch(setCurrentConversationStatusState({ newStatus: "exists" }));
   }
 );
+
+export const updateCurrentConversationInfo =
+  (groupConversationInfo: TGroupConversation) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { currentConversation } = getState();
+    if (currentConversation.conversationId !== groupConversationInfo._id)
+      return;
+    dispatch(setCurrentConversationGroupInfo(groupConversationInfo));
+  };
+export const kickUserFromCurrentConversation =
+  (conversationId: string, kickedUserId: string) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      currentConversation,
+      currentUser: { currentUser },
+    } = getState();
+    if (currentConversation.conversationId !== conversationId) return;
+    if (!currentConversation.members) return;
+
+    if (kickedUserId === currentUser?._id) {
+      dispatch(resetCurrentConversation());
+    }
+    const newCurrentConversationMembers = currentConversation.members.filter(
+      (member) => member._id !== kickedUserId
+    );
+    dispatch(setCurrentConversationMembers(newCurrentConversationMembers));
+  };
+
 export const changeConversationUserTypingStatus =
   (conversationId: string, userId: string, typingStatus: boolean) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
