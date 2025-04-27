@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <ContactsList />,
       },
       {
-        path: routes.conversationBase,
+        path: routes.conversation,
         element: <Conversation />,
       },
       {

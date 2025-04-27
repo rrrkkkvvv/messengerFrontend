@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
@@ -41,10 +41,7 @@ import { useLeaveConversationConnectMutation } from "../api/conversationApi";
 import TypingUser from "../../user/ui/TypingUser";
 
 const Conversation = () => {
-  const [searchParams] = useSearchParams();
-
-  const anotherUserIdParam = searchParams.get("anotherUserIdParam");
-  const conversationIdParam = searchParams.get("conversationIdParam");
+  const { type: conversationType, contactId } = useParams();
 
   const location = useLocation();
 
@@ -103,13 +100,13 @@ const Conversation = () => {
       name: null,
     },
   } = useConnectToChatChanelQuery(
-    anotherUserIdParam
+    conversationType === "single"
       ? {
-          userId: anotherUserIdParam,
+          userId: contactId,
           isGroup: false,
         }
       : {
-          conversationId: conversationIdParam,
+          conversationId: contactId,
           isGroup: true,
         }
   );
@@ -135,15 +132,12 @@ const Conversation = () => {
   // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
   // MUST HAVE, because of it gives reconect to WS
   const redirectToCurrentConversation = () => {
-    if (!location.pathname.startsWith("/conversation?")) {
-      if (conversationName && conversationId) {
-        navigate("/conversation?conversationIdParam=" + conversationId);
-      } else {
-        let anotherUserData = anotherUser();
-        if (anotherUserData) {
-          navigate("/conversation?anotherUserIdParam=" + anotherUserData._id);
-        }
-      }
+    if (!location.pathname.startsWith("/conversation")) {
+      navigate(
+        `conversation/${conversationCreatorId ? "group" : "single"}/${
+          conversationCreatorId ? conversationId : anotherUser()?._id
+        }`
+      );
     }
   };
 
@@ -177,7 +171,9 @@ const Conversation = () => {
   const handleResetIsEditingMessage = () => {
     setIsMessageEdit(false);
   };
-
+  const handleCloseConversation = () => {
+    navigate(routes.main);
+  };
   //USE EFFECTS
   useEffect(() => {
     if (conversationStatus == "absent") {
@@ -244,9 +240,7 @@ const Conversation = () => {
               <button
                 type="button"
                 className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-green-400 hover:outline-green-200"
-                onClick={() => {
-                  navigate(routes.main);
-                }}
+                onClick={handleCloseConversation}
               >
                 <FaArrowLeft />
               </button>

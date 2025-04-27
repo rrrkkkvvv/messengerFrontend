@@ -13,12 +13,13 @@ let socket: TApiSocket = null;
 type TConnectToChatArgs =
   | {
       isGroup: false;
-      userId: string | null;
+      userId: string | undefined;
     }
   | {
       isGroup: true;
-      conversationId: string | null;
+      conversationId: string | undefined;
     };
+
 const chatApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToChatChanel: builder.query<
@@ -57,7 +58,7 @@ const chatApi = baseApi.injectEndpoints({
           "joinConversation",
           isGroup
             ? { isGroup, conversationId: args.conversationId }
-            : { userId: args.userId }
+            : { userId: args.userId, isGroup }
         );
         try {
           await cacheDataLoaded;

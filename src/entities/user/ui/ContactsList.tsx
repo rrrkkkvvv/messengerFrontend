@@ -3,7 +3,7 @@ import { Contact, logout } from "..";
 import { CiCirclePlus, CiLogout } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
-import { routes, toastTexts } from "../../../shared/values/strValues";
+import { toastTexts } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
 import { selectContactsList, selectUsersOnlineEmails } from "../model";
 import { selectCurrentUser } from "../model";
@@ -36,11 +36,7 @@ const ContactsList = () => {
   };
 
   const openConversation = async (contact: TContact) => {
-    if (contact.type === "group") {
-      navigate(`${routes.conversationBase}?conversationIdParam=${contact._id}`);
-    } else {
-      navigate(`${routes.conversationBase}?anotherUserIdParam=${contact._id}`);
-    }
+    navigate(`conversation/${contact.type}/${contact._id}`);
   };
   const handleToggleIsGroupCreating = () => {
     setIsGroupCreating((prev) => !prev);

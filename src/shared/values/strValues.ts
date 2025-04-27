@@ -95,7 +95,6 @@ export const backendMessages: websocketMessages = {
 export const routes = {
   auth: "/auth",
   main: "/",
-  conversation: "/conversation/:conversationIdParam",
-  conversationBase: "/conversation",
+  conversation: "/conversation/:type/:contactId",
   profile: "/profile",
 };
