@@ -157,7 +157,24 @@ export const setCurrentConversationExists = createAsyncThunk(
     dispatch(setCurrentConversationStatusState({ newStatus: "exists" }));
   }
 );
-
+export const updateUserInfoInConversation =
+  (updatedUser: TUserInfo) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      currentConversation: { members },
+    } = getState();
+    if (!members) return;
+    const newMembersList = members.map((member) => {
+      if (member._id === updatedUser._id) {
+        return {
+          ...member,
+          ...updatedUser,
+        };
+      }
+      return member;
+    });
+    dispatch(setCurrentConversationMembers(newMembersList));
+  };
 export const updateCurrentConversationInfo =
   (groupConversationInfo: TGroupConversation) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {

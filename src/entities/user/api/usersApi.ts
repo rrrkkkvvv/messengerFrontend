@@ -8,6 +8,7 @@ import {
   changeConversationUserTypingStatus,
   kickUserFromCurrentConversation,
   updateCurrentConversationInfo,
+  updateUserInfoInConversation,
 } from "../../conversation/model/conversationSlice";
 import {
   addGroupToContacts,
@@ -18,7 +19,7 @@ import {
   deleteConversation,
   updateGroupContact,
   deleteMemberFromContact,
-} from "../model/getContactsSlice";
+} from "../model/contactsSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
 import {
   TContactsList,
@@ -76,13 +77,14 @@ const usersApi = baseApi.injectEndpoints({
             socket.on("userUpdated", (updatedUser) => {
               updateCachedData((draft) => {
                 if (!draft.contactsData) return;
-
+                // TODO:REPLAVE BY THUNK
                 draft.contactsData = draft.contactsData.map((user) =>
                   user._id === updatedUser._id
                     ? { ...user, ...updatedUser }
                     : user
                 );
               });
+              dispatch(updateUserInfoInConversation(updatedUser));
             });
             socket.on("groupConversationUpdated", (updatedGroupInfo) => {
               dispatch(updateCurrentConversationInfo(updatedGroupInfo));

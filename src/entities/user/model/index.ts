@@ -14,4 +14,4 @@ export {
   selectUsersOnlineEmails,
   setContactsList,
   setUsersOnlineEmails,
-} from "./getContactsSlice";
+} from "./contactsSlice";

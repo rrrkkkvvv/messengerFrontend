@@ -58,7 +58,7 @@ const chatApi = baseApi.injectEndpoints({
           "joinConversation",
           isGroup
             ? { isGroup, conversationId: args.conversationId }
-            : { userId: args.userId, isGroup }
+            : { isGroup, userId: args.userId }
         );
         try {
           await cacheDataLoaded;

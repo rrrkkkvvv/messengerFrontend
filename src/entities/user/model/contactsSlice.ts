@@ -40,6 +40,7 @@ const contactsListSlice = createSlice({
     selectUsersOnlineEmails: (state) => state.usersOnlineEmails,
   },
 });
+
 export const selectUsersByIds = (userIds: string[] | undefined) =>
   createSelector([selectContactsList], (contacts) => {
     if (userIds) {
@@ -60,6 +61,7 @@ export const selectUsersByIds = (userIds: string[] | undefined) =>
 
 const { setContactsListsState, setUsersOnlineEmailsState } =
   contactsListSlice.actions;
+
 export const changeLastMessage =
   (
     conversationId: string,
@@ -128,8 +130,9 @@ export const changeUserTypingStatus =
   async (dispatch: AppDispatch, getState: () => RootState) => {
     const {
       contactsList: { contactsList },
+      currentUser: { currentUser },
     } = getState();
-
+    if (userId === currentUser?._id) return;
     const newConversationsList = contactsList
       ? contactsList.map((contact) => {
           if (contact.type === "group") {
