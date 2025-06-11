@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
-import SubmitButton from "../../../../shared/ui/Button/SubmitButton";
+import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
 import { IoCloseOutline } from "react-icons/io5";
 import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
 import { TMessageInfo } from "../../api/conversationTypes";
@@ -157,7 +157,7 @@ const MessageForm = ({
         />
         <UploadButton onUpload={handleSetMessageImage} />
 
-        <SubmitButton children={isMessageEdit ? "Edit" : "Send"} />
+        <SubmitBtn children={isMessageEdit ? "Edit" : "Send"} />
       </div>
     </form>
   );

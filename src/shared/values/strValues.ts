@@ -36,6 +36,7 @@ export const toastTexts = {
     successKickUser: "User was kicked",
     successGroupCreate: "A group with you was created",
     successConversationDelete: "Chat was successfully deleted",
+    successAddUsersToConversation: "Users were added successfully",
   },
 
   error: {
@@ -44,6 +45,7 @@ export const toastTexts = {
     errorConversationDelete: "Chat deleting error",
     errorEditUser: "Data must be different and valid",
     errorAuth: "Authentication error",
+    errorAddUsersToConversation: "Users were not added, an error occurred",
   },
 };
 type websocketMessages = {} & {

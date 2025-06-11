@@ -1,5 +1,5 @@
 import { TbArrowBackUp } from "react-icons/tb";
-import SubmitButton from "../../../shared/ui/Button/SubmitButton";
+import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import Input from "../../../shared/ui/Input/Input";
 import { IoCloseOutline } from "react-icons/io5";
 import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
@@ -141,7 +141,7 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
         {/* Username input */}
         <Input onChange={handleInputChange} value={userName} type="input" />
       </div>
-      <SubmitButton children={"Save and submit"} />
+      <SubmitBtn children={"Save and submit"} />
     </form>
   );
 };

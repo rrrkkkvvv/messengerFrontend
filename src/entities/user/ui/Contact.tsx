@@ -45,7 +45,7 @@ const Contact = ({
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div>
-        <div>{contact.name}</div>
+        <div className="truncate max-w-40">{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
             {contact.type === "single" && contact.isTyping ? (
@@ -62,7 +62,9 @@ const Contact = ({
                 ) : (
                   contact.type === "group" &&
                   contact.lastMessage?.sender && (
-                    <>{contact.lastMessage.sender.name}:</>
+                    <span className="truncate max-w-40">
+                      {contact.lastMessage.sender.name}:
+                    </span>
                   )
                 )}
 
@@ -99,8 +101,8 @@ const Contact = ({
             )}
           </div>
 
-          {contact.type === "single" &&
-            !contact.isTyping &&
+          {((contact.type === "single" && !contact.isTyping) ||
+            (contact.type === "group" && !contact.usersTypingIds?.length)) &&
             contact.lastMessage?.senderId === currentUserId &&
             (contact.lastMessage?.seenStatus ? (
               <IoCheckmarkDoneOutline className="text-xl" />

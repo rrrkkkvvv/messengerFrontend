@@ -62,43 +62,43 @@ export const selectUsersByIds = (userIds: string[] | undefined) =>
 const { setContactsListsState, setUsersOnlineEmailsState } =
   contactsListSlice.actions;
 
+type TChangeLastMessageProps =
+  | { status: "newLastMessage"; message: TLastMessage }
+  | { status: "lastMessageSeen"; message: { conversationId: string } };
+
 export const changeLastMessage =
-  (
-    conversationId: string,
-    newLastMessage:
-      | TLastMessage
-      | { conversationId: string }
-      | { seenStatus: boolean; conversationId: string }
-  ) =>
+  (data: TChangeLastMessageProps) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     const {
       contactsList: { contactsList },
     } = getState();
-
-    // IF we get only conversationId - conversation was deleted
-    // OR IF we get message or new seen status - replace lastMessage to new for users with passed conversationId
+    const { message, status } = data;
     const newConversationsList = contactsList
-      ? contactsList.map((user) => {
-          if (user.lastMessage?.conversationId !== conversationId) return user;
-          if (!("_id" in newLastMessage)) {
-            return {
-              ...user,
-              lastMessage:
-                "seenStatus" in newLastMessage
-                  ? {
-                      ...user.lastMessage,
-                      seenStatus: newLastMessage.seenStatus,
-                    }
-                  : null,
-            };
+      ? contactsList.map((contact) => {
+          if (contact.type === "group") {
+            if (contact._id !== message.conversationId) {
+              return contact;
+            }
+          } else {
+            if (
+              contact.lastMessage?.conversationId !== message.conversationId
+            ) {
+              return contact;
+            }
           }
 
-          return {
-            ...user,
-            lastMessage: {
-              ...newLastMessage,
-            },
-          };
+          if (status === "lastMessageSeen") {
+            return {
+              ...contact,
+              lastMessage: { ...contact.lastMessage, seenStatus: true },
+            } as TContact;
+          } else if (status === "newLastMessage") {
+            return {
+              ...contact,
+              lastMessage: { ...message },
+            };
+          }
+          return contact;
         })
       : null;
 
@@ -137,20 +137,18 @@ export const changeUserTypingStatus =
       ? contactsList.map((contact) => {
           if (contact.type === "group") {
             if (contact._id === conversationId) {
+              // WE HAVE usersTypingIds array, and we get new userTypingId with status. IF status is true and user is not in list - add, if status false remove him from list
               let usersTypingIds = contact.usersTypingIds
                 ? [...contact.usersTypingIds]
                 : [];
+
               if (typingStatus) {
-                usersTypingIds
-                  ? usersTypingIds.indexOf(userId) === -1 &&
-                    usersTypingIds.push(userId)
-                  : (usersTypingIds = [userId]);
+                usersTypingIds.indexOf(userId) === -1;
+                usersTypingIds.push(userId);
               } else {
-                usersTypingIds = usersTypingIds
-                  ? usersTypingIds.filter(
-                      (userTypingId) => userTypingId !== userId
-                    )
-                  : usersTypingIds;
+                usersTypingIds = usersTypingIds.filter(
+                  (userTypingId) => userTypingId !== userId
+                );
               }
 
               return {
@@ -184,8 +182,8 @@ export const createChatWithUser =
     // Replace lastMessage to new for users with passed conversationId
     const newConversationsList = contactsList
       ? contactsList.map((contact) => {
-          if (contact.type === "group") return contact;
-          if (contact._id !== userId) return contact;
+          if (contact.type === "group" || contact._id !== userId)
+            return contact;
           return {
             ...contact,
             conversationId: conversationId,
@@ -208,11 +206,7 @@ export const addGroupToContacts =
     } = getState();
     const groupConversation = {
       ...newGroupConvesation,
-
       type: "group",
-      lastMessage: {
-        conversationId: newGroupConvesation._id,
-      } as TLastMessage,
     } as TContact;
 
     dispatch(
@@ -275,7 +269,7 @@ export const updateGroupContact =
     });
     dispatch(setContactsListsState(newContactsList));
   };
-export const deleteMemberFromContact =
+export const deleteMemberFromGroup =
   (conversationId: string, kickedUserId: string) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     const {
@@ -302,7 +296,26 @@ export const deleteMemberFromContact =
     });
     dispatch(setContactsListsState(newContactsList));
   };
+export const addUsersToConversation =
+  (conversationId: string, users: string[]) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      contactsList: { contactsList },
+    } = getState();
+    if (!contactsList) return;
 
+    const newContactsList = contactsList.map((contact) => {
+      if (contact._id === conversationId && contact.type === "group") {
+        return {
+          ...contact,
+          userIds: [...contact.userIds, ...users],
+        };
+      } else {
+        return contact;
+      }
+    });
+    dispatch(setContactsListsState(newContactsList));
+  };
 export const { selectContactsList, selectUsersOnlineEmails } =
   contactsListSlice.selectors;
 const contactsListReducer = contactsListSlice.reducer;

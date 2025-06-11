@@ -201,7 +201,26 @@ export const kickUserFromCurrentConversation =
     );
     dispatch(setCurrentConversationMembers(newCurrentConversationMembers));
   };
+export const addUsersToCurrentConversation =
+  (conversationId: string, users: string[]) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      currentConversation,
+      contactsList: { contactsList },
+    } = getState();
+    if (currentConversation.conversationId !== conversationId) return;
+    if (!currentConversation.members) return;
+    if (!contactsList) return;
 
+    const newCurrentConversationMembers = [...currentConversation.members];
+    users.forEach((userId) => {
+      const user = contactsList.find((contact) => contact._id === userId);
+      if (user && user.type === "single") {
+        newCurrentConversationMembers.push(user);
+      }
+    });
+    dispatch(setCurrentConversationMembers(newCurrentConversationMembers));
+  };
 export const changeConversationUserTypingStatus =
   (conversationId: string, userId: string, typingStatus: boolean) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {

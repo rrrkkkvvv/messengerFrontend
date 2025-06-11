@@ -5,6 +5,7 @@ import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs, toastTexts } from "../../../shared/values/strValues";
 import {
+  addUsersToCurrentConversation,
   changeConversationUserTypingStatus,
   kickUserFromCurrentConversation,
   updateCurrentConversationInfo,
@@ -18,7 +19,8 @@ import {
   resetLastMessage,
   deleteConversation,
   updateGroupContact,
-  deleteMemberFromContact,
+  deleteMemberFromGroup,
+  addUsersToConversation,
 } from "../model/contactsSlice";
 import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
 import {
@@ -65,9 +67,13 @@ const usersApi = baseApi.injectEndpoints({
                 draft.usersOnline = usersOnline;
               });
             });
-            socket.on("lastMessageUpdated", (sendedMessage) => {
+
+            socket.on("lastMessageUpdated", (data) => {
               dispatch(
-                changeLastMessage(sendedMessage.conversationId, sendedMessage)
+                changeLastMessage({
+                  status: data.status,
+                  message: data.message,
+                })
               );
             });
             socket.on("lastMessageReseted", (conversationId) => {
@@ -129,7 +135,6 @@ const usersApi = baseApi.injectEndpoints({
               (newGroupConvesation: TGroupConversation) => {
                 dispatch(addGroupToContacts(newGroupConvesation));
                 toast.success(toastTexts.success.successGroupCreate);
-                // dispatch();
               }
             );
             socket.on("userDeleted", (deletedUserId) => {
@@ -148,10 +153,17 @@ const usersApi = baseApi.injectEndpoints({
             socket.on(
               "kickedUserFromConversation",
               ({ conversationId, kickedUserId }) => {
-                dispatch(deleteMemberFromContact(conversationId, kickedUserId));
+                dispatch(deleteMemberFromGroup(conversationId, kickedUserId));
                 dispatch(
                   kickUserFromCurrentConversation(conversationId, kickedUserId)
                 );
+              }
+            );
+            socket.on(
+              "addedUserToConversation",
+              ({ conversationId, users }) => {
+                dispatch(addUsersToConversation(conversationId, users));
+                dispatch(addUsersToCurrentConversation(conversationId, users));
               }
             );
             socket.on("usersData", (data) => {

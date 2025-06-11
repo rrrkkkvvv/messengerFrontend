@@ -19,11 +19,10 @@ import { routes } from "../../../shared/values/strValues";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import {
   useConnectToChatChanelQuery,
-  useDeleteMessageMutation,
   useInvalidateConversationMutation,
 } from "../api";
 import MessageList from "./Messages/MessageList";
-import SidebarMenu from "./SidebarMenu";
+import SidebarMenu from "./Sidebar/SidebarMenu";
 import ConversationPlaceholder from "./ConversationPlaceholder";
 import { TMessageInfo } from "../api/conversationTypes";
 import { selectUsersOnlineEmails } from "../../user/model";
@@ -66,7 +65,6 @@ const Conversation = () => {
   const [leaveConversationConn] = useLeaveConversationConnectMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [deleteMessage] = useDeleteMessageMutation();
 
   //USE CALLBACKS
 
@@ -141,17 +139,6 @@ const Conversation = () => {
     }
   };
 
-  const handleDeleteMessage = async (messageId: string) => {
-    if (!conversationId) return;
-    try {
-      await deleteMessage({
-        conversationId,
-        messageId,
-      }).unwrap();
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-  };
   const handleCloseSidebarMenu = () => {
     setIsSidebarMenuVisible(false);
     setEditingMessage(null);
@@ -257,7 +244,7 @@ const Conversation = () => {
                 isOnline={isAnotherUserOnline()}
               />
               <div className="flex flex-col ">
-                <div className="text-lg">
+                <div className="text-lg max-w-56 truncate">
                   {conversationName ? conversationName : anotherUser()?.name}
                 </div>
                 {conversationCreatorId && conversationMembers ? (
@@ -297,7 +284,6 @@ const Conversation = () => {
           {/* MESSAGES */}
           <MessageList
             isGroup={!!conversationCreatorId}
-            onDeleteMessage={handleDeleteMessage}
             onEditMessage={handleSetEditingMessageData}
             currentUser={currentUser}
             conversationId={conversationId}

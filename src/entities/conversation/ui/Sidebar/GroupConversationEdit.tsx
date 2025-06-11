@@ -1,15 +1,15 @@
 import { TbArrowBackUp } from "react-icons/tb";
-import Avatar from "../../../shared/ui/Avatar/Avatar";
-import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
+import Avatar from "../../../../shared/ui/Avatar/Avatar";
+import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoCloseOutline } from "react-icons/io5";
-import Input from "../../../shared/ui/Input/Input";
-import SubmitButton from "../../../shared/ui/Button/SubmitButton";
+import Input from "../../../../shared/ui/Input/Input";
+import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
 import { FormEvent, useEffect, useState } from "react";
-import { useUpdateGroupConversationMutation } from "../api/conversationApi";
-import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { useUpdateGroupConversationMutation } from "../../api/conversationApi";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
-import { TEditGroupInfo } from "../api/conversationTypes";
-import { toastTexts } from "../../../shared/values/strValues";
+import { TEditGroupInfo } from "../../api/conversationTypes";
+import { toastTexts } from "../../../../shared/values/strValues";
 
 interface IGroupCOnversationEditProps {
   isAnotherUserOnline: boolean;
@@ -142,7 +142,7 @@ const GroupConversationEdit = ({
           type="input"
         />
       </div>{" "}
-      <SubmitButton
+      <SubmitBtn
         children={"Save and submit"}
         className="py-3 px-3 rounded-xl"
       />

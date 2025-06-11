@@ -5,12 +5,12 @@ import { FaArrowAltCircleDown } from "react-icons/fa";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
+import { useDeleteMessageMutation } from "../../api";
 
 interface IMessageListProps {
   conversationId: string | null;
   conversationMessages: TMessageInfo[] | null;
   currentUser: TUserInfo | null;
-  onDeleteMessage: (messageId: string) => void;
   onEditMessage: (message: TMessageInfo) => void;
   isGroup: boolean;
 }
@@ -19,11 +19,11 @@ const MessageList = ({
   conversationId,
   conversationMessages,
   currentUser,
-  onDeleteMessage,
   onEditMessage,
   isGroup,
 }: IMessageListProps) => {
   const [downScrollVisible, setDownScrollVisible] = useState<boolean>(true);
+  const [deleteMessage] = useDeleteMessageMutation();
   const [contextMenu, setContextMenu] = useState<{
     visible: boolean;
     x: number;
@@ -84,10 +84,17 @@ const MessageList = ({
       message: null,
     });
   };
-
-  const handleDelete = () => {
+  const handleDelete = async () => {
+    if (!conversationId) return;
     if (contextMenu.message?._id) {
-      onDeleteMessage(contextMenu.message?._id);
+      try {
+        await deleteMessage({
+          conversationId,
+          messageId: contextMenu.message._id,
+        }).unwrap();
+      } catch (error) {
+        console.error("Failed to send message:", error);
+      }
     }
     closeContextMenu();
   };

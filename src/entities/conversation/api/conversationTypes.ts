@@ -12,7 +12,7 @@ export type TMessageInfo = {
   seenIds: string[];
   conversationId: string;
   senderId: string;
-  sender: TUserInfo;
+  sender: TUserInfo | undefined;
   editedAt?: string | null;
   sentAt: string;
 };

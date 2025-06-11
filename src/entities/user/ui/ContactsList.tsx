@@ -11,7 +11,7 @@ import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useState } from "react";
 import { useCreateGroupConversationMutation } from "../api/usersApi";
 import toast from "react-hot-toast";
-import SubmitButton from "../../../shared/ui/Button/SubmitButton";
+import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import { TContact } from "../../../shared/types/Contact";
 
 const ContactsList = () => {
@@ -121,7 +121,7 @@ const ContactsList = () => {
             placeholder="Name your group"
             className="w-2/3 md:w-1/2 hover:border h-9 text-white"
           />
-          <SubmitButton className="py-2 px-5" children="Create" />
+          <SubmitBtn className="py-2 px-5" children="Create" />
           <h4>Select users for group</h4>
         </form>
       )}

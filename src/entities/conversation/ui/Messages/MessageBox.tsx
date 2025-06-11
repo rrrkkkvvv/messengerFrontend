@@ -86,7 +86,7 @@ const MessageBox = ({
           <Avatar
             hideOnline={true}
             isProfileAvatar={false}
-            picture={message.sender.avatarURL}
+            picture={message.sender ? message.sender.avatarURL : null}
             isMessageAvatar={true}
           />
         </>
@@ -97,8 +97,8 @@ const MessageBox = ({
         }`}
       >
         {!isCurrentUser && isGroup && (
-          <div className="text-sm text-green-300 absolute top-0 left-2">
-            {message.sender.name}
+          <div className="text-sm text-green-300 absolute top-0 left-2 truncate max-w-20">
+            {message.sender ? message.sender.name : "Deleted user"}
           </div>
         )}
         <div className="flex flex-col  items-center">
@@ -112,7 +112,6 @@ const MessageBox = ({
           <div className="max-w-52 sm:max-w-96 break-words whitespace-pre-wrap text-wrap ">
             {message.messageText && message.messageText}
           </div>
-
           <sub className="text-xs absolute bottom-0 right-1 ">
             <div className="flex items-center gap-2">
               &nbsp;&nbsp;

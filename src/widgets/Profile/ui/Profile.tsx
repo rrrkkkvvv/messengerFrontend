@@ -96,7 +96,9 @@ const Profile = () => {
           <>
             <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
 
-            <span className=" text-3xl md:text-2xl">{currentUser?.name}</span>
+            <span className=" text-3xl md:text-2xl truncate max-w-96">
+              {currentUser?.name}
+            </span>
           </>
         ) : profileMode === "edit" ? (
           <EditProfile currentUser={currentUser} />

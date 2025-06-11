@@ -5,7 +5,7 @@ type TSubmitButtonProps = {
   className?: string;
 };
 
-const SubmitButton = ({ children, className }: TSubmitButtonProps) => {
+const SubmitBtn = ({ children, className }: TSubmitButtonProps) => {
   return (
     <button
       type="submit"
@@ -16,4 +16,4 @@ const SubmitButton = ({ children, className }: TSubmitButtonProps) => {
   );
 };
 
-export default SubmitButton;
+export default SubmitBtn;

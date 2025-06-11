@@ -1,19 +1,22 @@
-import Avatar from "../../../shared/ui/Avatar/Avatar";
+import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import { IoCloseOutline } from "react-icons/io5";
-import { useDeleteConversationMutation } from "../api/";
-import { toastTexts } from "../../../shared/values/strValues";
+import { useDeleteConversationMutation } from "../../api";
+import { toastTexts } from "../../../../shared/values/strValues";
 import toast from "react-hot-toast";
-import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { useAppSelector } from "../../../app/store/store";
-import { selectCurrentUser } from "../../user/model";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
+import { useAppSelector } from "../../../../app/store/store";
+import { selectCurrentUser } from "../../../user/model";
 import { MdModeEdit } from "react-icons/md";
 import { useState } from "react";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 import {
   useKickUserFromConversationMutation,
   useLeaveFromConversationMutation,
-} from "../api/conversationApi";
-import GroupConversationEdit from "./groupConversationEdit";
+} from "../../api/conversationApi";
+import GroupConversationEdit from "./GroupConversationEdit";
+import AddUsersToGroup from "./AddUsersToGroup";
+import SidebarBtn from "../../../../shared/ui/Button/SidebarBtn";
 
 interface ISidebarMenuProps {
   anotherUser?: TUserInfo | null;
@@ -41,6 +44,7 @@ const SidebarMenu = ({
 }: ISidebarMenuProps) => {
   const currentUser = useAppSelector(selectCurrentUser);
   const [isEditing, setIsEditing] = useState(false);
+  const [openAddUsers, setOpenAddUsers] = useState(false);
 
   const [deleteConversation] = useDeleteConversationMutation();
   const [leaveFromConversation] = useLeaveFromConversationMutation();
@@ -73,6 +77,11 @@ const SidebarMenu = ({
 
   const handleToggleIsEditing = () => {
     setIsEditing((prev) => !prev);
+    openAddUsers && setOpenAddUsers(false);
+  };
+  const handleOpenAddUsers = () => {
+    setOpenAddUsers((prev) => !prev);
+    isEditing && setIsEditing(false);
   };
   const handleKickUser = async (userId: string) => {
     try {
@@ -88,12 +97,15 @@ const SidebarMenu = ({
       console.error("Failed to send message:", error);
     }
   };
-
   const isGroup = !!creatorId;
+  const creator = members?.find((member) => member._id === creatorId);
   const isCurrentUserCreator = creatorId === currentUser?._id;
+  const removeChatPosibility = isCurrentUserCreator || !isGroup;
+  if (isGroup && !creator) return;
+
   return (
     <div
-      className={`absolute right-5 top-5 rounded-xl   w-4/5  md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
+      className={`absolute right-0 top-0 rounded-xl   w-full md:right-5 md:top-5 md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
         ${
           isSidebarMenuVisible
             ? "opacity-100 scale-100 translate-0 "
@@ -103,19 +115,18 @@ const SidebarMenu = ({
     >
       <div className="absolute flex right-5 top-5">
         {isCurrentUserCreator && (
-          <button
-            onClick={handleToggleIsEditing}
-            className="  text-2xl h-10 w-10   flex items-center justify-center rounded-full border    transition   text-green-400  hover:border-green-200"
-          >
-            <MdModeEdit />
-          </button>
+          <>
+            <SidebarBtn onClick={handleToggleIsEditing}>
+              <MdModeEdit />
+            </SidebarBtn>
+            <SidebarBtn onClick={handleOpenAddUsers}>
+              <AiOutlineUsergroupAdd />
+            </SidebarBtn>
+          </>
         )}
-        <button
-          onClick={closeSidebarMenu}
-          className=" text-2xl  h-10 w-10 flex  items-center justify-center  rounded-full border    transition   text-green-400  hover:border-green-200"
-        >
+        <SidebarBtn onClick={closeSidebarMenu}>
           <IoCloseOutline />
-        </button>
+        </SidebarBtn>
       </div>
 
       <div className="flex gap-2 justify-center items-center flex-col  ">
@@ -146,60 +157,65 @@ const SidebarMenu = ({
 
         {isGroup && (
           <div className=" max-h-96 overflow-auto ">
-            {isCurrentUserCreator ? (
-              <div className="flex justify-around items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-100 px-9 py-3 max-h-96 overflow-auto border border-green-200 ">
-                <p>You</p>
-                <h2 className="text-md text-green-200">Owner</h2>
-              </div>
+            {openAddUsers ? (
+              <></>
             ) : (
-              <div className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-100 px-9 py-1 max-h-96 overflow-auto  border border-green-200">
-                <Avatar
-                  isProfileAvatar={false}
-                  isGroup={false}
-                  picture={
-                    members?.find((member) => member._id === creatorId)
-                      ?.avatarURL
-                  }
-                  isOnline={usersOnlineEmails?.includes(
-                    members?.find((member) => member._id === creatorId)
-                      ?.email || ""
-                  )}
-                />
-                <p>
-                  {members?.find((member) => member._id === creatorId)?.name}
-                </p>
-
+              <div className="flex justify-around items-center gap-10 rounded-lg duration-300  select-none   px-9 py-1 max-h-96 overflow-auto border border-green-200">
+                {isCurrentUserCreator ? (
+                  <p>You</p>
+                ) : (
+                  <>
+                    <Avatar
+                      isProfileAvatar={false}
+                      isGroup={false}
+                      picture={creator?.avatarURL}
+                      isOnline={usersOnlineEmails?.includes(
+                        creator ? creator.email : ""
+                      )}
+                    />
+                    <p>{creator?.name}</p>
+                  </>
+                )}
                 <h2 className="text-md text-green-200">Owner</h2>
               </div>
             )}
-            {members?.map((member) => {
-              if (member._id === creatorId) return;
+            {openAddUsers ? (
+              <AddUsersToGroup
+                conversationId={conversationId}
+                members={members}
+              />
+            ) : (
+              <>
+                {members?.map((member) => {
+                  if (member._id === creatorId) return;
 
-              return (
-                <div
-                  key={member._id}
-                  className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-100 px-9 py-1 max-h-96 overflow-auto "
-                >
-                  <Avatar
-                    isProfileAvatar={false}
-                    isGroup={false}
-                    picture={member.avatarURL}
-                    isOnline={usersOnlineEmails?.includes(member.email)}
-                  />
-                  <p>{member.name}</p>
-                  {isCurrentUserCreator && (
-                    <button
-                      onClick={() => {
-                        handleKickUser(member._id);
-                      }}
-                      className="text-4xl rounded-full   border transition text-red-100 hover:border-green-200"
+                  return (
+                    <div
+                      key={member._id}
+                      className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-100 px-9 py-1   overflow-auto "
                     >
-                      <IoCloseOutline />
-                    </button>
-                  )}
-                </div>
-              );
-            })}
+                      <Avatar
+                        isProfileAvatar={false}
+                        isGroup={false}
+                        picture={member.avatarURL}
+                        isOnline={usersOnlineEmails?.includes(member.email)}
+                      />
+                      <p className="max-w-16 truncate">{member.name}</p>
+                      {isCurrentUserCreator && (
+                        <button
+                          onClick={() => {
+                            handleKickUser(member._id);
+                          }}
+                          className="text-4xl rounded-full   border transition text-red-100 hover:border-green-200"
+                        >
+                          <IoCloseOutline />
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
           </div>
         )}
         {!isGroup && (
@@ -210,17 +226,13 @@ const SidebarMenu = ({
         <h1>
           <button
             onClick={
-              !isGroup || isCurrentUserCreator
+              removeChatPosibility
                 ? handleDeleteConversation
                 : handleLeaveConversation
             }
             className="text-green-400 mx-2 p-2 rounded-full border border-gray-100 outline-none    transition   hover:border-green-200"
           >
-            {isCurrentUserCreator || !isGroup ? (
-              <>Remove chat</>
-            ) : (
-              <>Leave chat</>
-            )}
+            {removeChatPosibility ? <>Remove chat</> : <>Leave chat</>}
           </button>
         </h1>
       </div>

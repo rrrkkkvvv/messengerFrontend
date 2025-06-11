@@ -240,6 +240,24 @@ const chatApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Conversation"],
     }),
+    addUsersToConversation: builder.mutation<
+      string,
+      {
+        conversationId: string;
+        selectedUsers: string[];
+      }
+    >({
+      async queryFn({ conversationId, selectedUsers }) {
+        return new Promise((resolve) => {
+          socket?.emit("addUsersToConversation", {
+            conversationId,
+            users: selectedUsers,
+          });
+          resolve({ data: "Users were added" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
     leaveFromConversation: builder.mutation<
       string,
       {
@@ -306,4 +324,5 @@ export const {
   useStartTypingMutation,
   useStopTypingMutation,
   useKickUserFromConversationMutation,
+  useAddUsersToConversationMutation,
 } = chatApi;
