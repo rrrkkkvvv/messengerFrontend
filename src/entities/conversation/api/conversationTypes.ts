@@ -16,6 +16,15 @@ export type TMessageInfo = {
   editedAt?: string | null;
   sentAt: string;
 };
+export type TEditingMessage = Omit<TMessageInfo, "messageImage"> & {
+  messageImage?: string | { fileBuffer: number[] | undefined };
+};
+export type TSendingMessage = {
+  messageText?: string;
+  messageImage?: {
+    fileBuffer: number[] | undefined;
+  };
+};
 export type TConversationData = {
   _id: string;
   userIds: string[];

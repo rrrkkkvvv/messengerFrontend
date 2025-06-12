@@ -3,7 +3,7 @@ import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
 import { IoCloseOutline } from "react-icons/io5";
 import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
-import { TMessageInfo } from "../../api/conversationTypes";
+import { TEditingMessage, TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowLeft } from "react-icons/fa";
 import Input from "../../../../shared/ui/Input/Input";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
@@ -47,9 +47,11 @@ const MessageForm = ({
     setMessageImagePreview("");
   };
   const handleSetMessageImagePreview = (url: string) => {
-    console.log(url);
-
     setMessageImagePreview(url);
+  };
+  const handleResetMessageImage = () => {
+    setMessageImagePreview("");
+    setMessageImage(undefined);
   };
   const handleSetMessageImage = (fileBuffer: number[]) => {
     setMessageImage(fileBuffer);
@@ -80,13 +82,21 @@ const MessageForm = ({
 
     try {
       if (isMessageEdit && messageId && editingMessage) {
+        const messageData = { ...editingMessage } as TEditingMessage;
+        if (
+          messageImage &&
+          messageImagePreview !== editingMessage.messageImage
+        ) {
+          messageData.messageImage = { fileBuffer: messageImage };
+        } else if (messageImagePreview === editingMessage.messageImage) {
+          messageData.messageImage = editingMessage.messageImage;
+        } else if (!messageImage && !messageImagePreview) {
+          messageData.messageImage = "";
+        }
+
         await editMessage({
           conversationId,
-          message: {
-            ...editingMessage,
-            messageText,
-            messageImage: { fileBuffer: messageImage },
-          },
+          message: messageData,
         }).unwrap();
       } else {
         await sendMessage({
@@ -126,7 +136,7 @@ const MessageForm = ({
           <button
             // Clears state of message image
             type="button"
-            onClick={() => handleSetMessageImagePreview("")}
+            onClick={handleResetMessageImage}
             className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
           >
             <IoCloseOutline />

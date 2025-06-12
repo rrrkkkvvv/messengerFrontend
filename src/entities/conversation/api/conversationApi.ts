@@ -4,7 +4,9 @@ import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
 import {
   TEditGroupInfo,
+  TEditingMessage,
   TMessageInfo,
+  TSendingMessage,
   TUpdateGroupResponse,
 } from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
@@ -150,12 +152,7 @@ const chatApi = baseApi.injectEndpoints({
       string,
       {
         conversationId: string;
-        message: {
-          messageText?: string;
-          messageImage?: {
-            fileBuffer: number[] | undefined;
-          };
-        };
+        message: TSendingMessage;
       }
     >({
       async queryFn({ conversationId, message }) {
@@ -169,9 +166,7 @@ const chatApi = baseApi.injectEndpoints({
       string,
       {
         conversationId: string;
-        message: Omit<TMessageInfo, "messageImage"> & {
-          messageImage?: string | { fileBuffer: number[] | undefined };
-        };
+        message: TEditingMessage;
       }
     >({
       async queryFn({ conversationId, message }) {
