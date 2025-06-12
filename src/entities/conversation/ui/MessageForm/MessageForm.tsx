@@ -30,7 +30,8 @@ const MessageForm = ({
   const [messageText, setMessageText] = useState<string>();
   const [messageId, setMessageId] = useState<string | null>(null);
 
-  const [messageImage, setMessageImage] = useState<string>();
+  const [messageImagePreview, setMessageImagePreview] = useState<string>();
+  const [messageImage, setMessageImage] = useState<number[]>();
 
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
@@ -43,12 +44,16 @@ const MessageForm = ({
     handleResetIsEditingMessage();
     setMessageId(null);
     setMessageText("");
-    setMessageImage("");
+    setMessageImagePreview("");
   };
-  const handleSetMessageImage = (url: string) => {
-    setMessageImage(url);
-  };
+  const handleSetMessageImagePreview = (url: string) => {
+    console.log(url);
 
+    setMessageImagePreview(url);
+  };
+  const handleSetMessageImage = (fileBuffer: number[]) => {
+    setMessageImage(fileBuffer);
+  };
   const handleInputChange = async (e: FormEvent<HTMLInputElement>) => {
     setMessageText(e.currentTarget.value);
     if (!conversationId) return;
@@ -71,7 +76,7 @@ const MessageForm = ({
     event.preventDefault();
     if (!conversationId) return;
     if (!currentUser) return;
-    if (!messageText && !messageImage) return;
+    if (!messageText && !messageImagePreview) return;
 
     try {
       if (isMessageEdit && messageId && editingMessage) {
@@ -80,7 +85,7 @@ const MessageForm = ({
           message: {
             ...editingMessage,
             messageText,
-            messageImage,
+            messageImage: { fileBuffer: messageImage },
           },
         }).unwrap();
       } else {
@@ -88,7 +93,7 @@ const MessageForm = ({
           conversationId: conversationId,
           message: {
             messageText,
-            messageImage,
+            messageImage: { fileBuffer: messageImage },
           },
         }).unwrap();
       }
@@ -105,7 +110,7 @@ const MessageForm = ({
         setMessageText(editingMessage.messageText);
       }
       if (editingMessage.messageImage) {
-        setMessageImage(editingMessage.messageImage);
+        setMessageImagePreview(editingMessage.messageImage);
       }
     }
   }, [isMessageEdit, editingMessage]);
@@ -113,22 +118,22 @@ const MessageForm = ({
     <form
       onSubmit={(event) => handleSendMessage(event)}
       className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
-        messageImage && "border border-t-gray-200"
+        messageImagePreview && "border border-t-gray-200"
       }`}
     >
-      {messageImage && (
+      {messageImagePreview && (
         <>
           <button
             // Clears state of message image
             type="button"
-            onClick={() => handleSetMessageImage("")}
+            onClick={() => handleSetMessageImagePreview("")}
             className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
           >
             <IoCloseOutline />
           </button>
           <div className="flex justify-center  mb-4 ">
             <img
-              src={messageImage}
+              src={messageImagePreview}
               alt="Uploaded"
               className="max-w-full h-44 rounded-lg shadow-md border-2 p-2 border-green-400"
             />
@@ -155,7 +160,10 @@ const MessageForm = ({
           value={messageText ? messageText : ""}
           className="w-full hover:border"
         />
-        <UploadButton onUpload={handleSetMessageImage} />
+        <UploadButton
+          setImagePreview={handleSetMessageImagePreview}
+          setImage={handleSetMessageImage}
+        />
 
         <SubmitBtn children={isMessageEdit ? "Edit" : "Send"} />
       </div>

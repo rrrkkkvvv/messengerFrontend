@@ -1,11 +1,12 @@
 import { ChangeEvent, FC, useState } from "react";
 import { IoMdImages } from "react-icons/io";
-
+// TODO: onUpload function must get file data as an argument
 interface UploadButtonProps {
-  onUpload: (url: string) => void;
+  setImagePreview: (url: string) => void;
+  setImage: (fileBuffer: number[]) => void;
 }
 
-const UploadButton: FC<UploadButtonProps> = ({ onUpload }) => {
+const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
@@ -13,28 +14,14 @@ const UploadButton: FC<UploadButtonProps> = ({ onUpload }) => {
     if (!file) return;
 
     setIsLoading(true);
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", import.meta.env.VITE_CLOUDINARY_PRESET);
-
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
     try {
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${
-          import.meta.env.VITE_CLOUDINARY_NAME
-        }/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const arrayBuffer = await file.arrayBuffer();
+      const uint8Array = new Uint8Array(arrayBuffer);
+      const buffer = Array.from(uint8Array);
 
-      const data = await response.json();
-      if (data.secure_url) {
-        onUpload(data.secure_url);
-      } else {
-        console.error("Error uploading file:", data);
-      }
+      setImage(buffer);
     } catch (error) {
       console.error("Upload error:", error);
     } finally {

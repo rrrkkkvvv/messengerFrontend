@@ -152,7 +152,9 @@ const chatApi = baseApi.injectEndpoints({
         conversationId: string;
         message: {
           messageText?: string;
-          messageImage?: string;
+          messageImage?: {
+            fileBuffer: number[] | undefined;
+          };
         };
       }
     >({
@@ -167,7 +169,9 @@ const chatApi = baseApi.injectEndpoints({
       string,
       {
         conversationId: string;
-        message: TMessageInfo;
+        message: Omit<TMessageInfo, "messageImage"> & {
+          messageImage?: string | { fileBuffer: number[] | undefined };
+        };
       }
     >({
       async queryFn({ conversationId, message }) {
