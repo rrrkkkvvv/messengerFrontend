@@ -14,7 +14,7 @@ import Conversation from "../entities/conversation";
 import Profile from "../widgets/Profile";
 import ErrorPage from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
-import { ContactsList } from "../entities/user";
+import { ContactsList } from "../entities/contact";
 
 const router = createBrowserRouter([
   {

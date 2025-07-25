@@ -1,13 +1,12 @@
 import baseApi from "../../../app/api/baseApi";
-import { TAuthResponse } from "./authTypes";
-import { apiURLs } from "../../../shared/values/strValues";
-import { TSignInUserData } from "../../../entities/user";
 import { TUserData } from "../../../shared/types/UserEntityTypes";
+import { apiURLs } from "../../../shared/values/strValues";
+import { TAuthResponse, TSignInUserData } from "./userTypes";
 
 const { googleAuthPath, logoutPath, refreshPath, signInPath, signUpPath } =
   apiURLs.paths.auth;
 
-const authApi = baseApi.injectEndpoints({
+const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     signUp: builder.mutation<TAuthResponse, TUserData>({
       query: (userData: TUserData) => ({
@@ -61,5 +60,5 @@ export const {
   usePrefetch,
   useRefreshUserAuthMutation,
   useLogoutMutation,
-} = authApi;
-export default authApi;
+} = userApi;
+export default userApi;

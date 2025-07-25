@@ -21,8 +21,8 @@ import {
   updateGroupContact,
   deleteMemberFromGroup,
   addUsersToConversation,
-} from "../model/contactsSlice";
-import { TDeleteUserResponse, TUpdateUserResponse } from "./userTypes";
+} from "../model/contactSlice";
+import { TDeleteUserResponse, TUpdateUserResponse } from "./contactTypes";
 import {
   TContactsList,
   TGroupConversation,
@@ -31,7 +31,7 @@ import {
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
 let socket: TApiSocket = null;
 
-const usersApi = baseApi.injectEndpoints({
+const contactApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToGetUsersChanel: builder.query<
       {
@@ -207,14 +207,7 @@ const usersApi = baseApi.injectEndpoints({
       },
       invalidatesTags: ["Users"],
     }),
-    disconnectFromSocket: builder.mutation<string, void>({
-      async queryFn() {
-        return new Promise((resolve) => {
-          socket?.disconnect();
-          resolve({ data: "User was disconnected" });
-        });
-      },
-    }),
+
     updateUser: builder.mutation<TUpdateUserResponse, TProfile>({
       async queryFn(profile) {
         return new Promise((resolve) => {
@@ -237,6 +230,6 @@ export const {
   useConnectToGetUsersChanelQuery,
   useDeleteUserMutation,
   useCreateGroupConversationMutation,
-} = usersApi;
+} = contactApi;
 
-export default usersApi;
+export default contactApi;

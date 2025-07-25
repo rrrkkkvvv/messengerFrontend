@@ -1,6 +1,6 @@
 import { FaCircle } from "react-icons/fa6";
 import { useAppSelector } from "../../../app/store/store";
-import { selectUsersByIds } from "../model/contactsSlice";
+import { selectUsersByIds } from "../model/contactSlice";
 interface ITypingUser {
   groupTypingStatuses?: boolean;
   userTypingIds?: string[];

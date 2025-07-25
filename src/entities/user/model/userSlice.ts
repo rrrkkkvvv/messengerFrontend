@@ -64,6 +64,32 @@ export const setJWTToken =
     dispatch(setJWTTokenState(token));
   };
 
+type TSetUserLoginDataProps =
+  | {
+      loginStatus: true;
+      token?: string;
+      user: TUserInfo;
+    }
+  | {
+      loginStatus: false;
+    };
+export const setUserLoginData =
+  (props: TSetUserLoginDataProps) => async (dispatch: AppDispatch) => {
+    const { loginStatus } = props;
+    if (loginStatus) {
+      const { user, token } = props;
+
+      dispatch(setCurrentUser(user));
+      if (token) {
+        dispatch(setJWTToken(token));
+      }
+      dispatch(setIsLoggedIn(true));
+    } else {
+      dispatch(setCurrentUser(null));
+      dispatch(setJWTToken(null));
+      dispatch(setIsLoggedIn(false));
+    }
+  };
 export const {
   selectCurrentUser,
   selectCurrentUserPicture,

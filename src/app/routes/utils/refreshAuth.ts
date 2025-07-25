@@ -1,11 +1,10 @@
 import { NavigateFunction } from "react-router-dom";
-import { useRefreshUserAuthMutation } from "../../../pages/auth/";
 import { AppDispatch } from "../../store/store";
-import { logout } from "../../../entities/user";
+import { logout } from "../../../entities/contact";
 import { routes } from "../../../shared/values/strValues";
-import { setCurrentUser, setIsLoggedIn } from "../../../entities/user/model/";
+import userApi from "../../../entities/user/api/userApi";
+import { setUserLoginData } from "../../../entities/user/model/userSlice";
 type TRefreshAuthProps = {
-  refreshUserAuth: ReturnType<typeof useRefreshUserAuthMutation>[0];
   navigate: NavigateFunction;
   dispatch: AppDispatch;
   isRestrictedRoute?: boolean;
@@ -13,16 +12,23 @@ type TRefreshAuthProps = {
 export const refreshAuth = async ({
   dispatch,
   navigate,
-  refreshUserAuth,
   isRestrictedRoute,
 }: TRefreshAuthProps) => {
   try {
-    const result = await refreshUserAuth().unwrap();
+    const result = await dispatch(userApi.endpoints.refreshUserAuth.initiate());
+    if (!result.error) {
+      dispatch(
+        setUserLoginData({
+          loginStatus: true,
+          user: result.data.data.user,
+        })
+      );
 
-    dispatch(setCurrentUser(result.data.user));
-    dispatch(setIsLoggedIn(true));
-    if (isRestrictedRoute) {
-      navigate(routes.main);
+      if (isRestrictedRoute) {
+        navigate(routes.main);
+      }
+    } else {
+      throw new Error("Cannot refresh authentication");
     }
   } catch (error) {
     logout(navigate, dispatch);

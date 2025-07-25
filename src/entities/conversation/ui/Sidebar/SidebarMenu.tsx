@@ -5,7 +5,6 @@ import { toastTexts } from "../../../../shared/values/strValues";
 import toast from "react-hot-toast";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import { useAppSelector } from "../../../../app/store/store";
-import { selectCurrentUser } from "../../../user/model";
 import { MdModeEdit } from "react-icons/md";
 import { useState } from "react";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
@@ -17,6 +16,7 @@ import {
 import GroupConversationEdit from "./GroupConversationEdit";
 import AddUsersToGroup from "./AddUsersToGroup";
 import SidebarBtn from "../../../../shared/ui/Button/SidebarBtn";
+import { selectCurrentUser } from "../../../user";
 
 interface ISidebarMenuProps {
   anotherUser?: TUserInfo | null;

@@ -7,7 +7,7 @@ const staggeredBaseQuery = retry(
     baseUrl: apiURLs.baseURL,
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).currentUser.jwtToken;
-      // If we have a token set in state, let's assume that we should be passing it.
+
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }

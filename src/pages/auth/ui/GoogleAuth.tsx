@@ -1,15 +1,15 @@
 import { GoogleLogin } from "@react-oauth/google";
 import toast from "react-hot-toast";
 import { routes, toastTexts } from "../../../shared/values/strValues";
-import { useSignInByGoogleMutation } from "../api/authApi";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
+import { FC } from "react";
 import {
   setCurrentUser,
-  setIsLoggedIn,
   setJWTToken,
-} from "../../../entities/user/model/";
-import { FC } from "react";
+  useSignInByGoogleMutation,
+} from "../../../entities/user";
+import { setUserLoginData } from "../../../entities/user/model/userSlice";
 
 interface GoogleLoginComponentProps {
   text?: string;
@@ -34,7 +34,13 @@ const GoogleAuth: FC<GoogleLoginComponentProps> = () => {
       toast.success(toastTexts.success.successAuth);
       dispatch(setCurrentUser(result.user));
       dispatch(setJWTToken(result.token));
-      dispatch(setIsLoggedIn(true));
+      dispatch(
+        setUserLoginData({
+          loginStatus: true,
+          user: result.user,
+          token: result.token,
+        })
+      );
 
       navigate(routes.main);
 

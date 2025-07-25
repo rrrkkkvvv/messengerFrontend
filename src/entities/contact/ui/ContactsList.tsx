@@ -5,14 +5,17 @@ import { CiCirclePlus, CiLogout } from "react-icons/ci";
 import { useNavigate } from "react-router-dom";
 import { toastTexts } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
-import { selectContactsList, selectUsersOnlineEmails } from "../model";
-import { selectCurrentUser } from "../model";
 import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useState } from "react";
-import { useCreateGroupConversationMutation } from "../api/usersApi";
+import { useCreateGroupConversationMutation } from "../api/contactApi";
 import toast from "react-hot-toast";
 import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import { TContact } from "../../../shared/types/Contact";
+import { selectCurrentUser } from "../../user";
+import {
+  selectContactsList,
+  selectUsersOnlineEmails,
+} from "../model/contactSlice";
 
 const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);

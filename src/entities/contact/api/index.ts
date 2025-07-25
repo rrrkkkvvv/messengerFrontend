@@ -2,4 +2,4 @@ export {
   useConnectToGetUsersChanelQuery,
   useUpdateUserMutation,
   usePrefetch,
-} from "./usersApi";
+} from "./contactApi";

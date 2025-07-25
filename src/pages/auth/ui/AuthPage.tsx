@@ -1,16 +1,13 @@
 import { FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { useSignInMutation, useSignUpMutation } from "../api/authApi";
 import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
 import { routes, toastTexts } from "../../../shared/values/strValues";
-import {
-  setCurrentUser,
-  setIsLoggedIn,
-  setJWTToken,
-} from "../../../entities/user/model/";
+
 import Input from "../../../shared/ui/Input/Input";
 import GoogleAuth from "./GoogleAuth";
+import { useSignInMutation, useSignUpMutation } from "../../../entities/user";
+import { setUserLoginData } from "../../../entities/user/model/userSlice";
 
 const AuthPage = () => {
   const [isSignUp, setSignIn] = useState(true);
@@ -47,17 +44,26 @@ const AuthPage = () => {
       let result;
       if (isSignUp) {
         result = await signUp({ name, password, email }).unwrap();
+        dispatch(
+          setUserLoginData({
+            loginStatus: true,
+            user: result.data.user,
+            token: result.data.token,
+          })
+        );
 
-        dispatch(setCurrentUser(result.data.user));
-        dispatch(setJWTToken(result.data.token));
-        dispatch(setIsLoggedIn(true));
         navigate(routes.main);
         toast.success(toastTexts.success.successSignup);
       } else {
         result = await signIn({ password, email }).unwrap();
-        dispatch(setCurrentUser(result.data.user));
-        dispatch(setJWTToken(result.data.token));
-        dispatch(setIsLoggedIn(true));
+        dispatch(
+          setUserLoginData({
+            loginStatus: true,
+            user: result.data.user,
+            token: result.data.token,
+          })
+        );
+
         navigate(routes.main);
         toast.success(toastTexts.success.successAuth);
       }

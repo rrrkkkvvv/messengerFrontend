@@ -1,22 +1,20 @@
 import { NavigateFunction } from "react-router-dom";
 import { localStorageItems, routes } from "../../../shared/values/strValues";
 import { AppDispatch } from "../../../app/store/store";
-import { setCurrentUser, setIsLoggedIn, setJWTToken } from "../model/";
-import { setContactsList, setUsersOnlineEmails } from "../model/";
+
 import baseApi from "../../../app/api/baseApi";
-import authApi from "../../../pages/auth/api/authApi";
-import usersApi from "../api/usersApi";
+import { setUserLoginData } from "../model/userSlice";
+import userApi from "../api/userApi";
 
 const logout = (navigate: NavigateFunction, dispatch: AppDispatch) => {
-  dispatch(authApi.endpoints.logout.initiate());
-  dispatch(usersApi.endpoints.disconnectFromSocket.initiate());
+  dispatch(userApi.endpoints.logout.initiate());
   dispatch(baseApi.util.resetApiState());
+  dispatch(
+    setUserLoginData({
+      loginStatus: false,
+    })
+  );
 
-  dispatch(setContactsList(null));
-  dispatch(setUsersOnlineEmails(null));
-  dispatch(setCurrentUser(null));
-  dispatch(setIsLoggedIn(false));
-  dispatch(setJWTToken(null));
   localStorage.removeItem(localStorageItems.jwtToken);
   localStorage.removeItem(localStorageItems.isLoggedIn);
 

@@ -6,12 +6,12 @@ import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { FormEvent, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/store/store";
-import { useUpdateUserMutation } from "../../../entities/user/api/";
+import { useUpdateUserMutation } from "../../../entities/contact/api";
 
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../shared/values/strValues";
-import { setCurrentUser } from "../../../entities/user/model/";
 import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { setCurrentUser } from "../../../entities/user";
 type TEditProfileProps = {
   currentUser: TUserInfo | null;
 };

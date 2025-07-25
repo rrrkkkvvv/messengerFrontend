@@ -6,10 +6,10 @@ import { FaArrowLeft, FaEye } from "react-icons/fa";
 import { MdModeEdit } from "react-icons/md";
 import EditProfile from "./EditProfile";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
-import { selectCurrentUser } from "../../../entities/user/model/";
 import { IoMdSettings } from "react-icons/io";
 import SettingsProfile from "./SettingsProfile";
 import { TbSettingsOff } from "react-icons/tb";
+import { selectCurrentUser } from "../../../entities/user";
 
 const Profile = () => {
   const currentUser = useAppSelector(selectCurrentUser);

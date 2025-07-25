@@ -5,14 +5,14 @@ import { routes } from "../../../shared/values/strValues";
 import Conversation from "../../../entities/conversation/";
 import Profile from "../../../widgets/Profile";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { useConnectToGetUsersChanelQuery } from "../../../entities/user/api/";
+import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { ContactsList } from "../../../entities/contact";
+import { selectCurrentUser } from "../../../entities/user";
 import {
-  selectCurrentUser,
   setContactsList,
   setUsersOnlineEmails,
-} from "../../../entities/user/model/";
-import { ContactsList } from "../../../entities/user";
+} from "../../../entities/contact/model/contactSlice";
 
 const MainPage = () => {
   const location = useLocation();

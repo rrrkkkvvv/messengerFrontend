@@ -25,9 +25,7 @@ import MessageList from "./Messages/MessageList";
 import SidebarMenu from "./Sidebar/SidebarMenu";
 import ConversationPlaceholder from "./ConversationPlaceholder";
 import { TMessageInfo } from "../api/conversationTypes";
-import { selectUsersOnlineEmails } from "../../user/model";
 import MessageForm from "./MessageForm/MessageForm";
-import { selectCurrentUser } from "../../user/model";
 import { IoCloseOutline } from "react-icons/io5";
 import {
   resetCurrentConversation,
@@ -37,7 +35,9 @@ import {
   setCurrentConversationGroupInfo,
 } from "../model/conversationSlice";
 import { useLeaveConversationConnectMutation } from "../api/conversationApi";
-import TypingUser from "../../user/ui/TypingUser";
+import TypingUser from "../../contact/ui/TypingUser";
+import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
+import { selectCurrentUser } from "../../user";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();

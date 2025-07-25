@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useAppSelector } from "../../../../app/store/store";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
-import { selectContactsList } from "../../../user/model";
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../../shared/values/strValues";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import { useAddUsersToConversationMutation } from "../../api/conversationApi";
+import { selectContactsList } from "../../../contact/model/contactSlice";
 
 interface IAddUsersToGroupProps {
   conversationId: string | null;
