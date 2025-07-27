@@ -31,7 +31,7 @@ const MessageForm = ({
   const [messageId, setMessageId] = useState<string | null>(null);
 
   const [messageImagePreview, setMessageImagePreview] = useState<string>();
-  const [messageImage, setMessageImage] = useState<number[]>();
+  const [messageImageBuffer, setMessageImageBuffer] = useState<number[]>();
 
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
@@ -51,10 +51,10 @@ const MessageForm = ({
   };
   const handleResetMessageImage = () => {
     setMessageImagePreview("");
-    setMessageImage(undefined);
+    setMessageImageBuffer(undefined);
   };
   const handleSetMessageImage = (fileBuffer: number[]) => {
-    setMessageImage(fileBuffer);
+    setMessageImageBuffer(fileBuffer);
   };
   const handleInputChange = async (e: FormEvent<HTMLInputElement>) => {
     setMessageText(e.currentTarget.value);
@@ -84,13 +84,13 @@ const MessageForm = ({
       if (isMessageEdit && messageId && editingMessage) {
         const messageData = { ...editingMessage } as TEditingMessage;
         if (
-          messageImage &&
+          messageImageBuffer &&
           messageImagePreview !== editingMessage.messageImage
         ) {
-          messageData.messageImage = { fileBuffer: messageImage };
+          messageData.messageImage = { fileBuffer: messageImageBuffer };
         } else if (messageImagePreview === editingMessage.messageImage) {
           messageData.messageImage = editingMessage.messageImage;
-        } else if (!messageImage && !messageImagePreview) {
+        } else if (!messageImageBuffer && !messageImagePreview) {
           messageData.messageImage = "";
         }
 
@@ -103,7 +103,7 @@ const MessageForm = ({
           conversationId: conversationId,
           message: {
             messageText,
-            messageImage: { fileBuffer: messageImage },
+            messageImage: { fileBuffer: messageImageBuffer },
           },
         }).unwrap();
       }

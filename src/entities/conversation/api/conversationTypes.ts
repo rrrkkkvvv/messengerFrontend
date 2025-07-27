@@ -37,7 +37,9 @@ export type TEditGroupInfo = {
   _id: string;
   creatorId: string;
   name?: string;
-  avatarURL?: string | null;
+  avatar?: {
+    fileBuffer: number[] | null;
+  };
 };
 export type TUpdateGroupResponse =
   | {

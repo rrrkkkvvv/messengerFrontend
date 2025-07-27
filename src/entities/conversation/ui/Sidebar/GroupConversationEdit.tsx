@@ -27,21 +27,28 @@ const GroupConversationEdit = ({
   creatorId,
   conversationId,
 }: IGroupCOnversationEditProps) => {
-  const [avatarInputValue, setAvatarInputValue] = useState(avatarURL);
   const [nameInputValue, setNameValue] = useState("");
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarBuffer, setAvatarBuffer] = useState<number[]>([]);
+
   const [updateGroupConversation] = useUpdateGroupConversationMutation();
 
-  const handleSetAvatarURL = (url: string) => {
-    setAvatarInputValue(url);
+  const handleSetAvatarPreview = (url: string) => {
+    setAvatarPreview(url);
+  };
+  const handleSetAvatarBuffer = (fileBuffer: number[]) => {
+    setAvatarBuffer(fileBuffer);
   };
   const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setNameValue(event.currentTarget.value);
   };
-  const handleRemoveAvatarURL = () => {
-    setAvatarInputValue(null);
+  const handleRemoveAvatar = () => {
+    setAvatarPreview(null);
+    setAvatarBuffer([]);
   };
-  const handleResetAvatarURL = () => {
-    setAvatarInputValue(avatarURL);
+  const handleResetAvatar = () => {
+    setAvatarPreview(avatarURL);
+    setAvatarBuffer([]);
   };
   const handleResetUsername = () => {
     if (!originalName) return;
@@ -53,7 +60,7 @@ const GroupConversationEdit = ({
     const toastId = toast.loading("Loading...");
     try {
       if (
-        (nameInputValue === originalName && avatarInputValue === avatarURL) ||
+        (nameInputValue === originalName && avatarPreview === avatarURL) ||
         !nameInputValue?.trim()
       ) {
         toast.error(toastTexts.error.errorEditUser);
@@ -68,8 +75,10 @@ const GroupConversationEdit = ({
       if (nameInputValue !== originalName) {
         groupInfo.name = nameInputValue;
       }
-      if (avatarInputValue !== avatarURL) {
-        groupInfo.avatarURL = avatarInputValue;
+      if (avatarPreview !== avatarURL) {
+        groupInfo.avatar = {
+          fileBuffer: avatarBuffer,
+        };
       }
 
       result = await updateGroupConversation(groupInfo).unwrap();
@@ -88,7 +97,8 @@ const GroupConversationEdit = ({
     if (originalName) {
       setNameValue(originalName);
     }
-    setAvatarInputValue(avatarURL);
+    setAvatarPreview(avatarURL);
+    setAvatarBuffer([]);
   }, [originalName, avatarURL]);
   return (
     <form
@@ -98,26 +108,29 @@ const GroupConversationEdit = ({
       <h1>
         <Avatar
           isGroup={true}
-          picture={avatarInputValue}
+          picture={avatarPreview}
           isOnline={isAnotherUserOnline}
           isProfileAvatar={false}
         />
       </h1>
       <div className="flex items-center justify-between gap-5">
-        {avatarInputValue !== avatarURL && (
+        {avatarPreview !== avatarURL && (
           <button
             type="button"
             className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
-            onClick={handleResetAvatarURL}
+            onClick={handleResetAvatar}
           >
             <TbArrowBackUp />
           </button>
         )}
-        <UploadButton onUpload={handleSetAvatarURL} />
-        {avatarInputValue && (
+        <UploadButton
+          setImagePreview={handleSetAvatarPreview}
+          setImage={handleSetAvatarBuffer}
+        />
+        {avatarPreview && (
           <button
             type="button"
-            onClick={handleRemoveAvatarURL}
+            onClick={handleRemoveAvatar}
             className=" text-green-400 mx-1  text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
           >
             <IoCloseOutline />

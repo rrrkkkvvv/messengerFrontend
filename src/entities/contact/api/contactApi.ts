@@ -1,6 +1,5 @@
 import toast from "react-hot-toast";
 import baseApi from "../../../app/api/baseApi";
-import { TProfile } from "../../../shared/types/UserEntityTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs, toastTexts } from "../../../shared/values/strValues";
@@ -22,7 +21,11 @@ import {
   deleteMemberFromGroup,
   addUsersToConversation,
 } from "../model/contactSlice";
-import { TDeleteUserResponse, TUpdateUserResponse } from "./contactTypes";
+import {
+  TDeleteUserResponse,
+  TEditedProfile,
+  TUpdateUserResponse,
+} from "./contactTypes";
 import {
   TContactsList,
   TGroupConversation,
@@ -208,7 +211,7 @@ const contactApi = baseApi.injectEndpoints({
       invalidatesTags: ["Users"],
     }),
 
-    updateUser: builder.mutation<TUpdateUserResponse, TProfile>({
+    updateUser: builder.mutation<TUpdateUserResponse, TEditedProfile>({
       async queryFn(profile) {
         return new Promise((resolve) => {
           const data = {

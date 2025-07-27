@@ -1,4 +1,4 @@
-import { TUserData, TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 export type TEditProfileResponse =
   | {
@@ -35,3 +35,10 @@ export type TOpenGetUsersConnectionResponse =
   | {
       message: "Unauthorized";
     };
+export type TEditedProfile = {
+  _id: string;
+  name?: string;
+  avatar?: {
+    fileBuffer: number[] | null;
+  };
+};

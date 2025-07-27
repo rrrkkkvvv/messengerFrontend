@@ -29,12 +29,18 @@ const ContactsList = () => {
   const [groupNameValue, setGroupNameValue] = useState("");
   const [groupMembersList, setGroupMembersList] = useState<string[]>([]);
   const toggleUserToGroup = (userId: string) => {
-    if (!groupMembersList.includes(userId)) {
-      setGroupMembersList([userId, ...groupMembersList]);
-    } else {
-      setGroupMembersList(
-        groupMembersList.filter((memberId) => userId !== memberId)
-      );
+    if (
+      contactsList?.find(
+        (contact) => contact._id === userId && contact.type === "single"
+      )
+    ) {
+      if (!groupMembersList.includes(userId)) {
+        setGroupMembersList([userId, ...groupMembersList]);
+      } else {
+        setGroupMembersList(
+          groupMembersList.filter((memberId) => userId !== memberId)
+        );
+      }
     }
   };
 

@@ -10,19 +10,25 @@ import { useUpdateUserMutation } from "../../../entities/contact/api";
 
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../shared/values/strValues";
-import { TProfile, TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { setCurrentUser } from "../../../entities/user";
+import { TEditedProfile } from "../../../entities/contact/api/contactTypes";
 type TEditProfileProps = {
   currentUser: TUserInfo | null;
 };
 const EditProfile = ({ currentUser }: TEditProfileProps) => {
   const [userName, setUserName] = useState("");
-  const [userPicture, setUserPicture] = useState<string | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [avatarBuffer, setAvatarBuffer] = useState<number[]>([]);
+
   const [updateUser] = useUpdateUserMutation();
   const dispatch = useAppDispatch();
 
-  const handleSetUserPicture = (url: string) => {
-    setUserPicture(url);
+  const handleSetAvatarPreview = (url: string) => {
+    setAvatarPreview(url);
+  };
+  const handleSetAvatarBuffer = (fileBuffer: number[]) => {
+    setAvatarBuffer(fileBuffer);
   };
   const handleResetUsername = () => {
     if (currentUser?.name) {
@@ -30,15 +36,17 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
     }
   };
   const handleResetUserPicutre = () => {
-    if (currentUser?.avatarURL) {
-      setUserPicture(currentUser.avatarURL);
+    if (currentUser) {
+      setAvatarPreview(currentUser.avatarURL);
+      setAvatarBuffer([]);
     }
   };
   const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setUserName(event.currentTarget.value);
   };
   const handleRemoveUserPicture = () => {
-    setUserPicture(null);
+    setAvatarBuffer([]);
+    setAvatarPreview(null);
   };
 
   const handleEditProfile = async (event: FormEvent<HTMLFormElement>) => {
@@ -49,7 +57,7 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
     try {
       if (
         (userName === currentUser.name &&
-          userPicture === currentUser.avatarURL) ||
+          avatarPreview === currentUser.avatarURL) ||
         !userName.trim()
       ) {
         toast.error(toastTexts.error.errorEditUser);
@@ -58,19 +66,24 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
 
       let result;
 
-      let profile: TProfile = {
+      let profile: TEditedProfile = {
         _id: currentUser._id,
       };
       if (userName !== currentUser.name) {
         profile.name = userName;
       }
-      if (userPicture !== currentUser.avatarURL) {
-        profile.avatarURL = userPicture;
+      if (avatarPreview !== currentUser.avatarURL) {
+        profile.avatar = { fileBuffer: avatarBuffer };
       }
 
       result = await updateUser(profile).unwrap();
       if (result.message === "User was updated") {
-        const updatedUserInfo = { ...currentUser, ...profile };
+        const updatedUserInfo = {
+          ...currentUser,
+
+          name: userName,
+          avatarURL: avatarPreview,
+        } as TUserInfo;
 
         dispatch(setCurrentUser(updatedUserInfo));
         toast.success(toastTexts.success.successEditUser);
@@ -90,7 +103,8 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
       setUserName(currentUser.name);
     }
     if (currentUser?.avatarURL) {
-      setUserPicture(currentUser.avatarURL);
+      setAvatarBuffer([]);
+      setAvatarPreview(currentUser.avatarURL);
     }
   }, [currentUser]);
 
@@ -101,12 +115,12 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
     >
       <div className="flex w-full justify-center items-center flex-col gap-3">
         {/* User picture */}
-        <Avatar isProfileAvatar={true} picture={userPicture} />
+        <Avatar isProfileAvatar={true} picture={avatarPreview} />
 
         <div className="flex items-center justify-between gap-5">
           {/* Reset picture button(exists if picture is not saved) */}
 
-          {userPicture !== currentUser?.avatarURL && (
+          {avatarPreview !== currentUser?.avatarURL && (
             <button
               type="button"
               className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
@@ -116,7 +130,10 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
             </button>
           )}
           {/* Choose picture */}
-          <UploadButton onUpload={handleSetUserPicture} />
+          <UploadButton
+            setImagePreview={handleSetAvatarPreview}
+            setImage={handleSetAvatarBuffer}
+          />
 
           <button
             type="button"
