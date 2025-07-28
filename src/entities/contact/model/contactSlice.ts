@@ -12,11 +12,13 @@ import { TEditGroupInfo } from "../../conversation/api/conversationTypes";
 interface IConversationsListSliceProps {
   contactsList: TContactsList | null;
   usersOnlineEmails: string[] | null;
+  isLoading: boolean;
 }
 
 const initialState: IConversationsListSliceProps = {
   contactsList: null,
   usersOnlineEmails: null,
+  isLoading: true,
 };
 const contactsListSlice = createSlice({
   name: "contactsList",
@@ -34,13 +36,23 @@ const contactsListSlice = createSlice({
     ) => {
       state.usersOnlineEmails = action.payload;
     },
+    setIsLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+    },
   },
   selectors: {
     selectContactsList: (state) => state.contactsList,
     selectUsersOnlineEmails: (state) => state.usersOnlineEmails,
+    selectIsLoadnigContacts: (state) => state.isLoading,
   },
 });
-
+const { setContactsListsState, setUsersOnlineEmailsState, setIsLoading } =
+  contactsListSlice.actions;
+export const {
+  selectContactsList,
+  selectUsersOnlineEmails,
+  selectIsLoadnigContacts,
+} = contactsListSlice.selectors;
 export const selectUsersByIds = (userIds: string[] | undefined) =>
   createSelector([selectContactsList], (contacts) => {
     if (userIds) {
@@ -58,9 +70,6 @@ export const selectUsersByIds = (userIds: string[] | undefined) =>
       return [];
     }
   });
-
-const { setContactsListsState, setUsersOnlineEmailsState } =
-  contactsListSlice.actions;
 
 type TChangeLastMessageProps =
   | { status: "newLastMessage"; message: TLastMessage }
@@ -220,6 +229,7 @@ export const addGroupToContacts =
 export const setContactsList =
   (conversationsList: TContactsList | null) =>
   async (dispatch: AppDispatch) => {
+    dispatch(setIsLoading(false));
     dispatch(setContactsListsState(conversationsList));
   };
 export const setUsersOnlineEmails =
@@ -316,7 +326,6 @@ export const addUsersToConversation =
     });
     dispatch(setContactsListsState(newContactsList));
   };
-export const { selectContactsList, selectUsersOnlineEmails } =
-  contactsListSlice.selectors;
+
 const contactsListReducer = contactsListSlice.reducer;
 export default contactsListReducer;

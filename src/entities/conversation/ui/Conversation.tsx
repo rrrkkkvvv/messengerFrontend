@@ -38,6 +38,7 @@ import { useLeaveConversationConnectMutation } from "../api/conversationApi";
 import TypingUser from "../../contact/ui/TypingUser";
 import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
+import ConversationSkeleton from "./ConversationSkeleton";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
@@ -214,8 +215,16 @@ const Conversation = () => {
 
   return (
     <>
-      {!anotherUser() && !conversationName ? (
+      {!anotherUser() &&
+      !conversationName &&
+      !conversationType &&
+      !contactId ? (
         <ConversationPlaceholder />
+      ) : !anotherUser() &&
+        !conversationName &&
+        conversationType &&
+        contactId ? (
+        <ConversationSkeleton />
       ) : (
         <div
           className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white"

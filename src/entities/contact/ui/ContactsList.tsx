@@ -6,20 +6,29 @@ import { useNavigate } from "react-router-dom";
 import { toastTexts } from "../../../shared/values/strValues";
 import { CgProfile } from "react-icons/cg";
 import Input from "../../../shared/ui/Input/Input";
-import { FormEvent, useState } from "react";
-import { useCreateGroupConversationMutation } from "../api/contactApi";
+import { FormEvent, useEffect, useState } from "react";
+import {
+  useConnectToGetUsersChanelQuery,
+  useCreateGroupConversationMutation,
+} from "../api/contactApi";
 import toast from "react-hot-toast";
 import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import { TContact } from "../../../shared/types/Contact";
 import { selectCurrentUser } from "../../user";
 import {
   selectContactsList,
+  selectIsLoadnigContacts,
   selectUsersOnlineEmails,
+  setContactsList,
+  setUsersOnlineEmails,
 } from "../model/contactSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
+import ContactsSkeleton from "./ContactsSkeleton";
 
 const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const contactsList = useAppSelector(selectContactsList);
+  const isLoadingContacts = useAppSelector(selectIsLoadnigContacts);
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
   const [createGroupConversation] = useCreateGroupConversationMutation();
   const navigate = useNavigate();
@@ -28,6 +37,25 @@ const ContactsList = () => {
   const [isGroupCreating, setIsGroupCreating] = useState(false);
   const [groupNameValue, setGroupNameValue] = useState("");
   const [groupMembersList, setGroupMembersList] = useState<string[]>([]);
+
+  const {
+    data = {
+      contactsData: null,
+      usersOnline: null,
+    },
+  } = useConnectToGetUsersChanelQuery(
+    currentUser?.email ? { userEmail: currentUser?.email } : skipToken
+  );
+
+  useEffect(() => {
+    if (data.contactsData) {
+      dispatch(setContactsList(data.contactsData));
+    }
+    if (data.usersOnline) {
+      dispatch(setUsersOnlineEmails(data.usersOnline));
+    }
+  }, [data]);
+  useEffect(() => {}, []);
   const toggleUserToGroup = (userId: string) => {
     if (
       contactsList?.find(
@@ -136,6 +164,7 @@ const ContactsList = () => {
       )}
       {/* Users list */}
       <div className="relative  max-h-full overflow-y-auto   text-green-200">
+        {isLoadingContacts && <ContactsSkeleton />}
         {contactsList &&
           [...contactsList]
             .sort((a, b) => {

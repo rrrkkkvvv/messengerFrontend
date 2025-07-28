@@ -7,6 +7,7 @@ type InputPropsType = {
   onChange?: (e: FormEvent<HTMLInputElement>) => void;
   onClick?: (e: MouseEvent<HTMLInputElement>) => void;
   className?: string;
+  disabled?: boolean;
   required?: boolean;
 };
 const Input = ({
@@ -17,9 +18,11 @@ const Input = ({
   onClick,
   className,
   required,
+  disabled,
 }: InputPropsType) => {
   return (
     <input
+      disabled={!!disabled}
       required={required}
       onChange={onChange}
       onClick={onClick}
@@ -27,16 +30,21 @@ const Input = ({
       placeholder={placeholder}
       value={value}
       className={`
-        bg-green-400
+        
         p-3 rounded-2xl
         placeholder:text-white 
         outline-none
         
         transition-all
-        focus:border-white
+
+        ${
+          disabled
+            ? "bg-gray-200"
+            : `bg-green-400         focus:border-white
         focus:border 
         hover:border-white
-        hover:border  
+        hover:border   `
+        }
         ${className}
         `}
     />
