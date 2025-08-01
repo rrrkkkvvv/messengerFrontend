@@ -26,7 +26,7 @@ export default {
         300: "#222629",
       },
       white: "#fff",
-      black: "#333",
+      black: "#000",
     },
     extend: {
       keyframes: {
@@ -38,7 +38,9 @@ export default {
         },
         dropDown: {
           "0%": { opacity: 0, height: 0 },
-          "100%": { opacity: 1, height: "150px" },
+          "50%": { height: "150px" },
+
+          "100%": { opacity: 1 },
         },
         fadeIn: {
           "0%": { opacity: 0 },

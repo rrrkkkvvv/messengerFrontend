@@ -1,1 +1,1 @@
-export { default } from "./ui/Profile";
+export { default } from "./ui/Modals/ProfileModal";

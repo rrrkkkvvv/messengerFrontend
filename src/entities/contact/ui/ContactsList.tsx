@@ -105,45 +105,7 @@ const ContactsList = () => {
     setGroupNameValue("");
   };
   return (
-    <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-300">
-      <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
-        <button
-          className="
-                  text-green-400
-                  flex
-                  gap-3
-                  items-center
-                  ml-2
-                  px-4
-                  outline-none
-                  rounded-sm
-                  transition-all
-                  focus:outline-green-400
-                  hover:outline-green-200"
-          onClick={() => navigate("/profile")}
-        >
-          <CgProfile className="text-2xl" />
-          My profile
-        </button>
-        <button
-          className="
-          text-green-400
-          flex
-          gap-3
-          items-center
-          ml-2
-          px-4
-          outline-none
-          rounded-sm
-          transition-all
-          focus:outline-green-400
-          hover:outline-green-200"
-          onClick={() => logout(navigate, dispatch)}
-        >
-          <CiLogout className="text-2xl" />
-          Logout
-        </button>
-      </h1>
+    <>
       {isGroupCreating && (
         <form
           className="w-full animate-dropDown  text-green-400 flex justify-center items-center flex-col gap-2"
@@ -203,9 +165,13 @@ const ContactsList = () => {
       </div>
       <CiCirclePlus
         onClick={handleToggleIsGroupCreating}
-        className="right-4 absolute bottom-10 bg-green-900 text-green-200 hover:bg-green-800 hover:text-green-100 rounded-full box-border  text-6xl cursor-pointer  z-50"
+        className={`right-4 absolute bottom-10      rounded-full box-border  text-6xl cursor-pointer  transition duration-500 z-50 ${
+          isGroupCreating
+            ? "rotate-45 bg-red-100 text-black hover:bg-red-100  hover:text-white"
+            : "hover:text-green-100 text-green-200 hover:bg-green-800"
+        }`}
       />
-    </div>
+    </>
   );
 };
 

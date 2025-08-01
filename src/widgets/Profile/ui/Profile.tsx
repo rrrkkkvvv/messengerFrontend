@@ -1,110 +1,68 @@
-import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/store/store";
-import { useState } from "react";
-import { routes } from "../../../shared/values/strValues";
-import { FaArrowLeft, FaEye } from "react-icons/fa";
-import { MdModeEdit } from "react-icons/md";
-import EditProfile from "./EditProfile";
+import { FC, useState } from "react";
+import { FaArrowLeft } from "react-icons/fa";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
-import { IoMdSettings } from "react-icons/io";
 import SettingsProfile from "./SettingsProfile";
-import { TbSettingsOff } from "react-icons/tb";
 import { selectCurrentUser } from "../../../entities/user";
+import { MdEdit } from "react-icons/md";
+import EditProfileModal from "./Modals/EditProfileModal";
 
-const Profile = () => {
+interface Profile {
+  closeProfile: () => void;
+}
+const Profile: FC<Profile> = ({ closeProfile }) => {
   const currentUser = useAppSelector(selectCurrentUser);
-  const [profileMode, setProfileMode] = useState<"view" | "settings" | "edit">(
-    "view"
-  );
-
-  const [isBackToMain, setIsBackToMain] = useState(false);
-  const [isSettingProfileModeEdit, setIsSettingProfileModeEdit] =
-    useState(false);
-  const [isSettingProfileModeSettings, setIsSettingProfileModeSettings] =
-    useState(false);
-  const handleToggleIsEdit = () => {
-    setIsSettingProfileModeEdit(true);
-    setTimeout(() => {
-      setProfileMode(profileMode !== "edit" ? "edit" : "view");
-
-      setIsSettingProfileModeEdit(false);
-    }, 300);
+  const [isEditProfile, setIsEditProfile] = useState(false);
+  const handleCloseEdit = () => {
+    setIsEditProfile(false);
   };
-  const handleToggleIsSetings = () => {
-    setIsSettingProfileModeSettings(true);
-    setTimeout(() => {
-      setProfileMode(profileMode !== "settings" ? "settings" : "view");
-
-      setIsSettingProfileModeSettings(false);
-    }, 300);
+  const handleOpenEdit = () => {
+    setIsEditProfile(true);
   };
-  const handleBackToMain = () => {
-    setIsBackToMain(true);
-    setTimeout(() => {
-      navigate(routes.main);
-
-      setIsBackToMain(false);
-    }, 150);
-  };
-
-  const navigate = useNavigate();
-
   return (
-    <div className=" w-full md:w-2/5 overflow-y-auto  h-dvh bg-gray-300">
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-300`}
+    >
       {/* Navigation*/}
-      <h1 className="h-20 flex px-0 lg:px-20  text-2xl justify-between text-center border border-gray-200 text-white items-center">
+      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
         <button
-          className={`text-green-400 mx-2 p-2 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
-          onClick={handleBackToMain}
+          className={`text-green-400 mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
+          onClick={closeProfile}
         >
-          <FaArrowLeft className={isBackToMain ? "animate-leftSlide" : ""} />
+          <FaArrowLeft />
         </button>
-        <div>
-          {profileMode === "view"
-            ? "Profile"
-            : profileMode === "edit"
-            ? "Edit profile"
-            : "Settings"}
-        </div>
-        <div>
-          <button
-            className={`text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all  hover:outline-green-200 ${
-              isSettingProfileModeSettings &&
-              (profileMode === "settings"
-                ? "animate-reverseSpin"
-                : "animate-spin")
-            }`}
-            onClick={handleToggleIsSetings}
-          >
-            {profileMode === "settings" ? <TbSettingsOff /> : <IoMdSettings />}
-          </button>
-
-          <button
-            className={`text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all  hover:outline-green-200`}
-            onClick={handleToggleIsEdit}
-          >
-            <div className={`${isSettingProfileModeEdit && "animate-scale"}`}>
-              {profileMode === "edit" ? <FaEye /> : <MdModeEdit />}
-            </div>
-          </button>
-        </div>
+        <button
+          className={`text-green-400 mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
+          onClick={handleOpenEdit}
+        >
+          <MdEdit />
+        </button>
       </h1>
       {/* Profile */}
-      <div className="flex flex-col justify-center relative items-center text-white gap-10 h-2/4">
+      <div className="flex flex-col justify-center relative items-center text-white gap-10 p-10">
         {/* Profile edit feautures */}
-        {profileMode === "view" ? (
-          <>
-            <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
 
-            <span className=" text-3xl md:text-2xl truncate max-w-96">
-              {currentUser?.name}
-            </span>
-          </>
-        ) : profileMode === "edit" ? (
-          <EditProfile currentUser={currentUser} />
-        ) : (
+        <>
+          <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
+
+          <span className=" text-3xl md:text-2xl truncate max-w-96">
+            {currentUser?.name}
+          </span>
+          <span className=" text-3xl md:text-2xl truncate max-w-96">
+            {currentUser?.email}
+          </span>
+          <span className=" text-3xl md:text-2xl truncate max-w-96">
+            {/* {currentUser?.name} */}
+          </span>
           <SettingsProfile currentUser={currentUser} />
-        )}
+        </>
+        <EditProfileModal
+          currentUser={currentUser}
+          onClose={handleCloseEdit}
+          isOpen={isEditProfile}
+        />
+        {/* <EditProfile currentUser={currentUser} /> */}
       </div>
     </div>
   );

@@ -13,10 +13,12 @@ import { toastTexts } from "../../../shared/values/strValues";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { setCurrentUser } from "../../../entities/user";
 import { TEditedProfile } from "../../../entities/contact/api/contactTypes";
+import { FaArrowLeft } from "react-icons/fa";
 type TEditProfileProps = {
   currentUser: TUserInfo | null;
+  closeEditProfile: () => void;
 };
-const EditProfile = ({ currentUser }: TEditProfileProps) => {
+const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
   const [userName, setUserName] = useState("");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [avatarBuffer, setAvatarBuffer] = useState<number[]>([]);
@@ -109,57 +111,76 @@ const EditProfile = ({ currentUser }: TEditProfileProps) => {
   }, [currentUser]);
 
   return (
-    <form
-      onSubmit={handleEditProfile}
-      className="flex w-full justify-center items-center flex-col gap-10"
+    <div
+      onClick={(e) => e.stopPropagation()}
+      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-300`}
     >
-      <div className="flex w-full justify-center items-center flex-col gap-3">
-        {/* User picture */}
-        <Avatar isProfileAvatar={true} picture={avatarPreview} />
+      {/* Navigation*/}
+      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
+        <button
+          className={`text-green-400 mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
+          onClick={closeEditProfile}
+        >
+          <FaArrowLeft />
+        </button>
+      </h1>
+      {/* Profile */}
+      <div className="flex flex-col justify-center relative items-center text-white gap-10 p-10">
+        {/* Profile edit feautures */}
 
-        <div className="flex items-center justify-between gap-5">
-          {/* Reset picture button(exists if picture is not saved) */}
+        <form
+          onSubmit={handleEditProfile}
+          className="flex w-full justify-center items-center flex-col gap-10"
+        >
+          <div className="flex w-full justify-center items-center flex-col gap-3">
+            {/* User picture */}
+            <Avatar isProfileAvatar={true} picture={avatarPreview} />
 
-          {avatarPreview !== currentUser?.avatarURL && (
-            <button
-              type="button"
-              className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
-              onClick={handleResetUserPicutre}
-            >
-              <TbArrowBackUp />
-            </button>
-          )}
-          {/* Choose picture */}
-          <UploadButton
-            setImagePreview={handleSetAvatarPreview}
-            setImage={handleSetAvatarBuffer}
-          />
+            <div className="flex items-center justify-between gap-5">
+              {/* Reset picture button(exists if picture is not saved) */}
 
-          <button
-            type="button"
-            onClick={handleRemoveUserPicture}
-            className=" text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
-          >
-            <IoCloseOutline />
-          </button>
-        </div>
+              {avatarPreview !== currentUser?.avatarURL && (
+                <button
+                  type="button"
+                  className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                  onClick={handleResetUserPicutre}
+                >
+                  <TbArrowBackUp />
+                </button>
+              )}
+              {/* Choose picture */}
+              <UploadButton
+                setImagePreview={handleSetAvatarPreview}
+                setImage={handleSetAvatarBuffer}
+              />
+
+              <button
+                type="button"
+                onClick={handleRemoveUserPicture}
+                className=" text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+              >
+                <IoCloseOutline />
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center">
+            {/* Reset username button(exists if username is not saved) */}
+
+            {userName !== currentUser?.name && (
+              <button
+                className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                onClick={handleResetUsername}
+              >
+                <TbArrowBackUp />
+              </button>
+            )}
+            {/* Username input */}
+            <Input onChange={handleInputChange} value={userName} type="input" />
+          </div>
+          <SubmitBtn children={"Save and submit"} />
+        </form>
       </div>
-      <div className="flex items-center">
-        {/* Reset username button(exists if username is not saved) */}
-
-        {userName !== currentUser?.name && (
-          <button
-            className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
-            onClick={handleResetUsername}
-          >
-            <TbArrowBackUp />
-          </button>
-        )}
-        {/* Username input */}
-        <Input onChange={handleInputChange} value={userName} type="input" />
-      </div>
-      <SubmitBtn children={"Save and submit"} />
-    </form>
+    </div>
   );
 };
 

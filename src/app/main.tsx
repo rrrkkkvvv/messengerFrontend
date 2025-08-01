@@ -11,7 +11,6 @@ import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";
 import Conversation from "../entities/conversation";
 
-import Profile from "../widgets/Profile";
 import ErrorPage from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
 import { ContactsList } from "../entities/contact";
@@ -44,10 +43,6 @@ const router = createBrowserRouter([
       {
         path: routes.conversation,
         element: <Conversation />,
-      },
-      {
-        path: routes.profile,
-        element: <Profile />,
       },
     ],
   },

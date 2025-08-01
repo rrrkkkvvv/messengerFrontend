@@ -1,6 +1,5 @@
 import { FormEvent, useState } from "react";
 import { MdDelete } from "react-icons/md";
-import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { useDeleteUserMutation } from "../../../entities/contact/api/contactApi";
 import { logout } from "../../../entities/contact";
@@ -41,11 +40,6 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
 
   return (
     <>
-      <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
-
-      <span className="text-3xl md:text-2xl">{currentUser?.email}</span>
-      <span className="text-3xl md:text-2xl">{currentUser?.name}</span>
-
       <div
         className="flex items-center h-12 px-2 text-center text-2xl gap-2 outline-none transition-all rounded-2xl cursor-pointer hover:outline-green-500"
         onClick={() => setIsModalOpen(true)}
