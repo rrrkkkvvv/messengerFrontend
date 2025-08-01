@@ -1,5 +1,5 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import ImageModal from "../../../../shared/ui/ImageModal/ImageModal.tsx";
+import ImageModal from "../ImageModal/ImageModal.tsx";
 import { TMessageInfo } from "../../api/conversationTypes";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes.ts";

@@ -35,7 +35,7 @@ const Modal: FC<ModalProps> = ({
   return createPortal(
     <div
       onClick={onClose}
-      className={`fixed inset-0  z-20 flex   transition   duration-300  ${styles}  ${animationStyles(
+      className={`fixed inset-0  z-40 flex   transition   duration-300  ${styles}  ${animationStyles(
         isVisible
       )} `}
     >

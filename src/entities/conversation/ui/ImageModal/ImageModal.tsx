@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Modal from "../Modal/Modal";
+import Modal from "../../../../shared/ui/Modal/Modal";
 
 interface ImageModalProps {
   src?: string | null;
@@ -27,7 +27,7 @@ const ImageModal: FC<ImageModalProps> = ({ isOpen, onClose, src }) => {
   // };
   return (
     <Modal
-      styles=" justify-center items-center bg-black bg-opacity-65 transition-opacity"
+      styles="z-50 justify-center items-center bg-black bg-opacity-65 transition-opacity"
       animationStyles={animationStyles}
       isOpen={isOpen}
       onClose={onClose}

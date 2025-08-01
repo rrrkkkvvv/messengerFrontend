@@ -1,10 +1,9 @@
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { Contact, logout } from "..";
-import { CiCirclePlus, CiLogout } from "react-icons/ci";
+import { Contact } from "..";
+import { CiCirclePlus } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
 import { toastTexts } from "../../../shared/values/strValues";
-import { CgProfile } from "react-icons/cg";
 import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
 import {
@@ -165,10 +164,10 @@ const ContactsList = () => {
       </div>
       <CiCirclePlus
         onClick={handleToggleIsGroupCreating}
-        className={`right-4 absolute bottom-10      rounded-full box-border  text-6xl cursor-pointer  transition duration-500 z-50 ${
+        className={`right-4 absolute bottom-10      rounded-full box-border  text-6xl cursor-pointer  transition duration-500 z-30 ${
           isGroupCreating
             ? "rotate-45 bg-red-100 text-black hover:bg-red-100  hover:text-white"
-            : "hover:text-green-100 text-green-200 hover:bg-green-800"
+            : "hover:text-green-100 bg-green-900 text-green-200 hover:bg-green-800"
         }`}
       />
     </>

@@ -1,6 +1,5 @@
 import { FC } from "react";
 import Modal from "../../../../shared/ui/Modal/Modal";
-import Profile from "../Profile";
 import EditProfile from "../EditProfile";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
@@ -24,7 +23,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
   };
   return (
     <Modal
-      styles=" z-30 items-start duration-500   transition-transform"
+      styles="  items-start duration-500   transition-transform"
       animationStyles={animationStyles}
       isOpen={isOpen}
       onClose={onClose}
