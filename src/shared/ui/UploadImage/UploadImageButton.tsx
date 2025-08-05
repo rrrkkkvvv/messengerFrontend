@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, useRef, useState } from "react";
 import { IoMdImages } from "react-icons/io";
 // TODO: onUpload function must get file data as an argument
 interface UploadButtonProps {
@@ -8,6 +8,23 @@ interface UploadButtonProps {
 
 const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  function clearInputFile() {
+    if (inputRef.current && inputRef.current.value) {
+      try {
+        inputRef.current.value = ""; //for IE11, latest Chrome/Firefox/Opera...
+      } catch (err) {}
+      if (inputRef.current.value) {
+        //for IE5 ~ IE10
+        var form = document.createElement("form"),
+          parentNode = inputRef.current.parentNode,
+          ref = inputRef.current.nextSibling;
+        form.appendChild(inputRef.current);
+        form.reset();
+        parentNode?.insertBefore(inputRef.current, ref);
+      }
+    }
+  }
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -26,6 +43,7 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
       console.error("Upload error:", error);
     } finally {
       setIsLoading(false);
+      clearInputFile();
     }
   };
 
@@ -44,7 +62,7 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
             cy="12"
             r="10"
             stroke="currentColor"
-            stroke-width="4"
+            strokeWidth="4"
           ></circle>
           <path
             className="opacity-75"
@@ -53,13 +71,14 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
           ></path>
         </svg>
       ) : (
-        <IoMdImages className="text-4xl transition duration-300 text-white hover:text-green-500 " />
+        <IoMdImages className="text-4xl md:text-3xl transition duration-300 text-white hover:text-purple-1500 " />
       )}
       <input
         type="file"
         accept="image/*"
         style={{ display: "none" }}
         onChange={handleFileChange}
+        ref={inputRef}
       />
     </label>
   );

@@ -23,7 +23,7 @@ const EditProfileModal: FC<EditProfileModalProps> = ({
   };
   return (
     <Modal
-      styles="  items-start duration-500   transition-transform"
+      styles="z-40  items-start duration-500   transition-transform"
       animationStyles={animationStyles}
       isOpen={isOpen}
       onClose={onClose}

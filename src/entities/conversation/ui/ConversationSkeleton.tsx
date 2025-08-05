@@ -11,14 +11,14 @@ const ConversationSkeleton = () => {
           {/* {isMobile && (
             <button
               type="button"
-              className="text-green-400 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-green-400 hover:outline-green-200"
+              className="text-purple-200 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-purple-200 hover:outline-purple-50"
               onClick={handleCloseConversation}
             >
               <FaArrowLeft />
             </button>
           )} */}
           <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
-            <div className="h-11 w-11 rounded-full bg-gray-300 relative animate-pulse"></div>
+            <div className="h-11 w-11 rounded-full bg-purple-100 relative animate-pulse"></div>
 
             <div className="flex flex-col ">
               <div className="text-lg  truncate h-6  w-56 rounded-lg bg-gray-200"></div>
@@ -32,7 +32,7 @@ const ConversationSkeleton = () => {
               <button
                 type="button"
                 onClick={closeConversation}
-                className="text-green-400 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-green-200"
+                className="text-purple-200 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-purple-50"
               >
                 <IoCloseOutline />
               </button>
@@ -42,7 +42,7 @@ const ConversationSkeleton = () => {
 
         {/* MESSAGES */}
         <div
-          className={`scroll-smooth  bg-gray-300 text-2xl h-dvh relative text-center border-2 border-gray-200   `}
+          className={`scroll-smooth  bg-purple-100 text-2xl h-dvh relative text-center border-2 border-gray-200   `}
         >
           <div className="relative"></div>
           <div
@@ -53,7 +53,7 @@ const ConversationSkeleton = () => {
         </div>
         {/* INPUT MESSAGE */}
         <form
-          className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 `}
+          className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-purple-100 border-l-2 border-gray-200 `}
         >
           <div className="flex gap-5 items-center">
             <Input

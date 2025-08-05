@@ -30,7 +30,7 @@ const Avatar = ({
             w-3
             z-10
   
-        ${isOnline ? "bg-green-400" : "bg-gray-100"}
+        ${isOnline ? "bg-green-200" : "bg-gray-100"}
         `}
         ></div>
       )}
@@ -62,15 +62,13 @@ const Avatar = ({
           inline-block
           rounded-full
           overflow-hidden
-          border-2
-        border-green-300  
-          ${
-            isProfileAvatar
-              ? "h-20 w-20 md:h-24 md:w-24"
-              : isMessageAvatar
-              ? "h-9 w-9"
-              : "h-9 w-9 md:h-11 md:w-11"
-          } 
+            ${
+              isProfileAvatar
+                ? "h-20 w-20 md:h-24 md:w-24"
+                : isMessageAvatar
+                ? "h-9 w-9"
+                : "h-9 w-9 md:h-11 md:w-11"
+            } 
           `}
         src={
           // if picture exists use it, else using placeholder

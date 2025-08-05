@@ -3,6 +3,14 @@ export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     colors: {
+      purple: {
+        50: "#bca6f4",
+        100: "#2c2734",
+        150: "#918aa0",
+        200: "#564875",
+        250: "#221e2a",
+        300: "#272131",
+      },
       green: {
         50: "#f0f7e6",
         100: "#dcebc0",
@@ -24,6 +32,7 @@ export default {
         100: "#6B6E70",
         200: "#474B4F",
         300: "#222629",
+        350: "#18191d",
       },
       white: "#fff",
       black: "#000",

@@ -120,7 +120,6 @@ export const resetLastMessage =
     const {
       contactsList: { contactsList },
     } = getState();
-    // Remove lastMessage for users with passed conversationId
     const newConversationsList = contactsList
       ? contactsList.map((contact) => {
           if (contact.lastMessage?.conversationId !== conversationId)

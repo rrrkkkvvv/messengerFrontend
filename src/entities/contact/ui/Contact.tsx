@@ -4,6 +4,8 @@ import { formatLastMessageDate } from "../../../shared/utils/formatLastMessageDa
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { TContact } from "../../../shared/types/Contact";
 import TypingUser from "./TypingUser";
+import { useAppSelector } from "../../../app/store/store";
+import { selectCurrentConversationId } from "../../conversation/model";
 
 interface IContactProps {
   contact: TContact;
@@ -19,23 +21,75 @@ const Contact = ({
   currentUserId,
   isUserSelectedForGroup,
 }: IContactProps) => {
+  const currentConversationId = useAppSelector(selectCurrentConversationId);
+  const isCurrentConversation = () => {
+    const currentConvStyles = "bg-purple-200 text-black";
+    if (contact.type === "single") {
+      if (!contact.conversationId && !currentConversationId) return "";
+      if (contact.conversationId === currentConversationId) {
+        return currentConvStyles;
+      } else {
+        return "";
+      }
+    } else {
+      if (contact._id === currentConversationId) {
+        return currentConvStyles;
+      } else {
+        return "";
+      }
+    }
+  };
+
+  const lastMessageSnipet = () => {
+    if (
+      !contact.lastMessage?.messageImage &&
+      contact.lastMessage?.messageText
+    ) {
+      return (
+        <div className="max-w-40 truncate">
+          {contact.lastMessage.messageText}
+        </div>
+      );
+    } else if (
+      contact.lastMessage?.messageImage &&
+      !contact.lastMessage?.messageText
+    ) {
+      return (
+        <div className="flex justify-center items-center gap-2">
+          <FaFileImage />
+        </div>
+      );
+    } else if (
+      contact.lastMessage?.messageImage &&
+      contact.lastMessage?.messageText
+    ) {
+      return (
+        <>
+          <div className="max-w-20 truncate">
+            {contact.lastMessage?.messageText}
+          </div>
+          <div className="flex justify-center items-center gap-2">
+            <FaFileImage />
+          </div>
+        </>
+      );
+    } else return <></>;
+  };
   return (
     <div
       onClick={onClick}
-      className="
+      className={`
                     w-full
                     relative
                     flex
                     items-center
                     space-x-3
-                    hover:bg-green-200
-                    hover:text-black
+                    text-white
+                    hover:bg-purple-200
                     rounded-lg
                     transition
                     cursor-pointer
-                    border-b-2
-                    border-green-200
-                    p-2"
+                    p-2 ${isCurrentConversation()}`}
     >
       <Avatar
         isGroup={contact.type === "group"}
@@ -44,8 +98,8 @@ const Contact = ({
         isProfileAvatar={false}
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
-      <div>
-        <div className="truncate max-w-40">{contact.name}</div>
+      <div className="text-purple-50">
+        <div className="truncate max-w-40 text-white">{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
             {contact.type === "single" && contact.isTyping ? (
@@ -58,61 +112,31 @@ const Contact = ({
             ) : (
               <>
                 {contact.lastMessage?.senderId === currentUserId ? (
-                  <>You:</>
+                  <span className=" text-purple-150">You:</span>
                 ) : (
                   contact.type === "group" &&
                   contact.lastMessage?.sender && (
-                    <span className="truncate max-w-40">
+                    <span className="truncate max-w-40 text-purple-150">
                       {contact.lastMessage.sender.name}:
                     </span>
                   )
                 )}
-
-                {
-                  // {/* IF NO IMAGE BUT TEXT */}
-                  !contact.lastMessage?.messageImage &&
-                  contact.lastMessage?.messageText ? (
-                    <div className="max-w-40 truncate">
-                      {contact.lastMessage.messageText}
-                    </div>
-                  ) : // IF NO TEXT BUT IMAGE
-                  contact.lastMessage?.messageImage &&
-                    !contact.lastMessage?.messageText ? (
-                    <div className="flex justify-center items-center gap-2">
-                      <FaFileImage />
-                    </div>
-                  ) : // IF  TEXT AND IMAGE
-                  contact.lastMessage?.messageImage &&
-                    contact.lastMessage?.messageText ? (
-                    <>
-                      <div className="max-w-20 truncate">
-                        {contact.lastMessage?.messageText}
-                      </div>
-                      <div className="flex justify-center items-center gap-2">
-                        <FaFileImage />
-                      </div>
-                    </>
-                  ) : (
-                    // NO TEXT AND NO IMAGE
-                    <></>
-                  )
-                }
+                {lastMessageSnipet()}
               </>
             )}
           </div>
-
-          {((contact.type === "single" && !contact.isTyping) ||
-            (contact.type === "group" && !contact.usersTypingIds?.length)) &&
-            contact.lastMessage?.senderId === currentUserId &&
-            (contact.lastMessage?.seenStatus ? (
-              <IoCheckmarkDoneOutline className="text-xl" />
-            ) : (
-              <IoCheckmarkOutline className="text-xl" />
-            ))}
         </div>
       </div>
 
-      <div className="absolute right-5 top-2">
+      <div className="flex absolute right-5 top-2">
+        {((contact.type === "single" && !contact.isTyping) ||
+          (contact.type === "group" && !contact.usersTypingIds?.length)) &&
+          contact.lastMessage?.senderId === currentUserId &&
+          (contact.lastMessage?.seenStatus ? (
+            <IoCheckmarkDoneOutline className="text-xl" />
+          ) : (
+            <IoCheckmarkOutline className="text-xl" />
+          ))}
         {contact.lastMessage?.sentAt && (
           <>{formatLastMessageDate(contact.lastMessage?.sentAt)}</>
         )}

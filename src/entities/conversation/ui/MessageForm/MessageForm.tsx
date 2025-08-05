@@ -1,16 +1,16 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
-import { IoCloseOutline } from "react-icons/io5";
+import { IoClose, IoCloseOutline } from "react-icons/io5";
 import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
 import { TEditingMessage, TMessageInfo } from "../../api/conversationTypes";
-import { FaArrowLeft } from "react-icons/fa";
-import Input from "../../../../shared/ui/Input/Input";
+import { FaCheck } from "react-icons/fa";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import {
   useStartTypingMutation,
   useStopTypingMutation,
 } from "../../api/conversationApi";
+import { TbSend2 } from "react-icons/tb";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -94,6 +94,8 @@ const MessageForm = ({
           messageData.messageImage = "";
         }
 
+        messageData.messageText = messageText;
+
         await editMessage({
           conversationId,
           message: messageData,
@@ -127,7 +129,7 @@ const MessageForm = ({
   return (
     <form
       onSubmit={(event) => handleSendMessage(event)}
-      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-4 bg-gray-300 border-l-2 border-gray-200 ${
+      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-5 md:py-2 bg-purple-100 border-l-2 border-gray-200 ${
         messageImagePreview && "border border-t-gray-200"
       }`}
     >
@@ -137,7 +139,7 @@ const MessageForm = ({
             // Clears state of message image
             type="button"
             onClick={handleResetMessageImage}
-            className="absolute right-5 top-5 text-5xl  rounded-full     transition   text-green-400 border hover:border-green-200"
+            className="absolute right-5 top-5 text-4xl  rounded-full     transition   text-purple-200 border hover:border-purple-50"
           >
             <IoCloseOutline />
           </button>
@@ -145,7 +147,7 @@ const MessageForm = ({
             <img
               src={messageImagePreview}
               alt="Uploaded"
-              className="max-w-full h-44 rounded-lg shadow-md border-2 p-2 border-green-400"
+              className="max-w-96 max-h-44 rounded-lg shadow-md border-2 p-2 border-purple-200"
             />
           </div>
         </>
@@ -156,26 +158,26 @@ const MessageForm = ({
           <button
             type="button"
             onClick={handleClearMessage}
-            className=" text-4xl  rounded-full     transition   text-green-400 border hover:border-green-200"
+            className=" text-5xl  rounded-full     transition   text-purple-200 border hover:border-purple-50"
           >
-            {<FaArrowLeft className=" p-2" />}
+            {<IoClose className=" p-2" />}
           </button>
         )}
-
-        <Input
-          type="text"
-          onClick={() => {}}
-          onChange={handleInputChange}
-          placeholder="Input message"
-          value={messageText ? messageText : ""}
-          className="w-full hover:border"
-        />
         <UploadButton
           setImagePreview={handleSetMessageImagePreview}
           setImage={handleSetMessageImage}
         />
-
-        <SubmitBtn children={isMessageEdit ? "Edit" : "Send"} />
+        <input
+          type="text"
+          value={messageText ? messageText : ""}
+          onChange={handleInputChange}
+          placeholder="Write a message..."
+          className="text-xl md:text-base w-full border-0         outline-none
+        bg-purple-100
+        transition-all
+"
+        />
+        <SubmitBtn children={isMessageEdit ? <FaCheck /> : <TbSend2 />} />
       </div>
     </form>
   );

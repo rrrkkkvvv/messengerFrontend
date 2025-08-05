@@ -113,12 +113,12 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-300`}
+      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-purple-100`}
     >
       {/* Navigation*/}
       <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
         <button
-          className={`text-green-400 mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200 overflow-hidden`}
+          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50 overflow-hidden`}
           onClick={closeEditProfile}
         >
           <FaArrowLeft />
@@ -142,7 +142,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               {avatarPreview !== currentUser?.avatarURL && (
                 <button
                   type="button"
-                  className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                  className="text-white mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
                   onClick={handleResetUserPicutre}
                 >
                   <TbArrowBackUp />
@@ -157,7 +157,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               <button
                 type="button"
                 onClick={handleRemoveUserPicture}
-                className=" text-green-400 mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                className=" text-white mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
               >
                 <IoCloseOutline />
               </button>
@@ -168,7 +168,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
 
             {userName !== currentUser?.name && (
               <button
-                className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+                className="text-purple-200 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
                 onClick={handleResetUsername}
               >
                 <TbArrowBackUp />

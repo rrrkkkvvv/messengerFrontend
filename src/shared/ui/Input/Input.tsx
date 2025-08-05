@@ -40,7 +40,7 @@ const Input = ({
         ${
           disabled
             ? "bg-gray-200"
-            : `bg-green-400         focus:border-white
+            : `bg-purple-200         focus:border-white
         focus:border 
         hover:border-white
         hover:border   `

@@ -14,7 +14,7 @@ const TypingUser = ({ userTypingIds, groupTypingStatuses }: ITypingUser) => {
     });
     if (!userNames.length) return;
     return (
-      <div className="text-green-150 select-none  flex items-center  ">
+      <div className="text-purple-50 select-none  flex items-center  ">
         <span className="text-lg">
           {userNames.length > 1 ? userNames.join(", ") : userNames[0]}
           &nbsp;typing
@@ -29,7 +29,7 @@ const TypingUser = ({ userTypingIds, groupTypingStatuses }: ITypingUser) => {
   }
   if (!groupTypingStatuses) {
     return (
-      <div className="text-green-150 select-none  flex items-center  ">
+      <div className="text-purple-50 select-none  flex items-center  ">
         <span className="text-lg">typing</span>
         <div className="flex gap-0.5  pt-4">
           <FaCircle className="h-1 w-1 duration-100 animate-bounce" />

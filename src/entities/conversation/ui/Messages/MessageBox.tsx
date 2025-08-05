@@ -15,7 +15,7 @@ type TMessageBoxProps = {
   handleContextMenu: (
     e: MouseEvent,
     message: TMessageInfo,
-    backgroundColor: "bg-green-700" | "bg-green-900"
+    backgroundColor: "bg-purple-200" | "bg-purple-300"
   ) => void;
 };
 const MessageBox = ({
@@ -30,7 +30,7 @@ const MessageBox = ({
   const [setSeenMessage] = useSetSeenMessageMutation();
 
   const isCurrentUser = message.senderId === currentUser._id;
-  const backgroundColor = isCurrentUser ? "bg-green-700" : "bg-green-900";
+  const backgroundColor = isCurrentUser ? "bg-purple-200" : "bg-purple-300";
   const handleSetMessageSeen = async () => {
     await setSeenMessage({
       conversationId,
@@ -97,7 +97,7 @@ const MessageBox = ({
         }`}
       >
         {!isCurrentUser && isGroup && (
-          <div className="text-sm text-green-300 absolute top-0 left-2 truncate max-w-20">
+          <div className="text-sm text-purple-50 absolute top-0 left-2 truncate max-w-20">
             {message.sender ? message.sender.name : "Deleted user"}
           </div>
         )}

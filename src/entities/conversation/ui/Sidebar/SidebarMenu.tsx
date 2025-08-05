@@ -105,7 +105,7 @@ const SidebarMenu = ({
 
   return (
     <div
-      className={`absolute right-0 top-0 rounded-xl   w-full md:right-5 md:top-5 md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-gray-300 border border-gray-100 z-30 flex justify-center items-center 
+      className={`absolute right-0 top-0 rounded-xl   w-full md:right-5 md:top-5 md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-purple-100 border border-gray-100 z-30 flex justify-center items-center 
         ${
           isSidebarMenuVisible
             ? "opacity-100 scale-100 translate-0 "
@@ -113,7 +113,7 @@ const SidebarMenu = ({
         } 
         ${isSidebarMenuVisible ? "visible" : "invisible delay-300"}`}
     >
-      <div className="absolute flex right-5 top-5">
+      <div className="absolute  flex right-5 top-5">
         {isCurrentUserCreator && (
           <>
             <SidebarBtn onClick={handleToggleIsEditing}>
@@ -125,7 +125,7 @@ const SidebarMenu = ({
           </>
         )}
         <SidebarBtn onClick={closeSidebarMenu}>
-          <IoCloseOutline />
+          <IoCloseOutline className="text-white" />
         </SidebarBtn>
       </div>
 
@@ -160,7 +160,7 @@ const SidebarMenu = ({
             {openAddUsers ? (
               <></>
             ) : (
-              <div className="flex justify-around items-center gap-10 rounded-lg duration-300  select-none   px-9 py-1 max-h-96 overflow-auto border border-green-200">
+              <div className="flex justify-around items-center gap-10 rounded-lg duration-300  select-none   px-9 py-1 max-h-96 overflow-auto border border-purple-50">
                 {isCurrentUserCreator ? (
                   <p>You</p>
                 ) : (
@@ -176,7 +176,7 @@ const SidebarMenu = ({
                     <p>{creator?.name}</p>
                   </>
                 )}
-                <h2 className="text-md text-green-200">Owner</h2>
+                <h2 className="text-md text-purple-50">Owner</h2>
               </div>
             )}
             {openAddUsers ? (
@@ -206,7 +206,7 @@ const SidebarMenu = ({
                           onClick={() => {
                             handleKickUser(member._id);
                           }}
-                          className="text-4xl rounded-full   border transition text-red-100 hover:border-green-200"
+                          className="text-4xl rounded-full   border transition text-red-100 hover:border-purple-50"
                         >
                           <IoCloseOutline />
                         </button>
@@ -230,7 +230,7 @@ const SidebarMenu = ({
                 ? handleDeleteConversation
                 : handleLeaveConversation
             }
-            className="text-green-400 mx-2 p-2 rounded-full border border-gray-100 outline-none    transition   hover:border-green-200"
+            className="text-white mx-2 p-2 rounded-full border border-gray-100 outline-none    transition   hover:border-purple-50"
           >
             {removeChatPosibility ? <>Remove chat</> : <>Leave chat</>}
           </button>

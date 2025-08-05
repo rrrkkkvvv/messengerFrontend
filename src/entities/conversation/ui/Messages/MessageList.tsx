@@ -144,7 +144,7 @@ const MessageList = ({
     <>
       <div
         ref={messagesEndRef}
-        className={`scroll-smooth  bg-gray-300 text-2xl h-dvh relative text-center border-2 border-gray-200  ${
+        className={`scroll-smooth  bg-gray-350 text-2xl h-dvh relative text-center border-2 border-gray-200  ${
           contextMenu.visible ? "overflow-y-hidden" : "overflow-y-auto"
         }`}
       >
@@ -166,11 +166,11 @@ const MessageList = ({
         </div>
         <div
           onClick={handleScrollDown}
-          className={`text-green-300 transition bottom-24 duration-300 flex fixed text-5xl right-0 px-4 justify-center z-20 ${
+          className={`text-purple-50 transition bottom-16 duration-300 flex fixed text-5xl right-0 px-4 justify-center z-20 ${
             downScrollVisible ? " " : "opacity-0 translate-y-20 -z-0"
           }`}
         >
-          <FaArrowAltCircleDown className="cursor-pointer bg-gray-300 box-content rounded-full" />
+          <FaArrowAltCircleDown className="cursor-pointer bg-purple-100 box-content rounded-full" />
         </div>
       </div>
       {/* Context menu */}
@@ -192,13 +192,13 @@ const MessageList = ({
             <>
               <button
                 onClick={handleDelete}
-                className="block px-4 py-4 w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+                className="block px-4 py-4 w-full rounded-xl text-gray-50 transition duration-300 hover:bg-purple-300"
               >
                 Delete message
               </button>
               <button
                 onClick={handleEdit}
-                className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-green-800"
+                className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-purple-300"
               >
                 Edit message
               </button>

@@ -117,7 +117,7 @@ const GroupConversationEdit = ({
         {avatarPreview !== avatarURL && (
           <button
             type="button"
-            className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+            className="text-purple-200 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
             onClick={handleResetAvatar}
           >
             <TbArrowBackUp />
@@ -131,7 +131,7 @@ const GroupConversationEdit = ({
           <button
             type="button"
             onClick={handleRemoveAvatar}
-            className=" text-green-400 mx-1  text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+            className=" text-purple-200 mx-1  text-3xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
           >
             <IoCloseOutline />
           </button>
@@ -142,7 +142,7 @@ const GroupConversationEdit = ({
 
         {nameInputValue !== originalName && (
           <button
-            className="text-green-400 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-green-400 hover:outline-green-200"
+            className="text-purple-200 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50"
             onClick={handleResetUsername}
           >
             <TbArrowBackUp />

@@ -1,0 +1,119 @@
+import { FC, useEffect, useState } from "react";
+import { HiDotsHorizontal } from "react-icons/hi";
+import { IoCloseOutline } from "react-icons/io5";
+import TypingUser from "../../contact/ui/TypingUser";
+import { FaArrowLeft } from "react-icons/fa";
+import Avatar from "../../../shared/ui/Avatar/Avatar";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { resetCurrentConversation } from "../model/conversationSlice";
+import { useLeaveConversationConnectMutation } from "../api/conversationApi";
+import { useAppDispatch } from "../../../app/store/store";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../../shared/values/strValues";
+
+interface IConversationHeaderProps {
+  conversationName: string | null;
+  conversationId: string | null;
+  conversationAvatarURL: string | null;
+  anotherUser: TUserInfo | null | undefined;
+  isAnotherUserOnline: boolean;
+  conversationCreatorId: string | null;
+  conversationMembers: TUserInfo[] | null;
+  handleShowSidebarMenu: () => void;
+}
+const ConversationHeader: FC<IConversationHeaderProps> = ({
+  conversationId,
+  conversationName,
+  conversationAvatarURL,
+  anotherUser,
+  isAnotherUserOnline,
+  conversationCreatorId,
+  conversationMembers,
+  handleShowSidebarMenu,
+}) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [leaveConversationConn] = useLeaveConversationConnectMutation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleCloseConversation = () => {
+    navigate(routes.main);
+  };
+
+  const closeConversation = async () => {
+    if (!conversationId) return;
+    await leaveConversationConn(conversationId).unwrap();
+    dispatch(resetCurrentConversation());
+  };
+  useEffect(() => {
+    // Resize of window if there is mobile device
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  return (
+    <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-purple-100">
+      {isMobile && (
+        <button
+          type="button"
+          className="text-white mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-purple-200 hover:outline-purple-50"
+          onClick={handleCloseConversation}
+        >
+          <FaArrowLeft />
+        </button>
+      )}
+      <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
+        <Avatar
+          isProfileAvatar={false}
+          isGroup={!!conversationName}
+          picture={
+            conversationName ? conversationAvatarURL : anotherUser?.avatarURL
+          }
+          isOnline={isAnotherUserOnline}
+        />
+        <div className="flex flex-col ">
+          <div className="text-lg max-w-56 truncate">
+            {conversationName ? conversationName : anotherUser?.name}
+          </div>
+          {conversationCreatorId && conversationMembers ? (
+            <TypingUser
+              groupTypingStatuses={true}
+              userTypingIds={conversationMembers
+                .filter((user) => user.isTyping)
+                .map((user) => {
+                  return user._id;
+                })}
+            />
+          ) : (
+            anotherUser?.isTyping && <TypingUser />
+          )}
+        </div>
+      </div>
+      <div className="">
+        <button
+          type="button"
+          onClick={handleShowSidebarMenu}
+          className="text-white mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-purple-50"
+        >
+          <HiDotsHorizontal />
+        </button>
+        {!isMobile && (
+          <button
+            type="button"
+            onClick={closeConversation}
+            className="text-purple-200 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-purple-50"
+          >
+            <IoCloseOutline />
+          </button>
+        )}
+      </div>
+    </h1>
+  );
+};
+
+export default ConversationHeader;

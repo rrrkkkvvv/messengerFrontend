@@ -107,7 +107,7 @@ const ContactsList = () => {
     <>
       {isGroupCreating && (
         <form
-          className="w-full animate-dropDown  text-green-400 flex justify-center items-center flex-col gap-2"
+          className="w-full animate-dropDown   flex justify-center items-center flex-col gap-2 text-white"
           onSubmit={createGroup}
         >
           <h3>Create group conversation</h3>
@@ -124,7 +124,7 @@ const ContactsList = () => {
         </form>
       )}
       {/* Users list */}
-      <div className="relative  max-h-full overflow-y-auto   text-green-200">
+      <div className="relative  max-h-full overflow-y-auto   text-purple-50">
         {isLoadingContacts && <ContactsSkeleton />}
         {contactsList &&
           [...contactsList]
@@ -167,7 +167,7 @@ const ContactsList = () => {
         className={`right-4 absolute bottom-10      rounded-full box-border  text-6xl cursor-pointer  transition duration-500 z-30 ${
           isGroupCreating
             ? "rotate-45 bg-red-100 text-black hover:bg-red-100  hover:text-white"
-            : "hover:text-green-100 bg-green-900 text-green-200 hover:bg-green-800"
+            : "hover:text-white bg-gray-300 text-purple-50 hover:bg-gray-200"
         }`}
       />
     </>

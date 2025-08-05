@@ -47,11 +47,11 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
   );
   return (
     <>
-      <div className="flex justify-center text-xl text-green-300 ">
+      <div className="flex justify-center text-xl text-purple-50 ">
         {selectedUsers.length ? (
           <button
             onClick={handleAdd}
-            className="text-green-400   py-1 w-1/3 text-lg  rounded-full border border-gray-100 outline-none    transition   hover:border-green-200"
+            className="text-purple-200   py-1 w-1/3 text-lg  rounded-full border border-gray-100 outline-none    transition   hover:border-purple-50"
           >
             Save
           </button>

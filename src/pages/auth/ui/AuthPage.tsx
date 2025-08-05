@@ -76,10 +76,10 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="h-dvh text-white bg-gray-300 flex  justify-center items-center ">
+    <div className="h-dvh text-white bg-purple-100 flex  justify-center items-center ">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col w-dvw md:w-3/6 lg:w-2/6 gap-4 p-4 rounded-md border-2 border-green-400  "
+        className="flex flex-col w-dvw md:w-3/6 lg:w-2/6 gap-4 p-4 rounded-md border-2 border-purple-200  "
         action=""
       >
         <h3 className="text-center">{isSignUp ? "Sign Up" : "Sign In"}</h3>
@@ -120,13 +120,13 @@ const AuthPage = () => {
               toggleSignIn();
             }}
             className={`
-                  text-green-400
+                  text-purple-200
                     ml-2
                     outline-none
                     rounded-sm
                     transition-all
-                  focus:outline-green-400
-                  hover:outline-green-200
+                  focus:outline-purple-200
+                  hover:outline-purple-50
                   `}
           >
             {isSignUp ? "Sign In" : "Sign Up"}

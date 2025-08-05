@@ -11,7 +11,7 @@ const SidebarBtn = ({ children, onClick }: IButtonProps) => {
     <button
       type="button"
       onClick={onClick}
-      className="text-2xl h-10 w-10   flex items-center justify-center rounded-full border    transition   text-green-400  hover:border-green-200"
+      className="text-2xl h-10 w-10   flex items-center justify-center rounded-full border    transition   text-purple-200  hover:border-purple-50"
     >
       {children}
     </button>

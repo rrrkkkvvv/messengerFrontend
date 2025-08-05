@@ -86,7 +86,6 @@ const contactApi = baseApi.injectEndpoints({
             socket.on("userUpdated", (updatedUser) => {
               updateCachedData((draft) => {
                 if (!draft.contactsData) return;
-                // TODO:REPLAVE BY THUNK
                 draft.contactsData = draft.contactsData.map((user) =>
                   user._id === updatedUser._id
                     ? { ...user, ...updatedUser }
@@ -112,18 +111,6 @@ const contactApi = baseApi.injectEndpoints({
                 dispatch(
                   changeUserTypingStatus(userId, conversationId, typingStatus)
                 );
-
-                // updateCachedData((draft) => {
-                //   if (draft.users) {
-                //     draft.users = draft.users.map((user) => {
-                //       if (user._id !== userId) return user;
-                //       return {
-                //         ...user,
-                //         isTyping: typingStatus,
-                //       };
-                //     });
-                //   }
-                // });
               }
             );
             socket.on(
