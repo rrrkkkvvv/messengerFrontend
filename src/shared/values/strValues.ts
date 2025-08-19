@@ -9,6 +9,7 @@ export const apiURLs = {
     namespaces: {
       users: "/users",
       conversations: "/conversations",
+      calls: "/calls",
     },
   },
   paths: {

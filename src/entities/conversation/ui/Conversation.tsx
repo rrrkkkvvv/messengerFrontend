@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { BiSolidPhoneCall } from "react-icons/bi";
 
 import {
   selectCurrentConversationId,
@@ -33,6 +34,7 @@ import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
+import Call from "./Call";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
@@ -215,7 +217,6 @@ const Conversation = () => {
           isAnotherUserOnline={isAnotherUserOnline()}
           handleShowSidebarMenu={handleShowSidebarMenu}
         />
-        {/* MESSAGES */}
         <MessageList
           isGroup={!!conversationCreatorId}
           onEditMessage={handleSetEditingMessageData}
@@ -224,7 +225,6 @@ const Conversation = () => {
           conversationMessages={conversationMessages}
         />
 
-        {/* INPUT MESSAGE */}
         <MessageForm
           handleResetIsEditingMessage={handleResetIsEditingMessage}
           currentUser={currentUser}
@@ -232,6 +232,10 @@ const Conversation = () => {
           isMessageEdit={isMessageEdit}
           editingMessage={editingMessage}
         />
+        {/* TEST CALL */}
+        {/* {anotherUser() && (
+          <Call callTo={anotherUser()?._id} currentUser={currentUser} />
+        )} */}
 
         <SidebarMenu
           avatarURL={conversationAvatarURL}

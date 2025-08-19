@@ -10,6 +10,7 @@ import { useLeaveConversationConnectMutation } from "../api/conversationApi";
 import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../shared/values/strValues";
+import { BiSolidPhoneCall } from "react-icons/bi";
 
 interface IConversationHeaderProps {
   conversationName: string | null;
@@ -61,7 +62,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
       {isMobile && (
         <button
           type="button"
-          className="text-white mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-purple-200 hover:outline-purple-50"
+          className=" mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-purple-200 text-gray-100 hover:text-white"
           onClick={handleCloseConversation}
         >
           <FaArrowLeft />
@@ -97,8 +98,15 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
       <div className="">
         <button
           type="button"
+          // onClick={}
+          className=" mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
+        >
+          <BiSolidPhoneCall />
+        </button>
+        <button
+          type="button"
           onClick={handleShowSidebarMenu}
-          className="text-white mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-purple-50"
+          className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white"
         >
           <HiDotsHorizontal />
         </button>
@@ -106,7 +114,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
           <button
             type="button"
             onClick={closeConversation}
-            className="text-purple-200 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-purple-50"
+            className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
           >
             <IoCloseOutline />
           </button>

@@ -167,7 +167,7 @@ const contactApi = baseApi.injectEndpoints({
           }
 
           await cacheEntryRemoved;
-          socket.disconnect();
+          // socket.disconnect();
         }
       },
       providesTags: ["Users", "Conversation"],
