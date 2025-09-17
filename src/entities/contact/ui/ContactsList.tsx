@@ -31,29 +31,11 @@ const ContactsList = () => {
   const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
   const [createGroupConversation] = useCreateGroupConversationMutation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
 
   const [isGroupCreating, setIsGroupCreating] = useState(false);
   const [groupNameValue, setGroupNameValue] = useState("");
   const [groupMembersList, setGroupMembersList] = useState<string[]>([]);
 
-  const {
-    data = {
-      contactsData: null,
-      usersOnline: null,
-    },
-  } = useConnectToGetUsersChanelQuery(
-    currentUser?.email ? { userEmail: currentUser?.email } : skipToken
-  );
-
-  useEffect(() => {
-    if (data.contactsData) {
-      dispatch(setContactsList(data.contactsData));
-    }
-    if (data.usersOnline) {
-      dispatch(setUsersOnlineEmails(data.usersOnline));
-    }
-  }, [data]);
   useEffect(() => {}, []);
   const toggleUserToGroup = (userId: string) => {
     if (

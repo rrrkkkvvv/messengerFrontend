@@ -34,7 +34,6 @@ import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
-import Call from "./Call";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();

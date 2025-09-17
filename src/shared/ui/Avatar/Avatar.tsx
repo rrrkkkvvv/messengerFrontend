@@ -4,6 +4,7 @@ interface AvatarProps {
   picture: string | null | undefined;
   isProfileAvatar: boolean;
   isOnline?: boolean;
+  isMobileCallAvatar?: boolean;
   isGroup?: boolean;
   hideOnline?: boolean;
   isMessageAvatar?: boolean;
@@ -14,13 +15,25 @@ const Avatar = ({
   isOnline,
   isGroup,
   isProfileAvatar,
+  isMobileCallAvatar,
   isUserSelectedForGroup,
   hideOnline,
   isMessageAvatar,
 }: AvatarProps) => {
+  const avatarSize = () => {
+    if (isMobileCallAvatar) {
+      return "h-36 w-36 md:h-24 md:w-24";
+    } else if (isProfileAvatar) {
+      return "h-20 w-20 md:h-24 md:w-24";
+    } else if (isMessageAvatar) {
+      return "h-9 w-9";
+    } else {
+      return "h-9 w-9 md:h-11 md:w-11";
+    }
+  };
   return (
     <div className="relative">
-      {!isGroup && !isProfileAvatar && !hideOnline && (
+      {!isGroup && !isProfileAvatar && !hideOnline && !isMobileCallAvatar && (
         <div
           className={`
             absolute
@@ -58,17 +71,12 @@ const Avatar = ({
       )}
       <img
         className={`
+     
           relative
           inline-block
           rounded-full
           overflow-hidden
-            ${
-              isProfileAvatar
-                ? "h-20 w-20 md:h-24 md:w-24"
-                : isMessageAvatar
-                ? "h-9 w-9"
-                : "h-9 w-9 md:h-11 md:w-11"
-            } 
+            ${avatarSize()} 
           `}
         src={
           // if picture exists use it, else using placeholder

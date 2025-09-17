@@ -68,7 +68,6 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
           >
             <Avatar
               isProfileAvatar={false}
-              isGroup={false}
               picture={user.avatarURL}
               isUserSelectedForGroup={selectedUsers.includes(user._id)}
               hideOnline

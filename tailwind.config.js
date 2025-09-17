@@ -1,3 +1,5 @@
+import { transform } from "typescript";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
@@ -10,6 +12,9 @@ export default {
         200: "#564875",
         250: "#221e2a",
         300: "#272131",
+      },
+      blue: {
+        50: "#6969e5",
       },
       green: {
         50: "#f0f7e6",
@@ -40,10 +45,9 @@ export default {
     extend: {
       keyframes: {
         dots: {
-          "0%": { content: "''" },
-          "25%": { content: "'.'" },
-          "50%": { content: "'..'" },
-          "75%": { content: "'...'" },
+          "0%": { opacity: 0 },
+          "85%": { opacity: 1 },
+          // "100%": { transform:  },
         },
         dropDown: {
           "0%": { opacity: 0, height: 0 },
@@ -58,6 +62,24 @@ export default {
         spin: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
+        },
+        callPing: {
+          "75%": { transform: "scale(1.5)", opacity: 0 },
+          "100%": { transform: "scale(1.5)", opacity: 0 },
+        },
+        shake: {
+          "0%": { transform: "rotate(0deg)" },
+          "10%": { transform: "rotate(15deg)" },
+          "20%": { transform: "rotate(-15deg)" },
+          "30%": { transform: "rotate(15deg)" },
+          "40%": { transform: "rotate(0deg)" },
+          "100%": { transform: "rotate(0deg)" },
+        },
+        elevate: {
+          "0%, 20%": { transform: "translate(0, 0)" },
+          "50%": { transform: "translate(0, -20px)" },
+          "80%": { transform: "translate(0, 0)" },
+          "100%": { transform: "translate(0, 0)" },
         },
         reverseSpin: {
           "0%": { transform: "rotate(0deg)" },
@@ -76,10 +98,12 @@ export default {
 
       animation: {
         fadeIn: "fadeIn 0.3s ease-out",
+        shake: "shake 2s ease-in-out infinite",
+        elevate: "elevate 2s ease-in-out infinite",
         dropDown: "dropDown 0.3s ease-out",
         dots: "dots 1.5s steps(4) infinite",
-
-        reverseSpin: "reverseSpin 0.5s ease-in-out infinite",
+        callPing: "callPing 1.5s infinite",
+        reverseSpin: "reverseSpin 1s ease-in-out infinite",
         scale: "scale 0.3s linear infinite",
         leftSlide: "leftSlide 0.2s linear infinite",
       },

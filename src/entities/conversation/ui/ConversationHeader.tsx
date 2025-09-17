@@ -11,6 +11,7 @@ import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../../shared/values/strValues";
 import { BiSolidPhoneCall } from "react-icons/bi";
+import { callUserThunk } from "../model/callSlice";
 
 interface IConversationHeaderProps {
   conversationName: string | null;
@@ -45,6 +46,10 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
     if (!conversationId) return;
     await leaveConversationConn(conversationId).unwrap();
     dispatch(resetCurrentConversation());
+  };
+  const handleCallUser = async () => {
+    if (conversationCreatorId || conversationName || !anotherUser) return;
+    dispatch(callUserThunk(anotherUser));
   };
   useEffect(() => {
     // Resize of window if there is mobile device
@@ -96,13 +101,16 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
         </div>
       </div>
       <div className="">
-        <button
-          type="button"
-          // onClick={}
-          className=" mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
-        >
-          <BiSolidPhoneCall />
-        </button>
+        {!conversationCreatorId && !conversationName && (
+          <button
+            type="button"
+            onClick={handleCallUser}
+            className=" mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
+          >
+            <BiSolidPhoneCall />
+          </button>
+        )}
+
         <button
           type="button"
           onClick={handleShowSidebarMenu}

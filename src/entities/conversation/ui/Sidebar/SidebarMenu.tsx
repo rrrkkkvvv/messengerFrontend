@@ -167,7 +167,6 @@ const SidebarMenu = ({
                   <>
                     <Avatar
                       isProfileAvatar={false}
-                      isGroup={false}
                       picture={creator?.avatarURL}
                       isOnline={usersOnlineEmails?.includes(
                         creator ? creator.email : ""
@@ -196,7 +195,6 @@ const SidebarMenu = ({
                     >
                       <Avatar
                         isProfileAvatar={false}
-                        isGroup={false}
                         picture={member.avatarURL}
                         isOnline={usersOnlineEmails?.includes(member.email)}
                       />

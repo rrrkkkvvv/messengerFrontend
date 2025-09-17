@@ -20,9 +20,9 @@ const TypingUser = ({ userTypingIds, groupTypingStatuses }: ITypingUser) => {
           &nbsp;typing
         </span>
         <div className="flex gap-0.5  pt-4">
-          <FaCircle className="h-1 w-1 duration-100 animate-bounce" />
-          <FaCircle className="h-1 w-1 duration-200 animate-bounce" />
-          <FaCircle className="h-1  w-1 duration-300 animate-bounce" />
+          <FaCircle className="h-1 w-1  [animation-delay:0s] animate-bounce" />
+          <FaCircle className="h-1 w-1  [animation-delay:0.2s] animate-bounce" />
+          <FaCircle className="h-1  w-1  [animation-delay:0.3s] animate-bounce" />
         </div>
       </div>
     );

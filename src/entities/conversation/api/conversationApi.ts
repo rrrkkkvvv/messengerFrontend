@@ -22,7 +22,7 @@ type TConnectToChatArgs =
       conversationId: string | undefined;
     };
 
-const chatApi = baseApi.injectEndpoints({
+const conversationApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
     connectToChatChanel: builder.query<
       {
@@ -324,4 +324,4 @@ export const {
   useStopTypingMutation,
   useKickUserFromConversationMutation,
   useAddUsersToConversationMutation,
-} = chatApi;
+} = conversationApi;

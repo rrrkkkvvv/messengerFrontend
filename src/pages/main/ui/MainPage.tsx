@@ -4,19 +4,43 @@ import { useEffect, useState } from "react";
 import Conversation from "../../../entities/conversation/";
 import { CiLogout } from "react-icons/ci";
 import { CgProfile } from "react-icons/cg";
-import { useAppDispatch } from "../../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { routes } from "../../../shared/values/strValues";
 import ProfileModal from "../../../widgets/Profile";
-import { logout } from "../../../entities/user";
+import { logout, selectCurrentUser } from "../../../entities/user";
 import { ContactsList } from "../../../entities/contact";
+import Call from "../../../entities/conversation/ui/Call/CallPortal";
+import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
+import {
+  setContactsList,
+  setUsersOnlineEmails,
+} from "../../../entities/contact/model/contactSlice";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const MainPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const location = useLocation();
   const isMainPage = location.pathname === routes.main;
-
+  const currentUser = useAppSelector(selectCurrentUser);
   const [isOpenModal, setIsOpenModal] = useState(false);
+  const {
+    data = {
+      contactsData: null,
+      usersOnline: null,
+    },
+  } = useConnectToGetUsersChanelQuery(
+    currentUser?.email ? { userEmail: currentUser?.email } : skipToken
+  );
+
+  useEffect(() => {
+    if (data.contactsData) {
+      dispatch(setContactsList(data.contactsData));
+    }
+    if (data.usersOnline) {
+      dispatch(setUsersOnlineEmails(data.usersOnline));
+    }
+  }, [data]);
   const handleCloseModal = () => {
     setIsOpenModal(false);
   };
@@ -33,7 +57,7 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex  ">
+    <div className="flex justify-center  ">
       {isMobile ? (
         isMainPage ? (
           <>
@@ -80,9 +104,6 @@ const MainPage = () => {
               <ContactsList />
             </div>
             <ProfileModal onClose={handleCloseModal} isOpen={isOpenModal} />
-            {/* <Modal alwaysRender={true} onClose={handleCloseModal} isOpen={isOpenModal}>
-              <Profile closeProfile={handleCloseModal} />
-            </Modal> */}
           </>
         ) : (
           <Outlet />
@@ -133,12 +154,10 @@ const MainPage = () => {
           </div>
           <Conversation />
           <ProfileModal onClose={handleCloseModal} isOpen={isOpenModal} />
-
-          {/* <Modal onClose={handleCloseModal} isOpen={isOpenModal}>
-            <Profile closeProfile={handleCloseModal} />
-          </Modal> */}
         </>
       )}
+      {/* <TestDnD /> */}
+      <Call />
     </div>
   );
 };

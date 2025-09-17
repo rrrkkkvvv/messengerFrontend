@@ -25,7 +25,7 @@ const baseApi = createApi({
   endpoints: () => ({}),
   refetchOnMountOrArgChange: true,
   refetchOnReconnect: true,
-  tagTypes: ["Conversation", "Users"],
+  tagTypes: ["Conversation", "Users", "Calls"],
 });
 
 export default baseApi;
