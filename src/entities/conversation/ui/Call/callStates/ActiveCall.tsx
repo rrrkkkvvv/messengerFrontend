@@ -1,28 +1,33 @@
 import Avatar from "../../../../../shared/ui/Avatar/Avatar";
-import { FiVideo } from "react-icons/fi";
-import { CiMicrophoneOff } from "react-icons/ci";
+import { FiVideo, FiVideoOff } from "react-icons/fi";
+import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
 
 import { MdCallEnd } from "react-icons/md";
 import { FC, useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../app/store/store";
 import {
   selectInterlocuter,
+  selectMediaState,
   setCallEndReason,
   setCallStatus,
 } from "../../../model/callSlice";
+import Video from "../../../../../shared/ui/Video/Video";
 interface IActiveCallProps {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
+  toggleMic: () => void;
+  toggleVideo: () => void;
 }
 
-const ActiveCall: FC<IActiveCallProps> = ({ localStream, remoteStream }) => {
-  const [isVideoActive, setIsVideoActive] = useState(true);
+const ActiveCall: FC<IActiveCallProps> = ({
+  localStream,
+  remoteStream,
+  toggleMic,
+  toggleVideo,
+}) => {
   const interlocuter = useAppSelector(selectInterlocuter);
+  const mediaState = useAppSelector(selectMediaState);
 
-  const [isUserVideo, setIsUserVideo] = useState(true);
-  const myVideo = useRef<HTMLVideoElement | null>(null);
-
-  const interlocuterVideo = useRef<HTMLVideoElement | null>(null);
   // const userAudio = useRef<HTMLAudioElement | null>(null);
 
   const dispatch = useAppDispatch();
@@ -31,15 +36,10 @@ const ActiveCall: FC<IActiveCallProps> = ({ localStream, remoteStream }) => {
     dispatch(setCallEndReason("self"));
   };
 
-  useEffect(() => {
-    if (!myVideo.current || !interlocuterVideo.current) return;
-    myVideo.current.srcObject = localStream;
-    interlocuterVideo.current.srcObject = remoteStream;
-  }, [remoteStream, localStream]);
   if (!interlocuter) return <></>;
   return (
     <>
-      {!isVideoActive && (
+      {!interlocuter.videoEnable && !mediaState.videoEnable ? (
         <div className="gap-5">
           <div className="flex items-center gap-5 flex-col ">
             <div className="  text-3xl">{interlocuter.name}</div>
@@ -54,40 +54,45 @@ const ActiveCall: FC<IActiveCallProps> = ({ localStream, remoteStream }) => {
             active call
           </div>
         </div>
-      )}
-      <div className="flex absolute w-full h-full z-10">
-        <video
-          className="w-full h-full  absolute "
-          playsInline
-          muted
-          ref={interlocuterVideo}
-          autoPlay
-        ></video>
+      ) : (
+        <div className="flex absolute w-full h-full z-10">
+          <Video
+            className={`w-full h-full  absolute`}
+            isMuted={false}
+            stream={remoteStream}
+            enabled={interlocuter.videoEnable}
+          />
 
-        {/* <audio
-          className="w-full h-full  absolute "
-          ref={userAudio}
-          autoPlay
-        ></audio> */}
-        <video
-          className={`  absolute w-1/4  right-0 bottom-0 z-20  ${
-            isUserVideo ? " " : "w-full h-full"
-          }`}
-          muted
-          playsInline
-          ref={myVideo}
-          autoPlay
-        ></video>
-      </div>
+          <Video
+            className={`absolute    z-20 ${
+              interlocuter.videoEnable
+                ? "w-1/4 right-0 bottom-0"
+                : "w-full h-full"
+            }`}
+            isMuted={true}
+            stream={localStream}
+            enabled={mediaState.videoEnable}
+          />
+        </div>
+      )}
+
       <div
         className={`  flex gap-5  ${
-          isVideoActive ? "absolute bottom-10 z-20" : ""
+          interlocuter.videoEnable || mediaState.videoEnable
+            ? "absolute bottom-10 z-20"
+            : ""
         }`}
       >
         <div className="flex  w-full justify-around">
-          <div className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
-            {/* <CiMicrophoneOn className="text-white text-6xl    " /> */}
-            <CiMicrophoneOff className="text-white text-6xl    " />
+          <div
+            onClick={toggleMic}
+            className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
+          >
+            {mediaState.muted ? (
+              <CiMicrophoneOn className="text-white text-6xl    " />
+            ) : (
+              <CiMicrophoneOff className="text-white text-6xl    " />
+            )}
           </div>
         </div>
         <div onClick={handleEndCall} className="flex  w-full justify-around">
@@ -96,9 +101,15 @@ const ActiveCall: FC<IActiveCallProps> = ({ localStream, remoteStream }) => {
           </div>
         </div>
         <div className="flex  w-full justify-around">
-          <div className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
-            <FiVideo className="text-white text-6xl    " />
-            {/* <FiVideoOff className="text-white text-6xl    " /> */}
+          <div
+            onClick={toggleVideo}
+            className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
+          >
+            {mediaState.videoEnable ? (
+              <FiVideoOff className="text-white text-6xl    " />
+            ) : (
+              <FiVideo className="text-white text-6xl    " />
+            )}
           </div>
         </div>
       </div>

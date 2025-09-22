@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { routes } from "../../../shared/values/strValues";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { callUserThunk } from "../model/callSlice";
-
+import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
 interface IConversationHeaderProps {
   conversationName: string | null;
   conversationId: string | null;
@@ -49,7 +49,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
   };
   const handleCallUser = async () => {
     if (conversationCreatorId || conversationName || !anotherUser) return;
-    dispatch(callUserThunk(anotherUser));
+    dispatch(callUserThunk({ ...anotherUser, ...defaultMediaState }));
   };
   useEffect(() => {
     // Resize of window if there is mobile device

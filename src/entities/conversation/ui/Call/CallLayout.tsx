@@ -11,7 +11,7 @@ import { selectCallStatus } from "../../model/callSlice";
 const CallLayout = () => {
   const [isHidden, setIsHidden] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { localStream, remoteStream } = useCall();
+  const { localStream, remoteStream, toggleMic, toggleVideo } = useCall();
 
   const callStatus = useAppSelector(selectCallStatus);
 
@@ -25,7 +25,12 @@ const CallLayout = () => {
       return <OutgoingCall />;
     } else if (callStatus === "active") {
       return (
-        <ActiveCall localStream={localStream} remoteStream={remoteStream} />
+        <ActiveCall
+          toggleVideo={toggleVideo}
+          toggleMic={toggleMic}
+          localStream={localStream}
+          remoteStream={remoteStream}
+        />
       );
     } else if (callStatus === "idle") {
       return <></>;

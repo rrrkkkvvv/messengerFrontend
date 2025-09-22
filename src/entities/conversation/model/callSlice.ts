@@ -1,13 +1,20 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TCallStatus, TEndCallReason } from "../api/callTypes";
-import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import {
+  TCallParticipant,
+  TCallStatus,
+  TEndCallReason,
+  TMediaState,
+} from "../api/callTypes";
 import { AppDispatch, RootState } from "../../../app/store/store";
+import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
+
 interface ICallSliceProps {
+  mediaState: TMediaState;
   callStatus: TCallStatus;
   endReason: TEndCallReason;
   callFrom: string | null;
   callTo: string | null;
-  interlocuter: TUserInfo | null;
+  interlocuter: TCallParticipant | null;
 }
 
 const initialState: ICallSliceProps = {
@@ -16,6 +23,9 @@ const initialState: ICallSliceProps = {
   callFrom: null,
   callTo: null,
   interlocuter: null,
+  mediaState: {
+    ...defaultMediaState,
+  },
 };
 
 const callSlice = createSlice({
@@ -39,11 +49,14 @@ const callSlice = createSlice({
     setCallFrom(state, action: PayloadAction<string>) {
       state.callFrom = action.payload;
     },
-    setInterlocuter(state, action: PayloadAction<TUserInfo>) {
+    setInterlocuter(state, action: PayloadAction<TCallParticipant>) {
       state.interlocuter = action.payload;
     },
     setCallEndReason(state, action: PayloadAction<TEndCallReason>) {
       state.endReason = action.payload;
+    },
+    setMediaState(state, action: PayloadAction<TMediaState>) {
+      state.mediaState = { ...action.payload };
     },
   },
   selectors: {
@@ -52,11 +65,13 @@ const callSlice = createSlice({
     selectCallFrom: (state) => state.callFrom,
     selectCallStatus: (state) => state.callStatus,
     selectInterlocuter: (state) => state.interlocuter,
+    selectMediaState: (state) => state.mediaState,
   },
 });
 
 export const {
   resetCallState,
+  setMediaState,
   setCallFrom,
   setCallStatus,
   setCallTo,
@@ -64,7 +79,7 @@ export const {
   setCallEndReason,
 } = callSlice.actions;
 export const callUserThunk =
-  (user: TUserInfo) =>
+  (user: TCallParticipant) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
     const {
       callState: { callStatus },
@@ -81,6 +96,7 @@ export const {
   selectCallStatus,
   selectInterlocuter,
   selectCallEndReason,
+  selectMediaState,
 } = callSlice.selectors;
 const callReducer = callSlice.reducer;
 export default callReducer;
