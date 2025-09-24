@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { useAppSelector } from "../../../app/store/store";
 import { Contact } from "..";
 import { CiCirclePlus } from "react-icons/ci";
 
@@ -6,10 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toastTexts } from "../../../shared/values/strValues";
 import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
-import {
-  useConnectToGetUsersChanelQuery,
-  useCreateGroupConversationMutation,
-} from "../api/contactApi";
+import { useCreateGroupConversationMutation } from "../api/contactApi";
 import toast from "react-hot-toast";
 import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import { TContact } from "../../../shared/types/Contact";
@@ -18,10 +15,7 @@ import {
   selectContactsList,
   selectIsLoadnigContacts,
   selectUsersOnlineEmails,
-  setContactsList,
-  setUsersOnlineEmails,
 } from "../model/contactSlice";
-import { skipToken } from "@reduxjs/toolkit/query";
 import ContactsSkeleton from "./ContactsSkeleton";
 
 const ContactsList = () => {
