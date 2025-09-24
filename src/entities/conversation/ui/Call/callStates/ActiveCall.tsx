@@ -12,6 +12,7 @@ import {
   setCallStatus,
 } from "../../../model/callSlice";
 import Video from "../../../../../shared/ui/Video/Video";
+import Audio from "../../../../../shared/ui/Audio/Audio";
 interface IActiveCallProps {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
@@ -27,8 +28,6 @@ const ActiveCall: FC<IActiveCallProps> = ({
 }) => {
   const interlocuter = useAppSelector(selectInterlocuter);
   const mediaState = useAppSelector(selectMediaState);
-
-  // const userAudio = useRef<HTMLAudioElement | null>(null);
 
   const dispatch = useAppDispatch();
   const handleEndCall = () => {
@@ -53,18 +52,24 @@ const ActiveCall: FC<IActiveCallProps> = ({
           <div className="w-full text-center mt-2 md:mt-0 uppercase text-2xl opacity-75  ">
             active call
           </div>
+          <Audio
+            className=""
+            enabled={!interlocuter.videoEnable && !mediaState.videoEnable}
+            isMuted={interlocuter.muted}
+            stream={remoteStream}
+          />
         </div>
       ) : (
         <div className="flex absolute w-full h-full z-10">
           <Video
-            className={`w-full h-full  absolute`}
+            className={`remote w-full h-full  absolute`}
             isMuted={false}
             stream={remoteStream}
             enabled={interlocuter.videoEnable}
           />
 
           <Video
-            className={`absolute    z-20 ${
+            className={`local absolute    z-20 ${
               interlocuter.videoEnable
                 ? "w-1/4 right-0 bottom-0"
                 : "w-full h-full"

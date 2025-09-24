@@ -17,10 +17,15 @@ import {
 } from "../../model/callSlice";
 import { selectCurrentUser } from "../../../user";
 import { rtcConfig } from "../../../../shared/utils/rtcConfig";
-import { TCallStatus, TMediaState } from "../../api/callTypes";
+import {
+  TCallParticipant,
+  TCallStatus,
+  TMediaState,
+} from "../../api/callTypes";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
+  interlocuter: TCallParticipant | null;
   callStatus: TCallStatus;
   callTo: string | null;
   sdp: RTCSessionDescriptionInit | null;
@@ -43,6 +48,7 @@ const useCall = () => {
   const callsSocket = useSocket(wsUrl);
   // REFS for states because of stale closure
   const callStateRef = useRef<TCallStateRef>({
+    interlocuter: interlocuter,
     callStatus: callStatus,
     callTo: callTo,
     sdp: null,
@@ -53,7 +59,9 @@ const useCall = () => {
   useEffect(() => {
     callStateRef.current.callStatus = callStatus;
   }, [callStatus]);
-
+  useEffect(() => {
+    callStateRef.current.interlocuter = interlocuter;
+  }, [interlocuter]);
   useEffect(() => {
     callStateRef.current.callTo = callTo;
   }, [callTo]);
@@ -67,8 +75,11 @@ const useCall = () => {
       );
     });
     callsSocket.on("mediaStateChanged", ({ from, mediaState }) => {
-      if (interlocuter?._id !== from._id) return;
-      dispatch(setInterlocuter({ ...interlocuter, ...mediaState }));
+      if (callStateRef.current?.interlocuter?._id !== from._id) return;
+
+      dispatch(
+        setInterlocuter({ ...callStateRef.current.interlocuter, ...mediaState })
+      );
     });
     callsSocket.on("incomingCall", ({ sdp, from }) => {
       if (callStatus !== "idle") {
@@ -80,7 +91,6 @@ const useCall = () => {
 
       callStateRef.current.sdp = sdp;
       dispatch(setCallFrom(from._id));
-      console.log(from);
       dispatch(setInterlocuter(from));
       dispatch(setCallStatus("incoming"));
     });
@@ -99,6 +109,7 @@ const useCall = () => {
     });
     callsSocket.on("callEnded", () => {
       dispatch(setCallEndReason("interlocute"));
+
       dispatch(setCallStatus("ended"));
     });
     return () => {
@@ -107,6 +118,7 @@ const useCall = () => {
   }, []);
 
   useEffect(() => {
+    console.log(callStatus);
     if (callStatus === "outgoing") {
       callUser();
     } else if (callStatus === "ended") {
@@ -131,6 +143,7 @@ const useCall = () => {
   const createPeerConnection = () => {
     const pc = new RTCPeerConnection(rtcConfig);
     pc.ontrack = ({ streams: [remoteStream] }) => {
+      console.log(remoteStream);
       setRemoteStream(remoteStream);
     };
     pc.onicecandidate = (e) => {
@@ -220,7 +233,6 @@ const useCall = () => {
     sendMediaStateUpdate({ ...mediaState, muted: !mediaState.muted });
   };
   const toggleVideo = () => {
-    console.log(1);
     if (mediaState.videoEnable) {
       disableVideo();
     } else {
@@ -236,6 +248,8 @@ const useCall = () => {
     });
   };
   const disableVideo = () => {
+    console.log("disableVideo");
+
     if (!localStream) return;
     localStream.getVideoTracks().forEach((track) => {
       track.stop();
@@ -257,6 +271,7 @@ const useCall = () => {
       });
       const videoTrack = videoStream.getVideoTracks()[0];
       localStream.addTrack(videoTrack);
+      console.log(videoTrack);
 
       if (callStateRef.current.peerConnection) {
         callStateRef.current.peerConnection?.addTrack(videoTrack, localStream);
