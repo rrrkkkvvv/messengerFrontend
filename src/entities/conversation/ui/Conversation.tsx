@@ -1,6 +1,5 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { BiSolidPhoneCall } from "react-icons/bi";
 
 import {
   selectCurrentConversationId,

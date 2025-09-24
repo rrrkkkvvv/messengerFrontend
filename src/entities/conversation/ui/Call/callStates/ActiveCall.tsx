@@ -3,7 +3,7 @@ import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
 
 import { MdCallEnd } from "react-icons/md";
-import { FC, useEffect, useRef, useState } from "react";
+import { FC } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../../app/store/store";
 import {
   selectInterlocuter,
