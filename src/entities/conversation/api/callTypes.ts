@@ -7,7 +7,7 @@ export type TCallStatus =
   | "incoming"
   | "active"
   | "ended";
-export type TEndCallReason = "self" | "interlocute" | null;
+export type TEndCallReason = "self" | "interlocuter" | null;
 export type TMediaState = {
   muted: boolean;
   videoEnable: boolean;

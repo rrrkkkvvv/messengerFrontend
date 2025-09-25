@@ -23,9 +23,7 @@ const initialState: ICallSliceProps = {
   callFrom: null,
   callTo: null,
   interlocuter: null,
-  mediaState: {
-    ...defaultMediaState,
-  },
+  mediaState: defaultMediaState,
 };
 
 const callSlice = createSlice({
@@ -37,6 +35,7 @@ const callSlice = createSlice({
       state.callFrom = null;
       state.callTo = null;
       state.interlocuter = null;
+      state.mediaState = defaultMediaState;
     },
 
     setCallStatus(state, action: PayloadAction<TCallStatus>) {

@@ -22,6 +22,7 @@ import {
   TCallStatus,
   TMediaState,
 } from "../../api/callTypes";
+import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
@@ -30,7 +31,7 @@ type TCallStateRef = {
   callTo: string | null;
   sdp: RTCSessionDescriptionInit | null;
   peerConnection: RTCPeerConnection | null;
-  isRemoteSdpSet: boolean;
+  currentUser: TUserInfo | null;
 };
 const useCall = () => {
   const dispatch = useAppDispatch();
@@ -49,13 +50,15 @@ const useCall = () => {
   // REFS for states because of stale closure
   const callStateRef = useRef<TCallStateRef>({
     interlocuter: interlocuter,
+    currentUser: null,
     callStatus: callStatus,
     callTo: callTo,
     sdp: null,
-    isRemoteSdpSet: false,
     peerConnection: null,
   });
-
+  useEffect(() => {
+    callStateRef.current.currentUser = currentUser;
+  }, [currentUser]);
   useEffect(() => {
     callStateRef.current.callStatus = callStatus;
   }, [callStatus]);
@@ -100,25 +103,39 @@ const useCall = () => {
         callStateRef.current.callTo === from._id
       ) {
         dispatch(setCallStatus("active"));
-        if (callStateRef.current.isRemoteSdpSet) {
-          return;
-        }
-        callStateRef.current.isRemoteSdpSet = true;
+        // if (callStateRef.current.isRemoteSdpSet) {
+        //   return;
+        // }
+        // callStateRef.current.isRemoteSdpSet = true;
         callStateRef.current?.peerConnection?.setRemoteDescription(sdp);
       }
     });
     callsSocket.on("callEnded", () => {
-      dispatch(setCallEndReason("interlocute"));
+      dispatch(setCallEndReason("interlocuter"));
 
       dispatch(setCallStatus("ended"));
     });
+    callsSocket.on("newSdp", ({ sdp, from, sdpType }) => {
+      if (callStateRef.current.interlocuter?._id === from._id) {
+        callStateRef.current?.peerConnection?.setRemoteDescription(sdp);
+
+        if (sdpType === "offer") {
+          sendSdp("answer");
+        }
+      }
+    });
     return () => {
+      callsSocket.off("newSdp");
+      callsSocket.off("callEnded");
+      callsSocket.off("callAccepted");
+      callsSocket.off("incomingCall");
+      callsSocket.off("mediaStateChanged");
+      callsSocket.off("iceCandidate");
       endCall();
     };
   }, []);
 
   useEffect(() => {
-    console.log(callStatus);
     if (callStatus === "outgoing") {
       callUser();
     } else if (callStatus === "ended") {
@@ -131,6 +148,23 @@ const useCall = () => {
       answerCall();
     }
   }, [callStatus]);
+  const sendSdp = async (sdpType: "offer" | "answer") => {
+    if (!callStateRef.current.peerConnection) return;
+    let sdp: RTCSessionDescriptionInit;
+    if (sdpType === "offer") {
+      sdp = await callStateRef.current.peerConnection.createOffer();
+    } else {
+      sdp = await callStateRef.current.peerConnection.createAnswer();
+    }
+    await callStateRef.current.peerConnection.setLocalDescription(sdp);
+    callsSocket.emit("sendSdp", {
+      to: callStateRef.current.interlocuter?._id,
+      sdp: sdp,
+      sdpType: sdpType,
+      from: { ...callStateRef.current.currentUser, ...mediaState },
+    });
+  };
+
   const sendMediaStateUpdate = (newMediaState: TMediaState) => {
     if (interlocuter) {
       callsSocket.emit("mediaStateChange", {
@@ -143,8 +177,10 @@ const useCall = () => {
   const createPeerConnection = () => {
     const pc = new RTCPeerConnection(rtcConfig);
     pc.ontrack = ({ streams: [remoteStream] }) => {
-      console.log(remoteStream);
       setRemoteStream(remoteStream);
+    };
+    pc.onnegotiationneeded = async () => {
+      await sendSdp("offer");
     };
     pc.onicecandidate = (e) => {
       if (e.candidate && interlocuter) {
@@ -159,7 +195,7 @@ const useCall = () => {
   const handleInitLocalStream = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: false,
         audio: true,
       });
       setLocalStream(stream);
@@ -248,8 +284,6 @@ const useCall = () => {
     });
   };
   const disableVideo = () => {
-    console.log("disableVideo");
-
     if (!localStream) return;
     localStream.getVideoTracks().forEach((track) => {
       track.stop();
@@ -271,7 +305,6 @@ const useCall = () => {
       });
       const videoTrack = videoStream.getVideoTracks()[0];
       localStream.addTrack(videoTrack);
-      console.log(videoTrack);
 
       if (callStateRef.current.peerConnection) {
         callStateRef.current.peerConnection?.addTrack(videoTrack, localStream);
