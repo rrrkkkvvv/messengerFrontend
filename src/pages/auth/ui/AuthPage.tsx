@@ -154,16 +154,17 @@ const AuthPage = () => {
           children={isSignUp ? "Sign Up" : "Sign In"}
         />
 
-        <p className="relative text-center px-3   uppercase text-sm text-gray-400 before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-1/3 before:h-px before:bg-gray-400 after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-1/3 after:h-px after:bg-gray-400">
+        <p className="relative text-center px-3   uppercase text-sm text-gray-100 before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-1/3 before:h-px before:bg-gray-100 after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-1/3 after:h-px after:bg-gray-100">
           or continue with
         </p>
-        <div className="flex cursor-pointer overflow-hidden relative items-center gap-2 w-1/2  font-semibold border bg-gray-300 p-2  rounded-lg">
+        {/* <div className="flex cursor-pointer overflow-hidden relative items-center gap-2 w-1/2  font-semibold border bg-gray-300 p-2  rounded-lg">
           <FaGoogle className="font-thin" />
           <div>Google</div>
-          <div className="absolute z-10 left-0 opacity-0 inset-0">
+          <div className="absolute z-10 left-0 opacity-0 ">
             <GoogleAuth />
           </div>
-        </div>
+        </div> */}
+        <GoogleAuth />
       </form>
     </div>
   );
