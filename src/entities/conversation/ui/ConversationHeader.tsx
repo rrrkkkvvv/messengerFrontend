@@ -105,7 +105,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
           <button
             type="button"
             onClick={handleCallUser}
-            className=" mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-white "
+            className=" mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-gray-100 "
           >
             <BiSolidPhoneCall />
           </button>
@@ -114,7 +114,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
         <button
           type="button"
           onClick={handleShowSidebarMenu}
-          className="  mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-white"
+          className="  mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-gray-100"
         >
           <HiDotsHorizontal />
         </button>
@@ -122,7 +122,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
           <button
             type="button"
             onClick={closeConversation}
-            className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-400 hover:text-white "
+            className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-50 hover:text-gray-100 "
           >
             <IoCloseOutline />
           </button>
