@@ -9,7 +9,6 @@ import GoogleAuth from "./GoogleAuth";
 import { useSignInMutation, useSignUpMutation } from "../../../entities/user";
 import { setUserLoginData } from "../../../entities/user/model/userSlice";
 import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
-import { FaGoogle } from "react-icons/fa";
 
 const AuthPage = () => {
   const [isSignUp, setSignIn] = useState(true);
