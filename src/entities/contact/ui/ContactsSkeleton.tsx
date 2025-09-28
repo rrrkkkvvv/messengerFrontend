@@ -16,7 +16,7 @@ const ContactsSkeleton = () => {
                     transition
                     cursor-pointer
                     border-b-2
-                    border-purple-50
+                    border-gray-50
                     p-2
                     animate-pulse"
           >

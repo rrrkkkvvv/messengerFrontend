@@ -129,7 +129,7 @@ const MessageForm = ({
   return (
     <form
       onSubmit={(event) => handleSendMessage(event)}
-      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-2  bg-purple-100 border-l-2 border-gray-200 ${
+      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-2  bg-gray-400 border-l-2 border-gray-200 ${
         messageImagePreview && "border border-t-gray-200"
       }`}
     >
@@ -139,7 +139,7 @@ const MessageForm = ({
             // Clears state of message image
             type="button"
             onClick={handleResetMessageImage}
-            className="absolute right-5 top-5 text-4xl  rounded-full     transition   text-purple-200 border hover:border-purple-50"
+            className="absolute right-5 top-5 text-4xl  rounded-full     transition   text-gray-300 border hover:border-gray-50"
           >
             <IoCloseOutline />
           </button>
@@ -147,7 +147,7 @@ const MessageForm = ({
             <img
               src={messageImagePreview}
               alt="Uploaded"
-              className="max-w-96 max-h-44 rounded-lg shadow-md border-2 p-2 border-purple-200"
+              className="max-w-96 max-h-44 rounded-lg shadow-md border-2 p-2 border-gray-300"
             />
           </div>
         </>
@@ -158,7 +158,7 @@ const MessageForm = ({
           <button
             type="button"
             onClick={handleClearMessage}
-            className=" text-5xl  rounded-full     transition   text-purple-200 border hover:border-purple-50"
+            className=" text-5xl  rounded-full     transition   text-gray-300 border hover:border-gray-50"
           >
             {<IoClose className=" p-2" />}
           </button>
@@ -173,7 +173,7 @@ const MessageForm = ({
           onChange={handleInputChange}
           placeholder="Write a message..."
           className="text-xl   md:text-base w-full border-0         outline-none
-        bg-purple-100
+        bg-gray-400
         transition-all
 "
         />

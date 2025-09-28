@@ -63,17 +63,17 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
     };
   }, []);
   return (
-    <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-purple-100">
+    <h1 className="flex md:px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-400">
       {isMobile && (
         <button
           type="button"
-          className=" mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-purple-200 text-gray-100 hover:text-white"
+          className=" mx-2 p-2 text-xl md:text-2xl rounded-full outline-none  transition-all focus:outline-gray-300 text-gray-50 hover:text-white"
           onClick={handleCloseConversation}
         >
           <FaArrowLeft />
         </button>
       )}
-      <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
+      <div className="flex flex-row  items-center gap-5">
         <Avatar
           isProfileAvatar={false}
           isGroup={!!conversationName}
@@ -105,7 +105,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
           <button
             type="button"
             onClick={handleCallUser}
-            className=" mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
+            className=" mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-white "
           >
             <BiSolidPhoneCall />
           </button>
@@ -114,7 +114,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
         <button
           type="button"
           onClick={handleShowSidebarMenu}
-          className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white"
+          className="  mx-2 p-2 rounded-full outline-none  text-2xl  transition-all  text-gray-50 hover:text-white"
         >
           <HiDotsHorizontal />
         </button>
@@ -122,7 +122,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
           <button
             type="button"
             onClick={closeConversation}
-            className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-100 hover:text-white "
+            className="  mx-2 p-2 rounded-full outline-none  text-3xl  transition-all  text-gray-400 hover:text-white "
           >
             <IoCloseOutline />
           </button>

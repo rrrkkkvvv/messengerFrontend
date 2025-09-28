@@ -61,7 +61,7 @@ const MainPage = () => {
       {isMobile ? (
         isMainPage ? (
           <>
-            <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-purple-100">
+            <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
               <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
                 <button
                   className="
@@ -74,8 +74,8 @@ const MainPage = () => {
                   outline-none
                   rounded-sm
                   transition-all
-                  focus:outline-purple-200
-                  hover:outline-purple-50"
+                  focus:outline-gray-300
+                  hover:outline-gray-50"
                   onClick={handleOpenModal}
                 >
                   <CgProfile className="text-2xl" />
@@ -92,8 +92,8 @@ const MainPage = () => {
             outline-none
             rounded-sm
             transition-all
-            focus:outline-purple-200
-            hover:outline-purple-50
+            focus:outline-gray-300
+            hover:outline-gray-50
           "
                   onClick={() => logout(navigate, dispatch)}
                 >
@@ -110,7 +110,7 @@ const MainPage = () => {
         )
       ) : (
         <>
-          <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-purple-100">
+          <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
             <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
               <button
                 className="
@@ -123,8 +123,8 @@ const MainPage = () => {
                   outline-none
                   rounded-sm
                   transition-all
-                  focus:outline-purple-200
-                  hover:outline-purple-50"
+                  focus:outline-gray-300
+                  hover:outline-gray-50"
                 onClick={handleOpenModal}
               >
                 <CgProfile className="text-2xl" />
@@ -141,8 +141,8 @@ const MainPage = () => {
             outline-none
             rounded-sm
             transition-all
-            focus:outline-purple-200
-            hover:outline-purple-50
+            focus:outline-gray-300
+            hover:outline-gray-50
           "
                 onClick={() => logout(navigate, dispatch)}
               >

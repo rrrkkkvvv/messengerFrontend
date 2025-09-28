@@ -41,16 +41,16 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
   return (
     <>
       <div
-        className="flex items-center h-12 px-2 text-center text-2xl gap-2 outline-none transition-all rounded-2xl cursor-pointer hover:outline-purple-150"
+        className="flex items-center h-12 px-2 text-center text-2xl gap-2 outline-none transition-all rounded-2xl cursor-pointer hover:outline-gray-150"
         onClick={() => setIsModalOpen(true)}
       >
         <div>Delete account</div>
-        <MdDelete className="text-purple-200 mt-1 text-2xl rounded-full outline-none" />
+        <MdDelete className="text-gray-300 mt-1 text-2xl rounded-full outline-none" />
       </div>
 
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 text-white bg-purple-100 bg-opacity-75 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="fixed inset-0 text-white bg-gray-400 bg-opacity-75 flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-gray-200 p-6 rounded-lg shadow-md w-96 animate-scaleIn">
             <h2 className="text-lg font-bold  mb-4">
               Are you sure you want to delete your account?
@@ -70,13 +70,13 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
             </div>
             <div className="flex justify-end gap-4">
               <button
-                className="px-4 py-2 bg-gray-50 transition-all text-gray-300 rounded-lg hover:bg-gray-100 hover:text-white"
+                className="px-4 py-2 bg-gray-50 transition-all text-gray-300 rounded-lg hover:bg-gray-400 hover:text-white"
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2  transition-all bg-purple-200 text-white rounded-lg hover:bg-purple-150"
+                className="px-4 py-2  transition-all bg-gray-300 text-white rounded-lg hover:bg-gray-150"
                 onClick={() => {
                   handleDeleteAccount();
                 }}

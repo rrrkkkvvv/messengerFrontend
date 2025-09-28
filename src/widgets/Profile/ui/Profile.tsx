@@ -22,18 +22,18 @@ const Profile: FC<Profile> = ({ closeProfile }) => {
   return (
     <div
       onClick={(e) => e.stopPropagation()}
-      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-purple-100`}
+      className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-400`}
     >
       {/* Navigation*/}
       <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
         <button
-          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50 overflow-hidden`}
+          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50 overflow-hidden`}
           onClick={closeProfile}
         >
           <FaArrowLeft />
         </button>
         <button
-          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-purple-200 hover:outline-purple-50 overflow-hidden`}
+          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50 overflow-hidden`}
           onClick={handleOpenEdit}
         >
           <MdEdit />

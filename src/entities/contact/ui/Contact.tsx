@@ -23,7 +23,7 @@ const Contact = ({
 }: IContactProps) => {
   const currentConversationId = useAppSelector(selectCurrentConversationId);
   const isCurrentConversation = () => {
-    const currentConvStyles = "bg-purple-200 text-black";
+    const currentConvStyles = "bg-gray-300 text-black";
     if (contact.type === "single") {
       if (!contact.conversationId && !currentConversationId) return "";
       if (contact.conversationId === currentConversationId) {
@@ -85,7 +85,7 @@ const Contact = ({
                     items-center
                     space-x-3
                     text-white
-                    hover:bg-purple-200
+                    hover:bg-gray-300
                     rounded-lg
                     transition
                     cursor-pointer
@@ -98,7 +98,7 @@ const Contact = ({
         isProfileAvatar={false}
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
-      <div className="text-purple-50">
+      <div className="text-gray-50">
         <div className="truncate max-w-40 text-white">{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
@@ -112,11 +112,11 @@ const Contact = ({
             ) : (
               <>
                 {contact.lastMessage?.senderId === currentUserId ? (
-                  <span className=" text-purple-150">You:</span>
+                  <span className=" text-gray-150">You:</span>
                 ) : (
                   contact.type === "group" &&
                   contact.lastMessage?.sender && (
-                    <span className="truncate max-w-40 text-purple-150">
+                    <span className="truncate max-w-40 text-gray-150">
                       {contact.lastMessage.sender.name}:
                     </span>
                   )

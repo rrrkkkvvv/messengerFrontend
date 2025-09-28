@@ -50,7 +50,9 @@ const GoogleAuth: FC<GoogleLoginComponentProps> = () => {
     }
   };
 
-  return <GoogleLogin onSuccess={onSuccess} />;
+  return (
+    <GoogleLogin width="1000000" onSuccess={onSuccess} text="signin_with" />
+  );
 };
 
 export default GoogleAuth;

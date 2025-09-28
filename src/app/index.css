@@ -6,11 +6,11 @@
   width: 0.8rem;
 } */
 ::-webkit-scrollbar {
-  width: 7px;
+  width: 5px;
 }
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #493d63;
+  background: #2e2f2f;
   border-radius: 5px;
 }
 
@@ -18,11 +18,11 @@
 ::-webkit-scrollbar-thumb {
   /* border: 1px solid #755fa5; */
 
-  background: #918aa0;
+  background: #e5e5e5;
   border-radius: 5px;
 }
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #333;
-}
+/* ::-webkit-scrollbar-thumb:hover {
+  background: #454545;
+} */

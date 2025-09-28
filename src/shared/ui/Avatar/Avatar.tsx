@@ -33,9 +33,13 @@ const Avatar = ({
   };
   return (
     <div className="relative">
-      {!isGroup && !isProfileAvatar && !hideOnline && !isMobileCallAvatar && (
-        <div
-          className={`
+      {!isGroup &&
+        !isProfileAvatar &&
+        !hideOnline &&
+        !isMobileCallAvatar &&
+        !isUserSelectedForGroup && (
+          <div
+            className={`
             absolute
             rounded-full
             
@@ -43,10 +47,10 @@ const Avatar = ({
             w-3
             z-10
   
-        ${isOnline ? "bg-green-200" : "bg-gray-100"}
+        ${isOnline ? "bg-green-200" : "bg-gray-50"}
         `}
-        ></div>
-      )}
+          ></div>
+        )}
       {isUserSelectedForGroup && (
         <div
           className={`
@@ -54,10 +58,11 @@ const Avatar = ({
             rounded-full
             bottom-0
             right-0
-            h-5
-            w-5
+            h-full
+            w-full
             z-20
-            bg-green-700
+            bg-gray-400
+            opacity-70
             flex
             items-center
             text-center

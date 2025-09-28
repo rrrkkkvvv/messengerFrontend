@@ -47,11 +47,11 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
   );
   return (
     <>
-      <div className="flex justify-center text-xl text-purple-50 ">
+      <div className="flex justify-center text-xl text-gray-50 ">
         {selectedUsers.length ? (
           <button
             onClick={handleAdd}
-            className="text-purple-200   py-1 w-1/3 text-lg  rounded-full border border-gray-100 outline-none    transition   hover:border-purple-50"
+            className="text-gray-300   py-1 w-1/3 text-lg  rounded-full border border-gray-400 outline-none    transition   hover:border-gray-50"
           >
             Save
           </button>
@@ -64,7 +64,7 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
           <div
             key={user._id}
             onClick={() => toggleUser(user._id)}
-            className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-100 px-9 py-1 max-h-96   overflow-hidden   "
+            className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 max-h-96   overflow-hidden   "
           >
             <Avatar
               isProfileAvatar={false}

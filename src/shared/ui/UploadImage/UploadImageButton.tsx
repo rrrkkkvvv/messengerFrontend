@@ -71,7 +71,7 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
           ></path>
         </svg>
       ) : (
-        <IoMdImages className="text-4xl md:text-3xl transition duration-300 text-white hover:text-purple-1500 " />
+        <IoMdImages className="text-4xl md:text-3xl transition duration-300 text-white hover:text-gray-1500 " />
       )}
       <input
         type="file"

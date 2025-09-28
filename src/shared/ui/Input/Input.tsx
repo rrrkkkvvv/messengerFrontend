@@ -1,51 +1,21 @@
-import { FormEvent, MouseEvent } from "react";
+import { InputHTMLAttributes } from "react";
 
-type InputPropsType = {
-  type: string;
-  placeholder?: string;
-  value?: string;
-  onChange?: (e: FormEvent<HTMLInputElement>) => void;
-  onClick?: (e: MouseEvent<HTMLInputElement>) => void;
-  className?: string;
-  disabled?: boolean;
-  required?: boolean;
-};
-const Input = ({
-  placeholder,
-  type,
-  value,
-  onChange,
-  onClick,
-  className,
-  required,
-  disabled,
-}: InputPropsType) => {
+type InputPropsType = InputHTMLAttributes<HTMLInputElement>;
+const Input = ({ ...props }: InputPropsType) => {
   return (
     <input
-      disabled={!!disabled}
-      required={required}
-      onChange={onChange}
-      onClick={onClick}
-      type={type}
-      placeholder={placeholder}
-      value={value}
+      {...props}
       className={`
-        
-        p-3 rounded-2xl
-        placeholder:text-white 
-        outline-none
-        
-        transition-all
+                      ${props.className}
 
-        ${
-          disabled
-            ? "bg-gray-200"
-            : `bg-purple-200         focus:border-white
-        focus:border 
-        hover:border-white
-        hover:border   `
-        }
-        ${className}
+        p-3 rounded-md
+        placeholder:text-gray-100 
+        outline-none
+          
+        transition-all
+bg-gray-300         focus:outline-gray-100
+        focus:outline-4
+    
         `}
     />
   );

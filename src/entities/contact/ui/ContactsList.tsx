@@ -95,12 +95,12 @@ const ContactsList = () => {
             placeholder="Name your group"
             className="w-2/3 md:w-1/2 hover:border h-9 text-white"
           />
-          <SubmitBtn className="py-2 px-5" children="Create" />
+          <SubmitBtn className="py-2 px-5 bg-gray-200" children="Create" />
           <h4>Select users for group</h4>
         </form>
       )}
       {/* Users list */}
-      <div className="relative  max-h-full overflow-y-auto   text-purple-50">
+      <div className="relative  max-h-full overflow-y-auto   text-gray-50">
         {isLoadingContacts && <ContactsSkeleton />}
         {contactsList &&
           [...contactsList]
@@ -143,7 +143,7 @@ const ContactsList = () => {
         className={`right-4 absolute bottom-10      rounded-full box-border  text-6xl cursor-pointer  transition duration-500 z-30 ${
           isGroupCreating
             ? "rotate-45 bg-red-100 text-black hover:bg-red-100  hover:text-white"
-            : "hover:text-white bg-gray-300 text-purple-50 hover:bg-gray-200"
+            : "hover:text-white bg-gray-300 text-gray-50 hover:bg-gray-200"
         }`}
       />
     </>
