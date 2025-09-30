@@ -125,7 +125,7 @@ const SidebarMenu = ({
           </>
         )}
         <SidebarBtn onClick={closeSidebarMenu}>
-          <IoCloseOutline className="text-white" />
+          <IoCloseOutline className="text-gray-50" />
         </SidebarBtn>
       </div>
 
@@ -228,7 +228,7 @@ const SidebarMenu = ({
                 ? handleDeleteConversation
                 : handleLeaveConversation
             }
-            className="text-white mx-2 p-2 rounded-full border border-gray-400 outline-none    transition   hover:border-gray-50"
+            className="text-gray-50 mx-2 p-2 rounded-full border border-gray-400 outline-none    transition   hover:border-gray-50"
           >
             {removeChatPosibility ? <>Remove chat</> : <>Leave chat</>}
           </button>

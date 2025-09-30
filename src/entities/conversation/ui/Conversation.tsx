@@ -201,7 +201,7 @@ const Conversation = () => {
   return (
     <>
       <div
-        className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white"
+        className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-gray-50"
         onClick={redirectToCurrentConversation}
       >
         {/* HEADER */}

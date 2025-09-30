@@ -176,7 +176,7 @@ const MessageList = ({
       {/* Context menu */}
       {contextMenu.visible && (
         <div
-          className={`absolute border rounded-xl shadow-md z-50 ${contextMenu.backgroundColor}`}
+          className={`absolute border rounded-xl shadow-md z-50 bg-gray-200`}
           style={{
             top: contextMenu.y,
             left: contextMenu.x,

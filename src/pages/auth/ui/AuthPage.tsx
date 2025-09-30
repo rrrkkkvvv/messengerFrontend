@@ -8,7 +8,7 @@ import Input from "../../../shared/ui/Input/Input";
 import GoogleAuth from "./GoogleAuth";
 import { useSignInMutation, useSignUpMutation } from "../../../entities/user";
 import { setUserLoginData } from "../../../entities/user/model/userSlice";
-import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
+import SolidButton from "../../../shared/ui/Button/SolidButton";
 
 const AuthPage = () => {
   const [isSignUp, setSignIn] = useState(true);
@@ -77,7 +77,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="h-dvh text-white bg-gray-400 flex justify-center    ">
+    <div className="h-dvh text-gray-50 bg-gray-400 flex justify-center    ">
       <form
         onSubmit={handleSubmit}
         className="h-full w-full md:w-1/3 flex flex-col    justify-center  gap-3 p-4 rounded-md     "
@@ -148,14 +148,16 @@ const AuthPage = () => {
           onChange={(e) => handleInputChange("password", e)}
           type="password"
         />
-        <SubmitBtn
-          className="mt-3 bg-gray-50 text-gray-400 font-bold "
-          children={isSignUp ? "Sign Up" : "Sign In"}
-        />
+        <SolidButton type="submit" className="mt-3">
+          {isSignUp ? <>Sign Up</> : <>Sign In</>}
+        </SolidButton>
+        <div className="relative my-4 flex justify-center items-center">
+          <span className="absolue w-full border-t-2 border-gray-100"></span>
+          <div className="uppercase text-sm absolute px-1 bg-gray-400 text-gray-100">
+            or continue with
+          </div>
+        </div>
 
-        <p className="relative text-center px-3   uppercase text-sm text-gray-100 before:content-[''] before:absolute before:left-0 before:top-1/2 before:w-1/3 before:h-px before:bg-gray-100 after:content-[''] after:absolute after:right-0 after:top-1/2 after:w-1/3 after:h-px after:bg-gray-100">
-          or continue with
-        </p>
         {/* <div className="flex cursor-pointer overflow-hidden relative items-center gap-2 w-1/2  font-semibold border bg-gray-300 p-2  rounded-lg">
           <FaGoogle className="font-thin" />
           <div>Google</div>

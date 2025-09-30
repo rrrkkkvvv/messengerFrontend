@@ -52,7 +52,7 @@ const CallLayout = () => {
       return "hidden ";
     } else {
       return ` 
-      text-white animate-fadeIn transition-all duration-300     md:rounded-lg  fixed z-50  bg-gray-200     ${
+      text-gray-50 animate-fadeIn transition-all duration-300     md:rounded-lg  fixed z-50  bg-gray-200     ${
         isCollapsed
           ? "-translate-x-1/2 left-1/2 w-1/2 md:w-1/3 lg:w-1/5 h-16 top-0  cursor-pointer     rounded-lg"
           : "w-full h-full top-0 md:h-1/2 md:w-1/2 lg:w-1/3 md:-translate-x-1/2 md:left-1/2 md:-translate-y-1/2 md:top-1/3 "

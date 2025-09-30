@@ -5,11 +5,11 @@ const ErrorPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-400 text-white">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-400 text-gray-50">
       <h1 className="text-6xl font-bold text-gray-50">404</h1>
       <p className="mt-4 text-xl text-gray-50">Page not found</p>
       <button
-        className="mt-6 px-6 py-2 bg-gray-300 text-white font-semibold rounded hover:bg-gray-150 transition duration-300"
+        className="mt-6 px-6 py-2 bg-gray-300 text-gray-50 font-semibold rounded hover:bg-gray-150 transition duration-300"
         onClick={() => navigate(routes.main)}
       >
         Back to main page

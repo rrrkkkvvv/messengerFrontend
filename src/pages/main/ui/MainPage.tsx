@@ -62,10 +62,10 @@ const MainPage = () => {
         isMainPage ? (
           <>
             <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
-              <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
+              <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
                 <button
                   className="
-                  text-white
+                  text-gray-50
                   flex
                   gap-3
                   items-center
@@ -83,7 +83,7 @@ const MainPage = () => {
                 </button>
                 <button
                   className="
-            text-white
+            text-gray-50
             flex
             gap-3
             items-center
@@ -111,10 +111,10 @@ const MainPage = () => {
       ) : (
         <>
           <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
-            <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-white items-center">
+            <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
               <button
                 className="
-                  text-white
+                  text-gray-50
                   flex
                   gap-3
                   items-center
@@ -132,7 +132,7 @@ const MainPage = () => {
               </button>
               <button
                 className="
-            text-white
+            text-gray-50
             flex
             gap-3
             items-center

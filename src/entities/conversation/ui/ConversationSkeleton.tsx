@@ -5,7 +5,7 @@ import Input from "../../../shared/ui/Input/Input";
 const ConversationSkeleton = () => {
   return (
     <>
-      <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-white ">
+      <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-gray-50 ">
         {/* HEADER */}
         <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
           {/* {isMobile && (
@@ -82,7 +82,7 @@ const ConversationSkeleton = () => {
           <IoMdImages className="text-4xl transition duration-300 animate-pulse " />
 
           <button
-            className={`p-4 rounded-md outline-none transition-all animate-pulse border-white border h-7 w-7 `}
+            className={`p-4 rounded-md outline-none transition-all animate-pulse border-gray-50 border h-7 w-7 `}
           >
             sdsd
           </button>

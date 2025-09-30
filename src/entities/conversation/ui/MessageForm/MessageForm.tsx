@@ -1,6 +1,5 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
-import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
 import { IoClose, IoCloseOutline } from "react-icons/io5";
 import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
 import { TEditingMessage, TMessageInfo } from "../../api/conversationTypes";
@@ -11,6 +10,10 @@ import {
   useStopTypingMutation,
 } from "../../api/conversationApi";
 import { TbSend2 } from "react-icons/tb";
+import Input from "../../../../shared/ui/Input/Input";
+import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
+import toast from "react-hot-toast";
+import { toastTexts } from "../../../../shared/values/strValues";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -26,7 +29,6 @@ const MessageForm = ({
   editingMessage,
   handleResetIsEditingMessage,
 }: TMessageFormProps) => {
-  // Input message value
   const [messageText, setMessageText] = useState<string>();
   const [messageId, setMessageId] = useState<string | null>(null);
 
@@ -67,10 +69,9 @@ const MessageForm = ({
       clearTimeout(typingTimeoutRef.current);
     }
 
-    // Запускаем новый таймер на 2 секунды перед отправкой stopTyping
     typingTimeoutRef.current = setTimeout(() => {
       stopTyping({ conversationId }).unwrap();
-      setIsTyping(false); // Сбрасываем флаг, чтобы при следующем вводе снова отправить startTyping
+      setIsTyping(false);
     }, 750);
   };
 
@@ -78,7 +79,11 @@ const MessageForm = ({
     event.preventDefault();
     if (!conversationId) return;
     if (!currentUser) return;
-    if (!messageText && !messageImagePreview) return;
+    if (!messageText && !messageImagePreview) {
+      toast.error("Message can't be empty");
+
+      return;
+    }
 
     try {
       if (isMessageEdit && messageId && editingMessage) {
@@ -135,49 +140,54 @@ const MessageForm = ({
     >
       {messageImagePreview && (
         <>
-          <button
-            // Clears state of message image
-            type="button"
-            onClick={handleResetMessageImage}
-            className="absolute right-5 top-5 text-4xl  rounded-full     transition   text-gray-300 border hover:border-gray-50"
-          >
-            <IoCloseOutline />
-          </button>
-          <div className="flex justify-center  mb-4 ">
-            <img
-              src={messageImagePreview}
-              alt="Uploaded"
-              className="max-w-96 max-h-44 rounded-lg shadow-md border-2 p-2 border-gray-300"
-            />
+          <div className="flex justify-center relative mb-4 ">
+            <div className="  relative  ">
+              <img
+                src={messageImagePreview}
+                alt="Uploaded"
+                className="max-w-96 max-h-44 rounded-lg shadow-md border-2 p-2 border-gray-300"
+              />
+              <BorderedButton
+                className="absolute -right-10 -top-2    rounded-full     transition       "
+                type="button"
+                onClick={handleResetMessageImage}
+              >
+                <IoCloseOutline />
+              </BorderedButton>
+            </div>
           </div>
         </>
       )}
 
       <div className="flex gap-5 items-center">
         {isMessageEdit && (
-          <button
-            type="button"
-            onClick={handleClearMessage}
-            className=" text-5xl  rounded-full     transition   text-gray-300 border hover:border-gray-50"
-          >
-            {<IoClose className=" p-2" />}
-          </button>
+          <div>
+            <BorderedButton type="button" onClick={handleClearMessage}>
+              <IoClose className="text-3xl  text-center" />
+            </BorderedButton>
+          </div>
         )}
+        <button className="   rounded-full     transition   text-gray-300 border hover:border-gray-50"></button>
         <UploadButton
           setImagePreview={handleSetMessageImagePreview}
           setImage={handleSetMessageImage}
         />
-        <input
+
+        <Input
+          className="    md:text-base w-full           focus:outline-none
+        bg-gray-400
+        transition-all
+"
           type="text"
           value={messageText ? messageText : ""}
           onChange={handleInputChange}
           placeholder="Write a message..."
-          className="text-xl   md:text-base w-full border-0         outline-none
-        bg-gray-400
-        transition-all
-"
         />
-        <SubmitBtn children={isMessageEdit ? <FaCheck /> : <TbSend2 />} />
+        <div>
+          <BorderedButton type="submit" className="text-xl hover:outline-none">
+            {isMessageEdit ? <FaCheck /> : <TbSend2 />}
+          </BorderedButton>
+        </div>
       </div>
     </form>
   );

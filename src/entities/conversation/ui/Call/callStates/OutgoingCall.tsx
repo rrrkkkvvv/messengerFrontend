@@ -38,7 +38,7 @@ const OutgoingCall = () => {
           onClick={handleStopCall}
           className="bg-red-100 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
         >
-          <MdCallEnd className="text-white text-6xl animate-shake   " />
+          <MdCallEnd className="text-gray-50 text-6xl animate-shake   " />
         </div>
       </div>
     </>

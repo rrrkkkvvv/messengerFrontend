@@ -84,7 +84,7 @@ const Contact = ({
                     flex
                     items-center
                     space-x-3
-                    text-white
+                    text-gray-50
                     hover:bg-gray-300
                     rounded-lg
                     transition
@@ -99,7 +99,7 @@ const Contact = ({
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div className="text-gray-50">
-        <div className="truncate max-w-40 text-white">{contact.name}</div>
+        <div className="truncate max-w-40 text-gray-50">{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
             {contact.type === "single" && contact.isTyping ? (

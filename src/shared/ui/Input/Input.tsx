@@ -1,7 +1,7 @@
 import { InputHTMLAttributes } from "react";
 
-type InputPropsType = InputHTMLAttributes<HTMLInputElement>;
-const Input = ({ ...props }: InputPropsType) => {
+type TInputProps = InputHTMLAttributes<HTMLInputElement>;
+const Input = ({ ...props }: TInputProps) => {
   return (
     <input
       {...props}

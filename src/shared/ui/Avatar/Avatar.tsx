@@ -67,7 +67,7 @@ const Avatar = ({
             items-center
             text-center
             justify-center
-            text-white
+            text-gray-50
             animate-fadeIn
         `}
         >

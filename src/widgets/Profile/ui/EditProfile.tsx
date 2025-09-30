@@ -1,5 +1,4 @@
 import { TbArrowBackUp } from "react-icons/tb";
-import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import Input from "../../../shared/ui/Input/Input";
 import { IoCloseOutline } from "react-icons/io5";
 import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
@@ -14,6 +13,8 @@ import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { setCurrentUser } from "../../../entities/user";
 import { TEditedProfile } from "../../../entities/contact/api/contactTypes";
 import { FaArrowLeft } from "react-icons/fa";
+import BorderedButton from "../../../shared/ui/Button/BorderedButton";
+import SolidButton from "../../../shared/ui/Button/SolidButton";
 type TEditProfileProps = {
   currentUser: TUserInfo | null;
   closeEditProfile: () => void;
@@ -116,16 +117,13 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
       className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-400`}
     >
       {/* Navigation*/}
-      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
-        <button
-          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50 overflow-hidden`}
-          onClick={closeEditProfile}
-        >
+      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-gray-50 items-center">
+        <BorderedButton onClick={closeEditProfile}>
           <FaArrowLeft />
-        </button>
+        </BorderedButton>
       </h1>
       {/* Profile */}
-      <div className="flex flex-col justify-center relative items-center text-white gap-10 p-10">
+      <div className="flex flex-col justify-center relative items-center text-gray-50 gap-10 p-10">
         {/* Profile edit feautures */}
 
         <form
@@ -142,7 +140,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               {avatarPreview !== currentUser?.avatarURL && (
                 <button
                   type="button"
-                  className="text-white mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
+                  className="text-gray-50 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
                   onClick={handleResetUserPicutre}
                 >
                   <TbArrowBackUp />
@@ -153,14 +151,9 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
                 setImagePreview={handleSetAvatarPreview}
                 setImage={handleSetAvatarBuffer}
               />
-
-              <button
-                type="button"
-                onClick={handleRemoveUserPicture}
-                className=" text-white mx-1 p-1 text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
-              >
+              <BorderedButton onClick={handleRemoveUserPicture}>
                 <IoCloseOutline />
-              </button>
+              </BorderedButton>
             </div>
           </div>
           <div className="flex items-center">
@@ -177,7 +170,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
             {/* Username input */}
             <Input onChange={handleInputChange} value={userName} type="input" />
           </div>
-          <SubmitBtn children={"Save and submit"} />
+          <SolidButton type="submit">Save and submit</SolidButton>
         </form>
       </div>
     </div>

@@ -42,13 +42,13 @@ const IncomingCall = () => {
           onClick={handleDeclineCall}
           className="bg-red-100 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
         >
-          <MdCallEnd className="text-white text-6xl animate-shake   " />
+          <MdCallEnd className="text-gray-50 text-6xl animate-shake   " />
         </div>
         <div
           onClick={handleAcceptCall}
           className="animate-elevate  bg-green-200 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
         >
-          <IoIosCall className="text-white text-6xl  animate-shake  " />
+          <IoIosCall className="text-gray-50 text-6xl  animate-shake  " />
         </div>
       </div>
     </>

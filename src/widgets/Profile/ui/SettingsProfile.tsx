@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
 import Input from "../../../shared/ui/Input/Input";
 import toast from "react-hot-toast";
+import SolidButton from "../../../shared/ui/Button/SolidButton";
 
 type TSettingsProfileProps = {
   currentUser: TUserInfo | null;
@@ -25,7 +26,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
   const handleDeleteAccount = async () => {
     if (!currentUser) return;
     if (confirmUserEmailText !== currentUser.email) {
-      toast.error("You should enter correct email");
+      toast.error("You should enter email correctly");
       return;
     }
     try {
@@ -40,17 +41,16 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
 
   return (
     <>
-      <div
-        className="flex items-center h-12 px-2 text-center text-2xl gap-2 outline-none transition-all rounded-2xl cursor-pointer hover:outline-gray-150"
+      <SolidButton
         onClick={() => setIsModalOpen(true)}
+        className=" bg-gray-50 text-gray-400 font-bold flex flex-row justify-center items-center text-center"
       >
         <div>Delete account</div>
-        <MdDelete className="text-gray-300 mt-1 text-2xl rounded-full outline-none" />
-      </div>
-
+        <MdDelete className="text-gray-400 mt-1 text-2xl rounded-full outline-none" />
+      </SolidButton>
       {/* Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 text-white bg-gray-400 bg-opacity-75 flex items-center justify-center z-50 animate-fadeIn">
+        <div className="fixed inset-0 text-gray-50 bg-gray-400 bg-opacity-75 flex items-center justify-center z-50 animate-fadeIn">
           <div className="bg-gray-200 p-6 rounded-lg shadow-md w-96 animate-scaleIn">
             <h2 className="text-lg font-bold  mb-4">
               Are you sure you want to delete your account?
@@ -65,24 +65,24 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
                 onChange={handleUserEmailChange}
                 placeholder="Input your email..."
                 value={confirmUserEmailText ? confirmUserEmailText : ""}
-                className="w-full h-11  rounded-xl"
+                className="w-full h-11   mt-3"
               />
             </div>
             <div className="flex justify-end gap-4">
-              <button
-                className="px-4 py-2 bg-gray-50 transition-all text-gray-300 rounded-lg hover:bg-gray-400 hover:text-white"
+              <SolidButton
+                className="px-4 py-2 bg-gray-50 transition-all text-gray-300 rounded-lg "
                 onClick={() => setIsModalOpen(false)}
               >
                 Cancel
-              </button>
-              <button
-                className="px-4 py-2  transition-all bg-gray-300 text-white rounded-lg hover:bg-gray-150"
+              </SolidButton>
+              <SolidButton
+                className="px-4 py-2  hover:bg-gray-400 hover:text-gray-50  "
                 onClick={() => {
                   handleDeleteAccount();
                 }}
               >
                 Delete
-              </button>
+              </SolidButton>
             </div>
           </div>
         </div>

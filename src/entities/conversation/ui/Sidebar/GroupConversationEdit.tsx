@@ -3,7 +3,7 @@ import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoCloseOutline } from "react-icons/io5";
 import Input from "../../../../shared/ui/Input/Input";
-import SubmitBtn from "../../../../shared/ui/Button/SubmitBtn";
+import Button from "../../../../shared/ui/Button/Button";
 import { FormEvent, useEffect, useState } from "react";
 import { useUpdateGroupConversationMutation } from "../../api/conversationApi";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
@@ -155,10 +155,7 @@ const GroupConversationEdit = ({
           type="input"
         />
       </div>{" "}
-      <SubmitBtn
-        children={"Save and submit"}
-        className="py-3 px-3 rounded-xl"
-      />
+      <Button children={"Save and submit"} className="py-3 px-3 rounded-xl" />
     </form>
   );
 };

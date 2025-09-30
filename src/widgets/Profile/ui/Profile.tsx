@@ -6,6 +6,7 @@ import SettingsProfile from "./SettingsProfile";
 import { selectCurrentUser } from "../../../entities/user";
 import { MdEdit } from "react-icons/md";
 import EditProfileModal from "./Modals/EditProfileModal";
+import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 
 interface Profile {
   closeProfile: () => void;
@@ -25,22 +26,16 @@ const Profile: FC<Profile> = ({ closeProfile }) => {
       className={`  w-full h-dvh md:w-2/5       overflow-y-auto  bg-gray-400`}
     >
       {/* Navigation*/}
-      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-white items-center">
-        <button
-          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50 overflow-hidden`}
-          onClick={closeProfile}
-        >
+      <h1 className="h-20 flex px-4  justify-between  text-2xl   text-center border border-gray-200 text-gray-50 items-center">
+        <BorderedButton onClick={closeProfile}>
           <FaArrowLeft />
-        </button>
-        <button
-          className={`text-white mx-2 p-2   text-2xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50 overflow-hidden`}
-          onClick={handleOpenEdit}
-        >
+        </BorderedButton>
+        <BorderedButton onClick={handleOpenEdit}>
           <MdEdit />
-        </button>
+        </BorderedButton>
       </h1>
       {/* Profile */}
-      <div className="flex flex-col justify-center relative items-center text-white gap-10 p-10">
+      <div className="flex flex-col justify-center relative items-center text-gray-50 gap-10 p-10">
         {/* Profile edit feautures */}
 
         <>
@@ -52,9 +47,8 @@ const Profile: FC<Profile> = ({ closeProfile }) => {
           <span className=" text-3xl md:text-2xl truncate max-w-96">
             {currentUser?.email}
           </span>
-          <span className=" text-3xl md:text-2xl truncate max-w-96">
-            {/* {currentUser?.name} */}
-          </span>
+          {/* <span className=" text-3xl md:text-2xl truncate max-w-96">
+          </span> */}
           <SettingsProfile currentUser={currentUser} />
         </>
         <EditProfileModal

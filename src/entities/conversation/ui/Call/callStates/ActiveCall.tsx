@@ -94,15 +94,15 @@ const ActiveCall: FC<IActiveCallProps> = ({
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
           >
             {mediaState.muted ? (
-              <CiMicrophoneOn className="text-white text-6xl    " />
+              <CiMicrophoneOn className="text-gray-50 text-6xl    " />
             ) : (
-              <CiMicrophoneOff className="text-white text-6xl    " />
+              <CiMicrophoneOff className="text-gray-50 text-6xl    " />
             )}
           </div>
         </div>
         <div onClick={handleEndCall} className="flex  w-full justify-around">
           <div className="bg-red-100 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
-            <MdCallEnd className="text-white text-6xl    " />
+            <MdCallEnd className="text-gray-50 text-6xl    " />
           </div>
         </div>
         <div className="flex  w-full justify-around">
@@ -111,9 +111,9 @@ const ActiveCall: FC<IActiveCallProps> = ({
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
           >
             {mediaState.videoEnable ? (
-              <FiVideoOff className="text-white text-6xl    " />
+              <FiVideoOff className="text-gray-50 text-6xl    " />
             ) : (
-              <FiVideo className="text-white text-6xl    " />
+              <FiVideo className="text-gray-50 text-6xl    " />
             )}
           </div>
         </div>

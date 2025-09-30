@@ -1,6 +1,5 @@
 import { ChangeEvent, FC, useRef, useState } from "react";
 import { IoMdImages } from "react-icons/io";
-// TODO: onUpload function must get file data as an argument
 interface UploadButtonProps {
   setImagePreview: (url: string) => void;
   setImage: (fileBuffer: number[]) => void;
@@ -51,7 +50,7 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
     <label style={{ cursor: "pointer" }}>
       {isLoading ? (
         <svg
-          className="animate-spin -ml-1 mr-3 h-8 w-8 text-white"
+          className="animate-spin -ml-1 mr-3 h-8 w-8 text-gray-50"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -71,7 +70,7 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
           ></path>
         </svg>
       ) : (
-        <IoMdImages className="text-4xl md:text-3xl transition duration-300 text-white hover:text-gray-1500 " />
+        <IoMdImages className="text-4xl md:text-3xl transition duration-300 text-gray-50 hover:text-gray-100 " />
       )}
       <input
         type="file"

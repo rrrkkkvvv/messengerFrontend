@@ -8,7 +8,6 @@ import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
 import { useCreateGroupConversationMutation } from "../api/contactApi";
 import toast from "react-hot-toast";
-import SubmitBtn from "../../../shared/ui/Button/SubmitBtn";
 import { TContact } from "../../../shared/types/Contact";
 import { selectCurrentUser } from "../../user";
 import {
@@ -17,6 +16,7 @@ import {
   selectUsersOnlineEmails,
 } from "../model/contactSlice";
 import ContactsSkeleton from "./ContactsSkeleton";
+import SolidButton from "../../../shared/ui/Button/SolidButton";
 
 const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
@@ -95,12 +95,12 @@ const ContactsList = () => {
             placeholder="Name your group"
             className="w-2/3 md:w-1/2 hover:border h-9 text-white"
           />
-          <SubmitBtn className="py-2 px-5 bg-gray-200" children="Create" />
-          <h4>Select users for group</h4>
+          <SolidButton className="mt-2">Create</SolidButton>
+          <h4 className="mb-2 font-bold">Select users for group</h4>
         </form>
       )}
-      {/* Users list */}
-      <div className="relative  max-h-full overflow-y-auto   text-gray-50">
+
+      <div className="relative  max-h-full overflow-y-scroll   text-gray-50">
         {isLoadingContacts && <ContactsSkeleton />}
         {contactsList &&
           [...contactsList]

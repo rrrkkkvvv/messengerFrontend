@@ -67,7 +67,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
       {isMobile && (
         <button
           type="button"
-          className=" mx-2 p-2 text-xl md:text-2xl rounded-full outline-none  transition-all focus:outline-gray-300 text-gray-50 hover:text-white"
+          className=" mx-2 p-2 text-xl md:text-2xl rounded-full outline-none  transition-all focus:outline-gray-300 text-gray-50 hover:text-gray-50"
           onClick={handleCloseConversation}
         >
           <FaArrowLeft />
