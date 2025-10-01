@@ -1,4 +1,5 @@
 import { FC, useEffect, useRef } from "react";
+import Audio from "../Audio/Audio";
 
 interface IVideoProps {
   isMuted: boolean;
@@ -15,7 +16,12 @@ const Video: FC<IVideoProps> = ({ enabled, stream, isMuted, className }) => {
       ref.current.srcObject = stream;
     }
   }, [enabled, stream]);
-  if (!enabled) return <></>;
+  if (!enabled)
+    return (
+      <>
+        <Audio enabled={true} className="" isMuted={isMuted} stream={stream} />
+      </>
+    );
   return (
     <video
       playsInline

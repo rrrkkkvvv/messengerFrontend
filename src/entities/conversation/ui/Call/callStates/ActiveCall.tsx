@@ -54,7 +54,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
           </div>
           <Audio
             className=""
-            enabled={!interlocuter.videoEnable && !mediaState.videoEnable}
+            enabled={!interlocuter.videoEnable}
             isMuted={interlocuter.muted}
             stream={remoteStream}
           />
@@ -94,9 +94,9 @@ const ActiveCall: FC<IActiveCallProps> = ({
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
           >
             {mediaState.muted ? (
-              <CiMicrophoneOn className="text-gray-50 text-6xl    " />
-            ) : (
               <CiMicrophoneOff className="text-gray-50 text-6xl    " />
+            ) : (
+              <CiMicrophoneOn className="text-gray-50 text-6xl    " />
             )}
           </div>
         </div>
@@ -111,9 +111,9 @@ const ActiveCall: FC<IActiveCallProps> = ({
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
           >
             {mediaState.videoEnable ? (
-              <FiVideoOff className="text-gray-50 text-6xl    " />
-            ) : (
               <FiVideo className="text-gray-50 text-6xl    " />
+            ) : (
+              <FiVideoOff className="text-gray-50 text-6xl    " />
             )}
           </div>
         </div>

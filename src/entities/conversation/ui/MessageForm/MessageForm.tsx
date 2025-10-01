@@ -13,7 +13,6 @@ import { TbSend2 } from "react-icons/tb";
 import Input from "../../../../shared/ui/Input/Input";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
 import toast from "react-hot-toast";
-import { toastTexts } from "../../../../shared/values/strValues";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;

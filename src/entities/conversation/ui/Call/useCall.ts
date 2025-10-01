@@ -149,7 +149,9 @@ const useCall = () => {
     }
   }, [callStatus]);
   const sendSdp = async (sdpType: "offer" | "answer") => {
-    if (!callStateRef.current.peerConnection) return;
+    if (!callStateRef.current.peerConnection) {
+      callStateRef.current.peerConnection = createPeerConnection();
+    }
     let sdp: RTCSessionDescriptionInit;
     if (sdpType === "offer") {
       sdp = await callStateRef.current.peerConnection.createOffer();
@@ -180,6 +182,7 @@ const useCall = () => {
       setRemoteStream(remoteStream);
     };
     pc.onnegotiationneeded = async () => {
+      console.log("onnegotiationneeded");
       await sendSdp("offer");
     };
     pc.onicecandidate = (e) => {
@@ -215,7 +218,9 @@ const useCall = () => {
     await handleInitLocalStream();
 
     const offer = await callStateRef.current.peerConnection.createOffer();
+
     await callStateRef.current.peerConnection.setLocalDescription(offer);
+
     callsSocket.emit("callUser", {
       to: callTo,
       sdp: offer,
