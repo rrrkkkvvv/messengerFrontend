@@ -1,14 +1,8 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 import Conversation from "../../../entities/conversation/";
-import { CiLogout } from "react-icons/ci";
-import { CgProfile } from "react-icons/cg";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
-import { routes } from "../../../shared/values/strValues";
-import ProfileModal from "../../../widgets/Profile";
-import { logout, selectCurrentUser } from "../../../entities/user";
-import { ContactsList } from "../../../entities/contact";
+import { selectCurrentUser } from "../../../entities/user";
 import Call from "../../../entities/conversation/ui/Call/CallPortal";
 import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
 import {
@@ -16,14 +10,13 @@ import {
   setUsersOnlineEmails,
 } from "../../../entities/contact/model/contactSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
+import SideBar from "./SideBar";
+import MobileLayout from "./MobileLayout";
 
 const MainPage = () => {
-  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const location = useLocation();
-  const isMainPage = location.pathname === routes.main;
   const currentUser = useAppSelector(selectCurrentUser);
-  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const {
     data = {
       contactsData: null,
@@ -41,15 +34,10 @@ const MainPage = () => {
       dispatch(setUsersOnlineEmails(data.usersOnline));
     }
   }, [data]);
-  const handleCloseModal = () => {
-    setIsOpenModal(false);
-  };
-  const handleOpenModal = () => {
-    setIsOpenModal(true);
-  };
+
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const handleResize = () => setIsMobile(window.innerWidth < 768);
   useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
@@ -57,106 +45,19 @@ const MainPage = () => {
   }, []);
 
   return (
-    <div className="flex justify-center  ">
-      {isMobile ? (
-        isMainPage ? (
-          <>
-            <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
-              <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
-                <button
-                  className="
-                  text-gray-50
-                  flex
-                  gap-3
-                  items-center
-                  ml-2
-                  px-4
-                  outline-none
-                  rounded-sm
-                  transition-all
-                  focus:outline-gray-300
-                  hover:outline-gray-50"
-                  onClick={handleOpenModal}
-                >
-                  <CgProfile className="text-2xl" />
-                  My profile
-                </button>
-                <button
-                  className="
-            text-gray-50
-            flex
-            gap-3
-            items-center
-            ml-2
-            px-4
-            outline-none
-            rounded-sm
-            transition-all
-            focus:outline-gray-300
-            hover:outline-gray-50
-          "
-                  onClick={() => logout(navigate, dispatch)}
-                >
-                  <CiLogout className="text-2xl" />
-                  Logout
-                </button>
-              </h1>
-              <ContactsList />
-            </div>
-            <ProfileModal onClose={handleCloseModal} isOpen={isOpenModal} />
-          </>
+    <div className="bg-gray-400 h-screen  flex flex-col ">
+      <div className="flex flex-1">
+        {isMobile ? (
+          <MobileLayout />
         ) : (
-          <Outlet />
-        )
-      ) : (
-        <>
-          <div className=" w-full md:w-2/5 relative  h-dvh overflow-hidden  bg-gray-400">
-            <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
-              <button
-                className="
-                  text-gray-50
-                  flex
-                  gap-3
-                  items-center
-                  ml-2
-                  px-4
-                  outline-none
-                  rounded-sm
-                  transition-all
-                  focus:outline-gray-300
-                  hover:outline-gray-50"
-                onClick={handleOpenModal}
-              >
-                <CgProfile className="text-2xl" />
-                My profile
-              </button>
-              <button
-                className="
-            text-gray-50
-            flex
-            gap-3
-            items-center
-            ml-2
-            px-4
-            outline-none
-            rounded-sm
-            transition-all
-            focus:outline-gray-300
-            hover:outline-gray-50
-          "
-                onClick={() => logout(navigate, dispatch)}
-              >
-                <CiLogout className="text-2xl" />
-                Logout
-              </button>
-            </h1>
-            <ContactsList />
-          </div>
-          <Conversation />
-          <ProfileModal onClose={handleCloseModal} isOpen={isOpenModal} />
-        </>
-      )}
-      {/* <TestDnD /> */}
+          <>
+            <SideBar />
+
+            <Conversation />
+          </>
+        )}
+      </div>
+
       <Call />
     </div>
   );

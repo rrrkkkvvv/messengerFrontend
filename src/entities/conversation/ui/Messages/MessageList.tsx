@@ -144,26 +144,25 @@ const MessageList = ({
     <>
       <div
         ref={messagesEndRef}
-        className={`scroll-smooth  bg-gray-400 text-2xl h-dvh relative text-center border-2 border-gray-200  ${
+        onClick={closeContextMenu}
+        className={`flex h-dvh flex-col  scroll-smooth  bg-gray-400 text-2xl  relative text-center border-2 border-gray-200  ${
           contextMenu.visible ? "overflow-y-hidden" : "overflow-y-auto"
         }`}
       >
-        <div onClick={closeContextMenu} className="relative">
-          {currentUser &&
-            conversationId &&
-            conversationMessages?.map((message) => {
-              return (
-                <MessageBox
-                  key={message._id}
-                  isGroup={isGroup}
-                  currentUser={currentUser}
-                  conversationId={conversationId}
-                  message={message}
-                  handleContextMenu={handleContextMenu}
-                />
-              );
-            })}
-        </div>
+        {currentUser &&
+          conversationId &&
+          conversationMessages?.map((message) => {
+            return (
+              <MessageBox
+                key={message._id}
+                isGroup={isGroup}
+                currentUser={currentUser}
+                conversationId={conversationId}
+                message={message}
+                handleContextMenu={handleContextMenu}
+              />
+            );
+          })}
         <div
           onClick={handleScrollDown}
           className={`text-gray-50 transition bottom-16 duration-300 flex fixed text-5xl right-0 px-4 justify-center z-20 ${

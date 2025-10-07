@@ -72,7 +72,7 @@ const MessageBox = ({
       ref={messageRef}
       onContextMenu={(e) => handleContextMenu(e, message, backgroundColor)}
       key={message._id}
-      className={`w-full p-2 flex mb-10 relative ${
+      className={`w-full p-2  flex  relative ${
         isCurrentUser ? "justify-end" : "justify-start"
       }`}
     >
@@ -93,8 +93,8 @@ const MessageBox = ({
         </>
       )}
       <div
-        className={`h-max min-w-28 text-base md:text-lg  rounded-xl font-semibold text-left px-3 pt-3 pb-6 flex  relative   ${color} ${backgroundColor} ${
-          message.messageImage && "pt-5"
+        className={`h-max min-w-28 text-base md:text-lg   rounded-xl font-semibold text-left px-3 pt-3 pb-6 flex  relative   ${color} ${backgroundColor} ${
+          message.messageImage && "px-0  rounded-lg overflow-hidden "
         }`}
       >
         {!isCurrentUser && isGroup && (
@@ -103,16 +103,17 @@ const MessageBox = ({
           </div>
         )}
         <div className="flex flex-col  items-center">
-          {message.messageImage && (
-            <img
-              onClick={() => setImageModalOpen(true)}
-              className="max-w-52  cursor-pointer"
-              src={message.messageImage}
-            />
-          )}
           <div className="max-w-52 sm:max-w-96 break-words whitespace-pre-wrap text-wrap ">
             {message.messageText && message.messageText}
           </div>
+          {message.messageImage && (
+            <img
+              onClick={() => setImageModalOpen(true)}
+              className=" max-w-52 max-h-58 cursor-pointer "
+              src={message.messageImage}
+            />
+          )}
+
           <sub className="text-xs absolute bottom-0 right-1 ">
             <div className="flex items-center gap-2">
               &nbsp;&nbsp;

@@ -62,7 +62,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
       ) : (
         <div className="flex absolute w-full h-full z-10">
           <Video
-            className={`remote  w-full -translate-y-1/2 top-1/2  absolute max-h-1/2`}
+            className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full max-h-1/2 object-cover`}
             isMuted={false}
             stream={remoteStream}
             enabled={interlocuter.videoEnable}

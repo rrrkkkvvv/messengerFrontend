@@ -33,29 +33,30 @@ export default {
     },
     extend: {
       keyframes: {
-        dots: {
-          "0%": { opacity: 0 },
-          "85%": { opacity: 1 },
-          // "100%": { transform:  },
-        },
         dropDown: {
           "0%": { opacity: 0, height: 0 },
           "50%": { height: "150px" },
 
           "100%": { opacity: 1 },
         },
+        expand: {
+          "0%": { height: "150px" },
+          "20%": {},
+          "100%": { height: "0" },
+        },
         fadeIn: {
           "0%": { opacity: 0 },
           "100%": { opacity: 1 },
+        },
+        fadeOut: {
+          "0%": { opacity: 1 },
+          "100%": { opacity: 0 },
         },
         spin: {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
-        callPing: {
-          "75%": { transform: "scale(1.5)", opacity: 0 },
-          "100%": { transform: "scale(1.5)", opacity: 0 },
-        },
+
         shake: {
           "0%": { transform: "rotate(0deg)" },
           "10%": { transform: "rotate(15deg)" },
@@ -70,31 +71,15 @@ export default {
           "80%": { transform: "translate(0, 0)" },
           "100%": { transform: "translate(0, 0)" },
         },
-        reverseSpin: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(-360deg)" },
-        },
-        scale: {
-          "0%": { transform: "scale(100%)" },
-          "50%": { transform: "scale(20%)" },
-          "100%": { transform: "scale(100%)" },
-        },
-        leftSlide: {
-          "0%": { transform: "translate(0,0)" },
-          "100%": { transform: "translate(-100%,0)" },
-        },
       },
 
       animation: {
         fadeIn: "fadeIn 0.3s ease-out",
+        fadeOut: "fadeOut 0.3s ease-out",
         shake: "shake 2s ease-in-out infinite",
         elevate: "elevate 2s ease-in-out infinite",
         dropDown: "dropDown 0.3s ease-out",
-        dots: "dots 1.5s steps(4) infinite",
-        callPing: "callPing 1.5s infinite",
-        reverseSpin: "reverseSpin 1s ease-in-out infinite",
-        scale: "scale 0.3s linear infinite",
-        leftSlide: "leftSlide 0.2s linear infinite",
+        expand: "expand 0.3s ease-out",
       },
     },
   },

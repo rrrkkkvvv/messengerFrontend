@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthPage from "../pages/auth";
 import { Provider } from "react-redux";
@@ -13,7 +14,7 @@ import Conversation from "../entities/conversation";
 
 import ErrorPage from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
-import { ContactsList } from "../entities/contact";
+import SideBar from "../pages/main/ui/SideBar";
 
 const router = createBrowserRouter([
   {
@@ -38,7 +39,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <ContactsList />,
+        element: <SideBar />,
       },
       {
         path: routes.conversation,

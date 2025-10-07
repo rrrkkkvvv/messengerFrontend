@@ -133,8 +133,8 @@ const MessageForm = ({
   return (
     <form
       onSubmit={(event) => handleSendMessage(event)}
-      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3 py-2  bg-gray-400 border-l-2 border-gray-200 ${
-        messageImagePreview && "border border-t-gray-200"
+      className={`flex flex-col relative  px-5 justify-center bottom-0 w-full z-30 gap-3   bg-gray-400 border-l-2 border-gray-200 ${
+        messageImagePreview && "border border-t-gray-200 py-2"
       }`}
     >
       {messageImagePreview && (

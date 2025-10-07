@@ -9,7 +9,6 @@ import { resetCurrentConversation } from "../model/conversationSlice";
 import { useLeaveConversationConnectMutation } from "../api/conversationApi";
 import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
-import { routes } from "../../../shared/values/strValues";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { callUserThunk } from "../model/callSlice";
 import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
@@ -39,7 +38,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
   const navigate = useNavigate();
 
   const handleCloseConversation = () => {
-    navigate(routes.main);
+    navigate(-1);
   };
 
   const closeConversation = async () => {
@@ -63,7 +62,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
     };
   }, []);
   return (
-    <h1 className="flex md:px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-400">
+    <h1 className="flex md:px-5  border border-gray-200  w-full z-10  items-center justify-between h-16 bg-gray-400">
       {isMobile && (
         <button
           type="button"

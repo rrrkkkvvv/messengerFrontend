@@ -27,6 +27,8 @@ const ContactsList = () => {
   const navigate = useNavigate();
 
   const [isGroupCreating, setIsGroupCreating] = useState(false);
+  const [isClosingGroupCreating, setIsClosingGroupCreating] = useState(false);
+
   const [groupNameValue, setGroupNameValue] = useState("");
   const [groupMembersList, setGroupMembersList] = useState<string[]>([]);
 
@@ -51,9 +53,18 @@ const ContactsList = () => {
     navigate(`conversation/${contact.type}/${contact._id}`);
   };
   const handleToggleIsGroupCreating = () => {
-    setIsGroupCreating((prev) => !prev);
-    setGroupMembersList([]);
-    setGroupNameValue("");
+    if (isGroupCreating) {
+      setGroupMembersList([]);
+      setGroupNameValue("");
+      setIsClosingGroupCreating(true);
+      setTimeout(() => {
+        setIsGroupCreating(false);
+
+        setIsClosingGroupCreating(false);
+      }, 500);
+    } else {
+      setIsGroupCreating(true);
+    }
   };
   const handleChangeGroupName = (e: FormEvent<HTMLInputElement>) => {
     setGroupNameValue(e.currentTarget.value);
@@ -80,10 +91,12 @@ const ContactsList = () => {
     setGroupNameValue("");
   };
   return (
-    <>
+    <div>
       {isGroupCreating && (
         <form
-          className="w-full animate-dropDown   flex justify-center items-center flex-col gap-2 text-white"
+          className={`w-full animate-dropDown  overflow-hidden bg-gray-400  flex justify-center items-center transition-all duration-300 flex-col gap-2 text-white ${
+            isClosingGroupCreating && "animate-expand  h-0 "
+          }`}
           onSubmit={createGroup}
         >
           <h3>Create group conversation</h3>
@@ -146,7 +159,7 @@ const ContactsList = () => {
             : "hover:text-white bg-gray-300 text-gray-50 hover:bg-gray-200"
         }`}
       />
-    </>
+    </div>
   );
 };
 

@@ -33,6 +33,7 @@ import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
+import CollapsedCall from "./Call/CollapsedCall";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
@@ -104,22 +105,18 @@ const Conversation = () => {
   );
   const [invalidateConversation] = useInvalidateConversationMutation();
 
-  // STATES
   const [isMessageEdit, setIsMessageEdit] = useState(false);
   const [editingMessage, setEditingMessage] = useState<TMessageInfo | null>(
     null
   );
 
-  // Is mobile device flag
-
   const [isSidebarMenuVisible, setIsSidebarMenuVisible] = useState(false);
   const handleShowSidebarMenu = () => {
     setIsSidebarMenuVisible(true);
   };
-  // HANDLES FUNCTIONS
+  // HANDLERS
 
   // Function for redirecting to current conversation route if user is on another page, but clicked on convesation field
-  // MUST HAVE, because of it gives reconect to WS
   const redirectToCurrentConversation = () => {
     if (!location.pathname.startsWith("/conversation")) {
       navigate(
@@ -149,6 +146,7 @@ const Conversation = () => {
   const handleResetIsEditingMessage = () => {
     setIsMessageEdit(false);
   };
+
   useEffect(() => {
     if (conversationStatus == "absent") {
       navigate(routes.main);
@@ -156,7 +154,6 @@ const Conversation = () => {
     }
   }, [conversationStatus]);
 
-  // Chat data processing(messages, members, conversationId)
   useEffect(() => {
     if (!chatData && !currentUser) return;
 
@@ -201,9 +198,11 @@ const Conversation = () => {
   return (
     <>
       <div
-        className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-gray-50"
+        className={` flex flex-col flex-1 h-dvh overflow-hidden    w-dvw   md:w-3/5  relative text-gray-50 `}
         onClick={redirectToCurrentConversation}
       >
+        <CollapsedCall />
+
         {/* HEADER */}
         <ConversationHeader
           anotherUser={anotherUser()}
