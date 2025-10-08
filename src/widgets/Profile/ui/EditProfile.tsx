@@ -168,7 +168,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               </button>
             )}
             {/* Username input */}
-            <Input onChange={handleInputChange} value={userName} type="input" maxLength="30"/>
+            <Input onChange={handleInputChange} value={userName} type="input" />
           </div>
           <SolidButton type="submit">Save and submit</SolidButton>
         </form>
