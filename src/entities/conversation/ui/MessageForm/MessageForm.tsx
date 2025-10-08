@@ -78,7 +78,7 @@ const MessageForm = ({
     event.preventDefault();
     if (!conversationId) return;
     if (!currentUser) return;
-    if (!messageText.trim() && !messageImagePreview) {
+    if (!messageText &&!messageText.trim() && !messageImagePreview) {
       toast.error("Message can't be empty");
 
       return;
@@ -98,7 +98,7 @@ const MessageForm = ({
           messageData.messageImage = "";
         }
 
-        messageData.messageText = messageText.trim();
+        messageData.messageText = messageText;
 
         await editMessage({
           conversationId,
