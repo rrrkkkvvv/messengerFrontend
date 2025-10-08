@@ -33,7 +33,7 @@ import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
-import CollapsedCall from "./Call/CollapsedCall";
+
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
@@ -201,7 +201,7 @@ const Conversation = () => {
         className={` flex flex-col flex-1 h-dvh overflow-hidden    w-dvw   md:w-3/5  relative text-gray-50 `}
         onClick={redirectToCurrentConversation}
       >
-        {/* <CollapsedCall />*/}
+        
 
         {/* HEADER */}
         <ConversationHeader
