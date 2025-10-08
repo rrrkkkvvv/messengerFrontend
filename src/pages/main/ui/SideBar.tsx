@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ContactsList } from "../../../entities/contact";
-import CollapsedCall from "../../../entities/conversation/ui/Call/CollapsedCall";
+
 import Header from "./Header";
 import ProfileModal from "../../../widgets/Profile";
 
@@ -16,7 +16,7 @@ const SideBar = () => {
     <>
       <div className=" w-full md:w-2/5 relative  h-screen overflow-auto   bg-gray-400">
         <Header handleOpenModal={handleOpenModal} />
-        <CollapsedCall />
+        
 
         <ContactsList />
       </div>
