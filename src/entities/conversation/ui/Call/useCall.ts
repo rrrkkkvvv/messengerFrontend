@@ -23,7 +23,7 @@ import {
   TMediaState,
 } from "../../api/callTypes";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
-import toast from "react-hot-toast";
+
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
