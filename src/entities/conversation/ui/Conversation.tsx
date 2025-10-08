@@ -201,7 +201,7 @@ const Conversation = () => {
         className={` flex flex-col flex-1 h-dvh overflow-hidden    w-dvw   md:w-3/5  relative text-gray-50 `}
         onClick={redirectToCurrentConversation}
       >
-        <CollapsedCall />
+        {/* <CollapsedCall />*/}
 
         {/* HEADER */}
         <ConversationHeader
