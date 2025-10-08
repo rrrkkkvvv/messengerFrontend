@@ -278,7 +278,7 @@ const useCall = () => {
     if (mediaState.videoEnable) {
       disableVideo();
     } else {
-      toast.loading("Video enabling");
+      //toast.loading("Video enabling");
 
       enableVideo();
     }
