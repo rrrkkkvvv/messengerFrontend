@@ -51,7 +51,7 @@ const MainPage = () => {
           <MobileLayout />
         ) : (
           <>
-            <SideBar />
+            {/*<SideBar />*/}
 
             <Conversation />
           </>
