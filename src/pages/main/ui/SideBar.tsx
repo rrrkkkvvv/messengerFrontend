@@ -14,7 +14,7 @@ const SideBar = () => {
   };
   return (
     <>
-      <div className=" w-full md:w-2/5 relative     bg-gray-400">
+      <div className=" w-full md:w-2/5 relative  h-screen overflow-auto   bg-gray-400">
         <Header handleOpenModal={handleOpenModal} />
         <CollapsedCall />
 
