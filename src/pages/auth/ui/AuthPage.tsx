@@ -29,11 +29,11 @@ const AuthPage = () => {
     e: FormEvent<HTMLInputElement>
   ) => {
     if (type === "email") {
-      setEmail(e.currentTarget.value);
+      if (email.length <= 254) setEmail(e.currentTarget.value);
     } else if (type === "password") {
       setPassword(e.currentTarget.value);
     } else if (type === "name") {
-      setName(e.currentTarget.value);
+      if (name.length <= 90) setName(e.currentTarget.value.trim());
     }
   };
 
@@ -44,7 +44,11 @@ const AuthPage = () => {
     try {
       let result;
       if (isSignUp) {
-        result = await signUp({ name, password, email }).unwrap();
+        result = await signUp({
+          name: name.trim(),
+          password,
+          email: email.trim(),
+        }).unwrap();
         dispatch(
           setUserLoginData({
             loginStatus: true,
@@ -117,6 +121,7 @@ const AuthPage = () => {
             </label>
 
             <Input
+              maxLength={90}
               required
               id="name"
               value={name}
@@ -130,7 +135,7 @@ const AuthPage = () => {
           Email
         </label>
         <Input
-          // className="bg-gray-50"
+          maxLength={254}
           id="email_input"
           required
           placeholder="email@example.com"

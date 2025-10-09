@@ -12,7 +12,6 @@ import {
 import { TbSend2 } from "react-icons/tb";
 import Input from "../../../../shared/ui/Input/Input";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
-import toast from "react-hot-toast";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -31,8 +30,12 @@ const MessageForm = ({
   const [messageText, setMessageText] = useState<string>();
   const [messageId, setMessageId] = useState<string | null>(null);
 
-  const [messageImagePreview, setMessageImagePreview] = useState<string>();
-  const [messageImageBuffer, setMessageImageBuffer] = useState<number[]>();
+  const [messageImagePreview, setMessageImagePreview] = useState<string | null>(
+    null
+  );
+  const [messageImageBuffer, setMessageImageBuffer] = useState<number[] | null>(
+    null
+  );
 
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
@@ -52,7 +55,7 @@ const MessageForm = ({
   };
   const handleResetMessageImage = () => {
     setMessageImagePreview("");
-    setMessageImageBuffer(undefined);
+    setMessageImageBuffer(null);
   };
   const handleSetMessageImage = (fileBuffer: number[]) => {
     setMessageImageBuffer(fileBuffer);
@@ -78,9 +81,8 @@ const MessageForm = ({
     event.preventDefault();
     if (!conversationId) return;
     if (!currentUser) return;
-    if (!messageText && !messageImagePreview && (messageText && !messageText.trim())) {
-      toast.error("Message can't be empty");
-
+    if (!messageText?.trim() && !messageImagePreview) {
+      handleClearMessage();
       return;
     }
 
@@ -98,7 +100,7 @@ const MessageForm = ({
           messageData.messageImage = "";
         }
 
-        messageData.messageText = messageText;
+        messageData.messageText = messageText?.trim();
 
         await editMessage({
           conversationId,
@@ -108,7 +110,7 @@ const MessageForm = ({
         await sendMessage({
           conversationId: conversationId,
           message: {
-            messageText,
+            messageText: messageText?.trim(),
             messageImage: { fileBuffer: messageImageBuffer },
           },
         }).unwrap();
@@ -166,7 +168,6 @@ const MessageForm = ({
             </BorderedButton>
           </div>
         )}
-        <button className="   rounded-full     transition   text-gray-300 border hover:border-gray-50"></button>
         <UploadButton
           setImagePreview={handleSetMessageImagePreview}
           setImage={handleSetMessageImage}

@@ -103,7 +103,7 @@ const GroupConversationEdit = ({
   return (
     <form
       onSubmit={handleEditGroup}
-      className="flex w-full justify-center items-center flex-col gap-2"
+      className="flex w-full justify-center items-center flex-col gap-2  animate-fadeIn"
     >
       <h1>
         <Avatar
@@ -117,7 +117,7 @@ const GroupConversationEdit = ({
         {avatarPreview !== avatarURL && (
           <button
             type="button"
-            className="text-gray-300 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
+            className="text-gray-50 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
             onClick={handleResetAvatar}
           >
             <TbArrowBackUp />
@@ -131,7 +131,7 @@ const GroupConversationEdit = ({
           <button
             type="button"
             onClick={handleRemoveAvatar}
-            className=" text-gray-300 mx-1  text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
+            className=" text-gray-50 mx-1  text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
           >
             <IoCloseOutline />
           </button>
@@ -142,7 +142,7 @@ const GroupConversationEdit = ({
 
         {nameInputValue !== originalName && (
           <button
-            className="text-gray-300 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
+            className="text-gray-50 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
             onClick={handleResetUsername}
           >
             <TbArrowBackUp />

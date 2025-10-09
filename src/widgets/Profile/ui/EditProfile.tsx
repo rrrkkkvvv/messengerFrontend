@@ -161,14 +161,19 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
 
             {userName !== currentUser?.name && (
               <button
-                className="text-gray-300 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
+                className="text-gray-50 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
                 onClick={handleResetUsername}
               >
                 <TbArrowBackUp />
               </button>
             )}
             {/* Username input */}
-            <Input onChange={handleInputChange} value={userName} type="input" />
+            <Input
+              maxLength={90}
+              onChange={handleInputChange}
+              value={userName}
+              type="input"
+            />
           </div>
           <SolidButton type="submit">Save and submit</SolidButton>
         </form>

@@ -6,6 +6,7 @@ import { toastTexts } from "../../../../shared/values/strValues";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import { useAddUsersToConversationMutation } from "../../api/conversationApi";
 import { selectContactsList } from "../../../contact/model/contactSlice";
+import SolidButton from "../../../../shared/ui/Button/SolidButton";
 
 interface IAddUsersToGroupProps {
   conversationId: string | null;
@@ -47,16 +48,16 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
   );
   return (
     <>
-      <div className="flex justify-center text-xl text-gray-50 ">
+      <div className="flex justify-center text-xl text-gray-50   ">
         {selectedUsers.length ? (
-          <button
+          <SolidButton
             onClick={handleAdd}
-            className="text-gray-300   py-1 w-1/3 text-lg  rounded-full border border-gray-400 outline-none    transition   hover:border-gray-50"
+            className="     h-10  animate-fadeIn   "
           >
             Save
-          </button>
+          </SolidButton>
         ) : (
-          <h1>Select any users</h1>
+          <h1 className="  animate-fadeIn   ">Select any users</h1>
         )}
       </div>
       {nonMembers?.map((user) => {
@@ -64,7 +65,7 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
           <div
             key={user._id}
             onClick={() => toggleUser(user._id)}
-            className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 max-h-96   overflow-hidden   "
+            className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 max-h-96   overflow-hidden animate-fadeIn  "
           >
             <Avatar
               isProfileAvatar={false}

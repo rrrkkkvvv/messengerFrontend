@@ -8,15 +8,6 @@ const ConversationSkeleton = () => {
       <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-gray-50 ">
         {/* HEADER */}
         <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
-          {/* {isMobile && (
-            <button
-              type="button"
-              className="text-gray-300 mx-2 p-2 text-2xl rounded-full outline-none  transition-all focus:outline-gray-300 hover:outline-gray-50"
-              onClick={handleCloseConversation}
-            >
-              <FaArrowLeft />
-            </button>
-          )} */}
           <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
             <div className="h-11 w-11 rounded-full bg-gray-400 relative animate-pulse"></div>
 
@@ -28,15 +19,6 @@ const ConversationSkeleton = () => {
             <div className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl animate-pulse       ">
               <HiDotsHorizontal />
             </div>
-            {/* {!isMobile && (
-              <button
-                type="button"
-                onClick={closeConversation}
-                className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl  transition-all   hover:outline-gray-50"
-              >
-                <IoCloseOutline />
-              </button>
-            )} */}
           </div>
         </h1>
 
@@ -46,7 +28,7 @@ const ConversationSkeleton = () => {
         >
           <div className="relative"></div>
           <div
-            className={`text-gray-300 transition bottom-24 duration-300 flex fixed text-5xl right-0 px-4 justify-center z-20 `}
+            className={`text-gray-50 transition bottom-24 duration-300 flex fixed text-5xl right-0 px-4 justify-center z-20 `}
           >
             <FaArrowAltCircleDown className=" bg-gray-200 box-content rounded-full animate-pulse" />
           </div>

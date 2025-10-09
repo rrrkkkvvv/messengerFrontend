@@ -99,7 +99,7 @@ const Contact = ({
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div className="text-gray-50">
-        <div className="truncate max-w-40 text-gray-50">{contact.name}</div>
+        <div className="truncate max-w-52 text-gray-50">{contact.name}</div>
         <div className="flex gap-5">
           <div className="flex gap-2 relative">
             {contact.type === "single" && contact.isTyping ? (

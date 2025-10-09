@@ -17,12 +17,12 @@ export type TMessageInfo = {
   sentAt: string;
 };
 export type TEditingMessage = Omit<TMessageInfo, "messageImage"> & {
-  messageImage?: string | { fileBuffer: number[] | undefined };
+  messageImage?: string | { fileBuffer: number[] | null };
 };
 export type TSendingMessage = {
   messageText?: string;
   messageImage?: {
-    fileBuffer: number[] | undefined;
+    fileBuffer: number[] | null;
   };
 };
 export type TConversationData = {

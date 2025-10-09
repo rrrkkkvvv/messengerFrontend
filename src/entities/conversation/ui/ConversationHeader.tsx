@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { callUserThunk } from "../model/callSlice";
 import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
+import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 interface IConversationHeaderProps {
   conversationName: string | null;
   conversationId: string | null;
@@ -64,13 +65,13 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
   return (
     <h1 className="flex md:px-5  border border-gray-200  w-full z-10  items-center justify-between h-16 bg-gray-400">
       {isMobile && (
-        <button
+        <BorderedButton
           type="button"
           className=" mx-2 p-2 text-xl md:text-2xl rounded-full outline-none  transition-all focus:outline-gray-300 text-gray-50 hover:text-gray-50"
           onClick={handleCloseConversation}
         >
           <FaArrowLeft />
-        </button>
+        </BorderedButton>
       )}
       <div className="flex flex-row  items-center gap-5">
         <Avatar

@@ -17,6 +17,7 @@ import GroupConversationEdit from "./GroupConversationEdit";
 import AddUsersToGroup from "./AddUsersToGroup";
 import SidebarBtn from "../../../../shared/ui/Button/SidebarBtn";
 import { selectCurrentUser } from "../../../user";
+import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
 
 interface ISidebarMenuProps {
   anotherUser?: TUserInfo | null;
@@ -105,7 +106,7 @@ const SidebarMenu = ({
 
   return (
     <div
-      className={`absolute right-0 top-0 rounded-xl   w-full md:right-5 md:top-5 md:w-3/4 lg:w-2/4   p-5  transition-all duration-300 bg-gray-300 border border-gray-400 z-30 flex justify-center items-center 
+      className={`absolute right-0 top-0 rounded-xl    w-full md:right-5 md:top-5 md:w-3/4 lg:w-2/4    p-5  transition-all duration-300 bg-gray-300 border border-gray-400 z-30 flex justify-center items-center 
         ${
           isSidebarMenuVisible
             ? "opacity-100 scale-100 translate-0 "
@@ -116,10 +117,10 @@ const SidebarMenu = ({
       <div className="absolute  flex right-5 top-5">
         {isCurrentUserCreator && (
           <>
-            <SidebarBtn onClick={handleToggleIsEditing}>
+            <SidebarBtn isSelected={isEditing} onClick={handleToggleIsEditing}>
               <MdModeEdit />
             </SidebarBtn>
-            <SidebarBtn onClick={handleOpenAddUsers}>
+            <SidebarBtn isSelected={openAddUsers} onClick={handleOpenAddUsers}>
               <AiOutlineUsergroupAdd />
             </SidebarBtn>
           </>
@@ -149,18 +150,18 @@ const SidebarMenu = ({
                 isProfileAvatar={false}
               />
             </h1>
-            <h1 className="text-lg sm:text-lg md:text-base lg:text-lg xl:text-xl">
+            <h1 className="text-lg sm:text-lg md:text-base lg:text-lg xl:text-xl max-w-40 truncate">
               {isGroup ? name : anotherUser?.name}
             </h1>
           </>
         )}
 
         {isGroup && (
-          <div className=" max-h-96 overflow-auto ">
+          <div className=" max-h-96 overflow-auto  ">
             {openAddUsers ? (
               <></>
             ) : (
-              <div className="flex justify-around items-center gap-10 rounded-lg duration-300  select-none   px-9 py-1 max-h-96 overflow-auto border border-gray-50">
+              <div className="flex  justify-around items-center gap-10 rounded-lg duration-300  select-none   px-9 py-1 max-h-96 overflow-auto border border-gray-50">
                 {isCurrentUserCreator ? (
                   <p>You</p>
                 ) : (
@@ -172,7 +173,7 @@ const SidebarMenu = ({
                         creator ? creator.email : ""
                       )}
                     />
-                    <p>{creator?.name}</p>
+                    <p className="max-w-16 truncate">{creator?.name}</p>
                   </>
                 )}
                 <h2 className="text-md text-gray-50">Owner</h2>
@@ -191,7 +192,7 @@ const SidebarMenu = ({
                   return (
                     <div
                       key={member._id}
-                      className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1   overflow-auto "
+                      className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 animate-fadeIn  overflow-auto "
                     >
                       <Avatar
                         isProfileAvatar={false}
@@ -221,18 +222,17 @@ const SidebarMenu = ({
             {anotherUser?.email}
           </h1>
         )}
-        <h1>
-          <button
-            onClick={
-              removeChatPosibility
-                ? handleDeleteConversation
-                : handleLeaveConversation
-            }
-            className="text-gray-50 mx-2 p-2 rounded-full border border-gray-400 outline-none    transition   hover:border-gray-50"
-          >
-            {removeChatPosibility ? <>Remove chat</> : <>Leave chat</>}
-          </button>
-        </h1>
+
+        <BorderedButton
+          onClick={
+            removeChatPosibility
+              ? handleDeleteConversation
+              : handleLeaveConversation
+          }
+          className=" text-lg px-2 border border-gray-100 "
+        >
+          {removeChatPosibility ? <>Remove chat</> : <>Leave chat</>}
+        </BorderedButton>
       </div>
     </div>
   );

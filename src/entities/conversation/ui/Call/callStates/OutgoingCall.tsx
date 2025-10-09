@@ -20,7 +20,7 @@ const OutgoingCall = () => {
     <>
       <div className="gap-5">
         <div className="flex items-center gap-5 flex-col ">
-          <div className="  text-3xl">{interlocuter.name}</div>
+          <div className=" max-w-40 truncate text-3xl">{interlocuter.name}</div>
           <Avatar
             isMobileCallAvatar={true}
             isProfileAvatar={true}
