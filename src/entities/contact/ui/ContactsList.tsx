@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { toastTexts } from "../../../shared/values/strValues";
 import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
-import { useCreateGroupConversationMutation } from "../api/contactApi";
 import toast from "react-hot-toast";
 import { TContact } from "../../../shared/types/Contact";
 import { selectCurrentUser } from "../../user";
@@ -17,6 +16,7 @@ import {
 } from "../model/contactSlice";
 import ContactsSkeleton from "./ContactsSkeleton";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
+import { useCreateGroupConversationMutation } from "../../conversation/api/conversationApi";
 
 const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
@@ -79,16 +79,19 @@ const ContactsList = () => {
       toast.error(toastTexts.error.errorGroupCreate);
       return;
     }
-
-    await createGroupConversation({
-      userIds: [...groupMembersList, currentUser._id],
-      creatorId: currentUser._id,
-      name: groupNameValue,
-    }).unwrap();
-    toast(toastTexts.success.successGroupCreating);
-    setIsGroupCreating(false);
-    setGroupMembersList([]);
-    setGroupNameValue("");
+    try {
+      await createGroupConversation({
+        userIds: [...groupMembersList, currentUser._id],
+        creatorId: currentUser._id,
+        name: groupNameValue,
+      }).unwrap();
+      toast(toastTexts.success.successGroupCreating);
+      setIsGroupCreating(false);
+      setGroupMembersList([]);
+      setGroupNameValue("");
+    } catch (err) {
+      console.error(err);
+    }
   };
   return (
     <div>

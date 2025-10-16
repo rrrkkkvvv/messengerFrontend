@@ -34,7 +34,6 @@ import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
 
-
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
 
@@ -156,7 +155,6 @@ const Conversation = () => {
 
   useEffect(() => {
     if (!chatData && !currentUser) return;
-
     // Open of websocket always returns members and conversationId
     if (chatData.members !== null) {
       dispatch(
@@ -201,8 +199,6 @@ const Conversation = () => {
         className={` flex flex-col flex-1 h-dvh overflow-hidden    w-dvw   md:w-3/5  relative text-gray-50 `}
         onClick={redirectToCurrentConversation}
       >
-        
-
         {/* HEADER */}
         <ConversationHeader
           anotherUser={anotherUser()}

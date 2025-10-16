@@ -24,7 +24,6 @@ import {
 } from "../../api/callTypes";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
-
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
   interlocuter: TCallParticipant | null;
@@ -208,8 +207,8 @@ const useCall = () => {
           callStateRef.current.peerConnection?.addTrack(track, stream);
         });
       }
-    } catch (e) {
-      console.error("Error get media devices:", e);
+    } catch (err) {
+      console.error("Error get media devices:", err);
       return null;
     }
   };
@@ -316,8 +315,8 @@ const useCall = () => {
       if (callStateRef.current.peerConnection) {
         callStateRef.current.peerConnection?.addTrack(videoTrack, localStream);
       }
-    } catch (e) {
-      console.error("Error get media devices:", e);
+    } catch (err) {
+      console.error("Error get media devices:", err);
       return null;
     }
   };

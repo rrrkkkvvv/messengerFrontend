@@ -33,9 +33,7 @@ const MessageForm = ({
   const [messageImagePreview, setMessageImagePreview] = useState<string | null>(
     null
   );
-  const [messageImageBuffer, setMessageImageBuffer] = useState<number[] | null>(
-    null
-  );
+  const [messageImageFile, setMessageImageFile] = useState<File | null>(null);
 
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
@@ -55,10 +53,10 @@ const MessageForm = ({
   };
   const handleResetMessageImage = () => {
     setMessageImagePreview("");
-    setMessageImageBuffer(null);
+    setMessageImageFile(null);
   };
-  const handleSetMessageImage = (fileBuffer: number[]) => {
-    setMessageImageBuffer(fileBuffer);
+  const handleSetMessageImage = (file: File) => {
+    setMessageImageFile(file);
   };
   const handleInputChange = async (e: FormEvent<HTMLInputElement>) => {
     setMessageText(e.currentTarget.value);
@@ -87,33 +85,26 @@ const MessageForm = ({
     }
 
     try {
-      if (isMessageEdit && messageId && editingMessage) {
-        const messageData = { ...editingMessage } as TEditingMessage;
+      const formData = new FormData();
+      formData.append("conversationId", conversationId);
+      if (messageImageFile) {
         if (
-          messageImageBuffer &&
-          messageImagePreview !== editingMessage.messageImage
+          !isMessageEdit ||
+          (isMessageEdit &&
+            messageImagePreview !== editingMessage?.messageImage)
         ) {
-          messageData.messageImage = { fileBuffer: messageImageBuffer };
-        } else if (messageImagePreview === editingMessage.messageImage) {
-          messageData.messageImage = editingMessage.messageImage;
-        } else if (!messageImageBuffer && !messageImagePreview) {
-          messageData.messageImage = "";
+          formData.append("messageImage", messageImageFile);
         }
-
-        messageData.messageText = messageText?.trim();
-
-        await editMessage({
-          conversationId,
-          message: messageData,
-        }).unwrap();
+      }
+      if (messageText) {
+        formData.append("messageText", messageText.trim());
       } else {
-        await sendMessage({
-          conversationId: conversationId,
-          message: {
-            messageText: messageText?.trim(),
-            messageImage: { fileBuffer: messageImageBuffer },
-          },
-        }).unwrap();
+        formData.append("messageText", "");
+      }
+      if (isMessageEdit && messageId && editingMessage) {
+        await editMessage({ formData }).unwrap();
+      } else {
+        await sendMessage({ formData }).unwrap();
       }
       handleClearMessage();
     } catch (error) {
@@ -170,7 +161,7 @@ const MessageForm = ({
         )}
         <UploadButton
           setImagePreview={handleSetMessageImagePreview}
-          setImage={handleSetMessageImage}
+          setImageFile={handleSetMessageImage}
         />
 
         <Input

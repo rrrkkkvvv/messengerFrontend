@@ -1,11 +1,16 @@
 import { ChangeEvent, FC, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { IoMdImages } from "react-icons/io";
+import { toastTexts } from "../../values/strValues";
 interface UploadButtonProps {
   setImagePreview: (url: string) => void;
-  setImage: (fileBuffer: number[]) => void;
+  setImageFile: (fileBuffer: File) => void;
 }
 
-const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
+const UploadButton: FC<UploadButtonProps> = ({
+  setImagePreview,
+  setImageFile,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   function clearInputFile() {
@@ -28,22 +33,30 @@ const UploadButton: FC<UploadButtonProps> = ({ setImagePreview, setImage }) => {
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-
+    if (!file.type.startsWith("image")) {
+      toast.error(toastTexts.error.errorSelectFile);
+      return;
+    }
     setIsLoading(true);
     const previewUrl = URL.createObjectURL(file);
     setImagePreview(previewUrl);
-    try {
-      const arrayBuffer = await file.arrayBuffer();
-      const uint8Array = new Uint8Array(arrayBuffer);
-      const buffer = Array.from(uint8Array);
 
-      setImage(buffer);
-    } catch (error) {
-      console.error("Upload error:", error);
-    } finally {
-      setIsLoading(false);
-      clearInputFile();
-    }
+    setImageFile(file);
+    setIsLoading(false);
+
+    clearInputFile();
+    // try {
+    //   const arrayBuffer = await file.arrayBuffer();
+    //   const uint8Array = new Uint8Array(arrayBuffer);
+    //   const buffer = Array.from(uint8Array);
+
+    //   setImageFile(buffer);
+    // } catch (error) {
+    //   console.error("Upload error:", error);
+    // } finally {
+    //   setIsLoading(false);
+    //   clearInputFile();
+    // }
   };
 
   return (

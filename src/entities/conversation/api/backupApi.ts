@@ -49,7 +49,7 @@ const conversationApi = baseApi.injectEndpoints({
       }),
       async onCacheEntryAdded(
         args,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         const { isGroup } = args;
         if (socket) {
@@ -123,22 +123,7 @@ const conversationApi = baseApi.injectEndpoints({
       },
       providesTags: ["Conversation"],
     }),
-    setSeenMessage: builder.mutation<
-      string,
-      {
-        conversationId: string;
-        userId: string;
-        messageId: string;
-      }
-    >({
-      async queryFn({ conversationId, userId, messageId }) {
-        return new Promise((resolve) => {
-          socket?.emit("setSeenMessage", { conversationId, userId, messageId });
 
-          resolve({ data: "Message seen" });
-        });
-      },
-    }),
     startTyping: builder.mutation<
       string,
       {
@@ -165,92 +150,154 @@ const conversationApi = baseApi.injectEndpoints({
         });
       },
     }),
-
     sendMessage: builder.mutation<
-      { data: TMessageInfo },
-      { formData: FormData }
+      string,
+      {
+        conversationId: string;
+        message: TSendingMessage;
+      }
     >({
-      query: ({ formData }) => {
-        return {
-          url: `/conversations/sendMessage`,
-          method: "POST",
-          body: formData,
-        };
+      async queryFn({ conversationId, message }) {
+        return new Promise((resolve) => {
+          socket?.emit("sendMessage", { conversationId, message });
+          resolve({ data: "Message sent" });
+        });
       },
     }),
-
     editMessage: builder.mutation<
-      { message: TMessageInfo },
-      { formData: FormData }
+      string,
+      {
+        conversationId: string;
+        message: TEditingMessage;
+      }
     >({
-      query: ({ formData }) => {
-        return {
-          url: `/conversations/updateMessage`,
-          method: "PUT",
-          body: formData,
-        };
+      async queryFn({ conversationId, message }) {
+        return new Promise((resolve) => {
+          socket?.emit("updateMessage", { conversationId, message });
+          resolve({ data: "Message edited" });
+        });
       },
     }),
-
     deleteMessage: builder.mutation<
-      void,
-      { conversationId: string; messageId: string }
+      string,
+      {
+        conversationId: string;
+        messageId: string;
+      }
     >({
-      query: ({ conversationId, messageId }) => ({
-        url: `/conversations/deleteMessage`,
-        method: "DELETE",
-        body: { conversationId, messageId },
-      }),
-    }),
+      async queryFn({ conversationId, messageId }) {
+        return new Promise((resolve) => {
+          socket?.emit("deleteMessage", { conversationId, messageId });
 
-    deleteConversation: builder.mutation<void, { conversationId: string }>({
-      query: ({ conversationId }) => ({
-        url: `/conversations/deleteConversation`,
-        method: "DELETE",
-        body: { conversationId },
-      }),
+          resolve({ data: "Message deleted" });
+        });
+      },
     }),
+    setSeenMessage: builder.mutation<
+      string,
+      {
+        conversationId: string;
+        userId: string;
+        messageId: string;
+      }
+    >({
+      async queryFn({ conversationId, userId, messageId }) {
+        return new Promise((resolve) => {
+          socket?.emit("setSeenMessage", { conversationId, userId, messageId });
 
+          resolve({ data: "Message seen" });
+        });
+      },
+    }),
+    deleteConversation: builder.mutation<
+      string,
+      {
+        conversationId: string;
+      }
+    >({
+      async queryFn({ conversationId }) {
+        return new Promise((resolve) => {
+          socket?.emit("deleteConversation", { conversationId });
+          resolve({ data: "Conversation deleted" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
     kickUserFromConversation: builder.mutation<
-      void,
-      { conversationId: string; kickedUserId: string }
+      string,
+      {
+        conversationId: string;
+        kickedUserId: string;
+      }
     >({
-      query: ({ conversationId, kickedUserId }) => ({
-        url: `/conversations/kickUser`,
-        method: "POST",
-        body: { conversationId, kickedUserId },
-      }),
+      async queryFn({ conversationId, kickedUserId }) {
+        return new Promise((resolve) => {
+          socket?.emit("kickUserFromConversation", {
+            conversationId,
+            kickedUserId,
+          });
+          resolve({ data: "User was kicked" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
     }),
-
     addUsersToConversation: builder.mutation<
-      void,
-      { conversationId: string; selectedUsers: string[] }
+      string,
+      {
+        conversationId: string;
+        selectedUsers: string[];
+      }
     >({
-      query: ({ conversationId, selectedUsers }) => ({
-        url: `/conversations/addUsers`,
-        method: "POST",
-        body: { conversationId, users: selectedUsers },
-      }),
+      async queryFn({ conversationId, selectedUsers }) {
+        return new Promise((resolve) => {
+          socket?.emit("addUsersToConversation", {
+            conversationId,
+            users: selectedUsers,
+          });
+          resolve({ data: "Users were added" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
     }),
-
-    leaveFromConversation: builder.mutation<void, { conversationId: string }>({
-      query: ({ conversationId }) => ({
-        url: `/conversations/leave`,
-        method: "POST",
-        body: { conversationId },
-      }),
+    leaveFromConversation: builder.mutation<
+      string,
+      {
+        conversationId: string;
+      }
+    >({
+      async queryFn({ conversationId }) {
+        return new Promise((resolve) => {
+          socket?.emit("leaveFromConversation", {
+            conversationId,
+          });
+          resolve({ data: "Leaved from conversation" });
+        });
+      },
+      invalidatesTags: ["Conversation"],
     }),
-
     updateGroupConversation: builder.mutation<
       TUpdateGroupResponse,
       TEditGroupInfo
     >({
-      query: (updatedGroup) => {
-        return {
-          url: `/conversations/updateGroup`,
-          method: "PUT",
-          body: updatedGroup,
-        };
+      async queryFn(groupInfo) {
+        return new Promise((resolve) => {
+          const data = {
+            updatedGroupInfo: groupInfo,
+          };
+
+          socket?.emit("updateGroupConversation", data);
+          resolve({ data: { message: "Group was updated" } });
+        });
+      },
+      invalidatesTags: ["Conversation"],
+    }),
+    leaveConversationConnect: builder.mutation<string, string>({
+      async queryFn(conversationId) {
+        return new Promise((resolve) => {
+          socket?.emit("leaveConversation", { conversationId });
+          socket?.disconnect();
+          resolve({ data: "Leaved out a conversation" });
+        });
       },
     }),
     createGroupConversation: builder.mutation<
@@ -270,16 +317,6 @@ const conversationApi = baseApi.injectEndpoints({
           creatorId,
         },
       }),
-    }),
-    //
-    leaveConversationConnect: builder.mutation<string, string>({
-      async queryFn(conversationId) {
-        return new Promise((resolve) => {
-          socket?.emit("leaveConversation", { conversationId });
-          socket?.disconnect();
-          resolve({ data: "Leaved out a conversation" });
-        });
-      },
     }),
     invalidateConversation: builder.mutation<string, void>({
       async queryFn() {

@@ -1,13 +1,5 @@
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
-export type TEditProfileResponse =
-  | {
-      message: "User was edited";
-      user: TUserInfo;
-    }
-  | {
-      message: "Editing went wrong";
-    };
 export type TDeleteUserResponse =
   | {
       message: "User was deleted";
@@ -35,10 +27,3 @@ export type TOpenGetUsersConnectionResponse =
   | {
       message: "Unauthorized";
     };
-export type TEditedProfile = {
-  _id: string;
-  name?: string;
-  avatar?: {
-    fileBuffer: number[] | null;
-  };
-};

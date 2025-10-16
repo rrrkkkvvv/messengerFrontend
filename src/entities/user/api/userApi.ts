@@ -1,10 +1,15 @@
 import baseApi from "../../../app/api/baseApi";
 import { TUserData } from "../../../shared/types/UserEntityTypes";
 import { apiURLs } from "../../../shared/values/strValues";
-import { TAuthResponse, TSignInUserData } from "./userTypes";
+import {
+  TAuthResponse,
+  TEditProfileResponse,
+  TSignInUserData,
+} from "./userTypes";
 
 const { googleAuthPath, logoutPath, refreshPath, signInPath, signUpPath } =
   apiURLs.paths.auth;
+const { deleteAccount, updateProfile } = apiURLs.paths.user;
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -38,6 +43,19 @@ const userApi = baseApi.injectEndpoints({
         },
       }),
     }),
+    deleteAccount: builder.mutation<void, void>({
+      query: () => ({
+        url: deleteAccount,
+        method: "DELETE",
+      }),
+    }),
+    updateProfile: builder.mutation<TEditProfileResponse, FormData>({
+      query: (formData: FormData) => ({
+        url: updateProfile,
+        method: "PATCH",
+        body: formData,
+      }),
+    }),
     logout: builder.mutation<void, void>({
       query: () => ({
         url: logoutPath,
@@ -60,5 +78,7 @@ export const {
   usePrefetch,
   useRefreshUserAuthMutation,
   useLogoutMutation,
+  useDeleteAccountMutation,
+  useUpdateProfileMutation,
 } = userApi;
 export default userApi;

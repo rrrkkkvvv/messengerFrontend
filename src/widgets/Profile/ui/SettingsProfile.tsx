@@ -1,20 +1,20 @@
 import { FormEvent, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { useDeleteUserMutation } from "../../../entities/contact/api/contactApi";
 import { logout } from "../../../entities/contact";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
 import Input from "../../../shared/ui/Input/Input";
 import toast from "react-hot-toast";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
+import { useDeleteAccountMutation } from "../../../entities/user/api/userApi";
 
 type TSettingsProfileProps = {
   currentUser: TUserInfo | null;
 };
 
 const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
-  const [deleteUser] = useDeleteUserMutation();
+  const [deleteAccount] = useDeleteAccountMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [confirmUserEmailText, setConfirmUserEmailText] = useState("");
@@ -30,7 +30,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
       return;
     }
     try {
-      await deleteUser().unwrap();
+      await deleteAccount().unwrap();
       logout(navigate, dispatch);
     } catch (error) {
       console.error("Failed to delete account:", error);

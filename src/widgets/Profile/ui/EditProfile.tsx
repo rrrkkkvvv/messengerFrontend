@@ -5,33 +5,34 @@ import UploadButton from "../../../shared/ui/UploadImage/UploadImageButton";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { FormEvent, useEffect, useState } from "react";
 import { useAppDispatch } from "../../../app/store/store";
-import { useUpdateUserMutation } from "../../../entities/contact/api";
 
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../shared/values/strValues";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { setCurrentUser } from "../../../entities/user";
-import { TEditedProfile } from "../../../entities/contact/api/contactTypes";
 import { FaArrowLeft } from "react-icons/fa";
 import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
+import { useUpdateProfileMutation } from "../../../entities/user/api/userApi";
 type TEditProfileProps = {
   currentUser: TUserInfo | null;
   closeEditProfile: () => void;
 };
 const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
   const [userName, setUserName] = useState("");
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [avatarBuffer, setAvatarBuffer] = useState<number[]>([]);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(
+    currentUser ? currentUser.avatarURL : null
+  );
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const [updateUser] = useUpdateUserMutation();
+  const [updateProfile] = useUpdateProfileMutation();
   const dispatch = useAppDispatch();
 
   const handleSetAvatarPreview = (url: string) => {
     setAvatarPreview(url);
   };
-  const handleSetAvatarBuffer = (fileBuffer: number[]) => {
-    setAvatarBuffer(fileBuffer);
+  const handleSetAvatarFile = (file: File) => {
+    setAvatarFile(file);
   };
   const handleResetUsername = () => {
     if (currentUser?.name) {
@@ -41,18 +42,18 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
   const handleResetUserPicutre = () => {
     if (currentUser) {
       setAvatarPreview(currentUser.avatarURL);
-      setAvatarBuffer([]);
+      setAvatarFile(null);
     }
   };
   const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setUserName(event.currentTarget.value);
   };
   const handleRemoveUserPicture = () => {
-    setAvatarBuffer([]);
+    setAvatarFile(null);
     setAvatarPreview(null);
   };
 
-  const handleEditProfile = async (event: FormEvent<HTMLFormElement>) => {
+  const handleEditProfile = async (event: FormEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (!currentUser) return;
 
@@ -66,35 +67,32 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
         toast.error(toastTexts.error.errorEditUser);
         return;
       }
+      const formData = new FormData();
 
-      let result;
-
-      let profile: TEditedProfile = {
-        _id: currentUser._id,
-      };
+      // let profile: TEditedProfile = {};
       if (userName !== currentUser.name) {
-        profile.name = userName;
+        formData.append("updatedName", userName);
+        // profile.name = userName;
       }
+
       if (avatarPreview !== currentUser.avatarURL) {
-        profile.avatar = { fileBuffer: avatarBuffer };
+        if (avatarFile) {
+          formData.append("updatedAvatar", avatarFile);
+        }
+
+        // profile.avatar = { fileBuffer: avatarFile };
       }
 
-      result = await updateUser(profile).unwrap();
-      if (result.message === "User was updated") {
-        const updatedUserInfo = {
-          ...currentUser,
+      const result = await updateProfile(formData).unwrap();
+      const updatedUserInfo = {
+        ...currentUser,
+        ...result.data,
+      } as TUserInfo;
 
-          name: userName,
-          avatarURL: avatarPreview,
-        } as TUserInfo;
-
-        dispatch(setCurrentUser(updatedUserInfo));
-        toast.success(toastTexts.success.successEditUser);
-      } else {
-        throw new Error(result.message);
-      }
+      dispatch(setCurrentUser(updatedUserInfo));
+      toast.success(toastTexts.success.successEditUser);
     } catch (error: any) {
-      toast.error(error.message || "An error occurred");
+      toast.error("Failed to edit profile");
       console.error(error);
     } finally {
       toast.dismiss(toastId);
@@ -106,7 +104,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
       setUserName(currentUser.name);
     }
     if (currentUser?.avatarURL) {
-      setAvatarBuffer([]);
+      setAvatarFile(null);
       setAvatarPreview(currentUser.avatarURL);
     }
   }, [currentUser]);
@@ -127,7 +125,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
         {/* Profile edit feautures */}
 
         <form
-          onSubmit={handleEditProfile}
+          // onSubmit={handleEditProfile}
           className="flex w-full justify-center items-center flex-col gap-10"
         >
           <div className="flex w-full justify-center items-center flex-col gap-3">
@@ -138,20 +136,17 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               {/* Reset picture button(exists if picture is not saved) */}
 
               {avatarPreview !== currentUser?.avatarURL && (
-                <button
-                  type="button"
-                  className="text-gray-50 mx-2 p-1 text-3xl rounded-full outline-none   transition-all focus:outline-gray-300 hover:outline-gray-50"
-                  onClick={handleResetUserPicutre}
-                >
+                <BorderedButton type="button" onClick={handleResetUserPicutre}>
                   <TbArrowBackUp />
-                </button>
+                </BorderedButton>
               )}
+
               {/* Choose picture */}
               <UploadButton
                 setImagePreview={handleSetAvatarPreview}
-                setImage={handleSetAvatarBuffer}
+                setImageFile={handleSetAvatarFile}
               />
-              <BorderedButton onClick={handleRemoveUserPicture}>
+              <BorderedButton type="button" onClick={handleRemoveUserPicture}>
                 <IoCloseOutline />
               </BorderedButton>
             </div>
@@ -175,7 +170,9 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
               type="input"
             />
           </div>
-          <SolidButton type="submit">Save and submit</SolidButton>
+          <SolidButton onClick={handleEditProfile} type="submit">
+            Save and submit
+          </SolidButton>
         </form>
       </div>
     </div>

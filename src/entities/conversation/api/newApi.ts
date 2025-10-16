@@ -167,29 +167,31 @@ const conversationApi = baseApi.injectEndpoints({
     }),
 
     sendMessage: builder.mutation<
-      { data: TMessageInfo },
-      { formData: FormData }
+      { message: TMessageInfo },
+      { conversationId: string; message: TSendingMessage }
     >({
-      query: ({ formData }) => {
+      query: ({ conversationId, message }) => {
         return {
           url: `/conversations/sendMessage`,
           method: "POST",
-          body: formData,
+          body: { conversationId, message },
         };
       },
+      invalidatesTags: ["Conversation"],
     }),
 
     editMessage: builder.mutation<
       { message: TMessageInfo },
-      { formData: FormData }
+      { conversationId: string; message: TEditingMessage }
     >({
-      query: ({ formData }) => {
+      query: ({ conversationId, message }) => {
         return {
           url: `/conversations/updateMessage`,
           method: "PUT",
-          body: formData,
+          body: { conversationId, message },
         };
       },
+      invalidatesTags: ["Conversation"],
     }),
 
     deleteMessage: builder.mutation<
@@ -201,6 +203,7 @@ const conversationApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { conversationId, messageId },
       }),
+      invalidatesTags: ["Conversation"],
     }),
 
     deleteConversation: builder.mutation<void, { conversationId: string }>({
@@ -209,6 +212,7 @@ const conversationApi = baseApi.injectEndpoints({
         method: "DELETE",
         body: { conversationId },
       }),
+      invalidatesTags: ["Conversation"],
     }),
 
     kickUserFromConversation: builder.mutation<
@@ -220,6 +224,7 @@ const conversationApi = baseApi.injectEndpoints({
         method: "POST",
         body: { conversationId, kickedUserId },
       }),
+      invalidatesTags: ["Conversation"],
     }),
 
     addUsersToConversation: builder.mutation<
@@ -231,6 +236,7 @@ const conversationApi = baseApi.injectEndpoints({
         method: "POST",
         body: { conversationId, users: selectedUsers },
       }),
+      invalidatesTags: ["Conversation"],
     }),
 
     leaveFromConversation: builder.mutation<void, { conversationId: string }>({
@@ -239,6 +245,7 @@ const conversationApi = baseApi.injectEndpoints({
         method: "POST",
         body: { conversationId },
       }),
+      invalidatesTags: ["Conversation"],
     }),
 
     updateGroupConversation: builder.mutation<
@@ -252,6 +259,7 @@ const conversationApi = baseApi.injectEndpoints({
           body: updatedGroup,
         };
       },
+      invalidatesTags: ["Conversation"],
     }),
     createGroupConversation: builder.mutation<
       void,

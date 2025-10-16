@@ -239,6 +239,17 @@ export const changeConversationUserTypingStatus =
 
     dispatch(setCurrentConversationMembers(newMembersList));
   };
+export const newMessage =
+  (sendedMessage: TMessageInfo) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { currentConversation } = getState();
+    if (currentConversation.conversationId !== sendedMessage.conversationId)
+      return;
+    const messages = currentConversation.messages?.length
+      ? [...currentConversation.messages, sendedMessage]
+      : [sendedMessage];
+    dispatch(setCurrentConversationMessages(messages));
+  };
 export const {
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,

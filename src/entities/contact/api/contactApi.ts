@@ -22,11 +22,6 @@ import {
   addUsersToConversation,
 } from "../model/contactSlice";
 import {
-  TDeleteUserResponse,
-  TEditedProfile,
-  TUpdateUserResponse,
-} from "./contactTypes";
-import {
   TContactsList,
   TGroupConversation,
 } from "../../../shared/types/Contact";
@@ -156,6 +151,20 @@ const contactApi = baseApi.injectEndpoints({
                 dispatch(addUsersToCurrentConversation(conversationId, users));
               }
             );
+            socket.on("userDeleted", (_id) => {
+              updateCachedData((draft) => {
+                if (!draft.contactsData) return;
+                draft.contactsData = draft.contactsData?.filter(
+                  (contact) => contact._id !== _id && contact.type === "single"
+                );
+              });
+            });
+            socket.on("newUser", (newUser) => {
+              updateCachedData((draft) => {
+                if (!draft.contactsData) return;
+                draft.contactsData.push(newUser);
+              });
+            });
             socket.on("usersData", (data) => {
               updateCachedData((draft) => {
                 draft.contactsData = data.users;
@@ -172,54 +181,9 @@ const contactApi = baseApi.injectEndpoints({
       },
       providesTags: ["Users", "Conversation"],
     }),
-    createGroupConversation: builder.mutation<
-      string,
-      {
-        userIds: string[];
-        name: string;
-        creatorId: string;
-      }
-    >({
-      async queryFn({ name, userIds, creatorId }) {
-        return new Promise((resolve) => {
-          socket?.emit("createGroupConversation", { name, userIds, creatorId });
-          resolve({ data: "Created" });
-        });
-      },
-    }),
-
-    deleteUser: builder.mutation<TDeleteUserResponse, void>({
-      async queryFn() {
-        return new Promise((resolve) => {
-          socket?.emit("deleteUser");
-          resolve({ data: { message: "User was deleted" } });
-        });
-      },
-      invalidatesTags: ["Users"],
-    }),
-
-    updateUser: builder.mutation<TUpdateUserResponse, TEditedProfile>({
-      async queryFn(profile) {
-        return new Promise((resolve) => {
-          const data = {
-            updatedProfile: profile,
-          };
-
-          socket?.emit("updateUser", data);
-          resolve({ data: { message: "User was updated" } });
-        });
-      },
-      invalidatesTags: ["Users"],
-    }),
   }),
 });
 
-export const {
-  usePrefetch,
-  useUpdateUserMutation,
-  useConnectToGetUsersChanelQuery,
-  useDeleteUserMutation,
-  useCreateGroupConversationMutation,
-} = contactApi;
+export const { usePrefetch, useConnectToGetUsersChanelQuery } = contactApi;
 
 export default contactApi;

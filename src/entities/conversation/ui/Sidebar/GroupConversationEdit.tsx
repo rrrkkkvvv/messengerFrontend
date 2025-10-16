@@ -3,13 +3,13 @@ import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoCloseOutline } from "react-icons/io5";
 import Input from "../../../../shared/ui/Input/Input";
-import Button from "../../../../shared/ui/Button/Button";
 import { FormEvent, useEffect, useState } from "react";
 import { useUpdateGroupConversationMutation } from "../../api/conversationApi";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
 import { TEditGroupInfo } from "../../api/conversationTypes";
 import { toastTexts } from "../../../../shared/values/strValues";
+import SolidButton from "../../../../shared/ui/Button/SolidButton";
 
 interface IGroupCOnversationEditProps {
   isAnotherUserOnline: boolean;
@@ -82,12 +82,9 @@ const GroupConversationEdit = ({
       }
 
       result = await updateGroupConversation(groupInfo).unwrap();
-      if (result.message === "Group was updated") {
-        toast.success(toastTexts.success.successEditUser);
-      } else {
-        throw new Error(result.message);
-      }
+      toast.success(toastTexts.success.successEditUser);
     } catch (error: any) {
+      console.log(error);
       toast.error(error.message || "An error occurred");
     } finally {
       toast.dismiss(toastId);
@@ -103,7 +100,7 @@ const GroupConversationEdit = ({
   return (
     <form
       onSubmit={handleEditGroup}
-      className="flex w-full justify-center items-center flex-col gap-2  animate-fadeIn"
+      className="flex w-full justify-center items-center flex-col gap-3  animate-fadeIn"
     >
       <h1>
         <Avatar
@@ -125,7 +122,7 @@ const GroupConversationEdit = ({
         )}
         <UploadButton
           setImagePreview={handleSetAvatarPreview}
-          setImage={handleSetAvatarBuffer}
+          setImageFile={handleSetAvatarBuffer}
         />
         {avatarPreview && (
           <button
@@ -154,8 +151,10 @@ const GroupConversationEdit = ({
           value={nameInputValue}
           type="input"
         />
-      </div>{" "}
-      <Button children={"Save and submit"} className="py-3 px-3 rounded-xl" />
+      </div>
+      <SolidButton className="py-3 px-3 rounded-xl">
+        Save and submit
+      </SolidButton>
     </form>
   );
 };

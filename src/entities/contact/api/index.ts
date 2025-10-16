@@ -1,5 +1,1 @@
-export {
-  useConnectToGetUsersChanelQuery,
-  useUpdateUserMutation,
-  usePrefetch,
-} from "./contactApi";
+export { useConnectToGetUsersChanelQuery, usePrefetch } from "./contactApi";

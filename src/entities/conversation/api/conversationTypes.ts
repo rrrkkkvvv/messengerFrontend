@@ -16,8 +16,8 @@ export type TMessageInfo = {
   editedAt?: string | null;
   sentAt: string;
 };
-export type TEditingMessage = Omit<TMessageInfo, "messageImage"> & {
-  messageImage?: string | { fileBuffer: number[] | null };
+export type TEditingMessage = Omit<TMessageInfo, "messageImage" | "sender"> & {
+  messageImage?: string | File;
 };
 export type TSendingMessage = {
   messageText?: string;
