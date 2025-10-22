@@ -14,6 +14,8 @@ export type TMessageInfo = {
   senderId: string;
   sender: TUserInfo | undefined;
   editedAt?: string | null;
+  pendingId?: string;
+  pending?: boolean;
   sentAt: string;
 };
 export type TEditingMessage = Omit<TMessageInfo, "messageImage" | "sender"> & {

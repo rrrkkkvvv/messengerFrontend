@@ -250,6 +250,30 @@ export const newMessage =
       : [sendedMessage];
     dispatch(setCurrentConversationMessages(messages));
   };
+export const updateMessage =
+  ({ updatedMessage }: { updatedMessage: TMessageInfo }) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { currentConversation } = getState();
+    if (
+      currentConversation.conversationId !== updatedMessage.conversationId ||
+      !currentConversation.messages
+    )
+      return;
+    const messages = currentConversation.messages.map((message) => {
+      if (
+        message._id === updatedMessage._id ||
+        (message.pendingId &&
+          updatedMessage.pendingId &&
+          message.pendingId === updatedMessage.pendingId)
+      ) {
+        return {
+          ...updatedMessage,
+        };
+      }
+      return message;
+    });
+    dispatch(setCurrentConversationMessages(messages));
+  };
 export const {
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,

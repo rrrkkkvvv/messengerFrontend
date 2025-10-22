@@ -4,9 +4,7 @@ import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
 import {
   TEditGroupInfo,
-  TEditingMessage,
   TMessageInfo,
-  TSendingMessage,
   TUpdateGroupResponse,
 } from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
@@ -49,7 +47,7 @@ const conversationApi = baseApi.injectEndpoints({
       }),
       async onCacheEntryAdded(
         args,
-        { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
+        { updateCachedData, cacheDataLoaded, cacheEntryRemoved }
       ) {
         const { isGroup } = args;
         if (socket) {
@@ -86,6 +84,17 @@ const conversationApi = baseApi.injectEndpoints({
           });
           socket.on("newMessage", (sendedMessage) => {
             updateCachedData((draft) => {
+              if (
+                draft.messages?.find(
+                  (message) =>
+                    message._id === sendedMessage._id ||
+                    (message.pendingId &&
+                      sendedMessage.pendingId &&
+                      message.pendingId === sendedMessage.pendingId)
+                )
+              ) {
+                return;
+              }
               if (draft.messages) {
                 draft.messages.push(sendedMessage);
               } else {
@@ -180,7 +189,7 @@ const conversationApi = baseApi.injectEndpoints({
     }),
 
     editMessage: builder.mutation<
-      { message: TMessageInfo },
+      { data: TMessageInfo },
       { formData: FormData }
     >({
       query: ({ formData }) => {

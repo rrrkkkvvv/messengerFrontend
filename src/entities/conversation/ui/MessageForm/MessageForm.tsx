@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoClose, IoCloseOutline } from "react-icons/io5";
 import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
-import { TEditingMessage, TMessageInfo } from "../../api/conversationTypes";
+import { TMessageInfo } from "../../api/conversationTypes";
 import { FaCheck } from "react-icons/fa";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import {
@@ -12,6 +12,8 @@ import {
 import { TbSend2 } from "react-icons/tb";
 import Input from "../../../../shared/ui/Input/Input";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
+import { newMessage, updateMessage } from "../../model/conversationSlice";
+import { useAppDispatch } from "../../../../app/store/store";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -28,8 +30,7 @@ const MessageForm = ({
   handleResetIsEditingMessage,
 }: TMessageFormProps) => {
   const [messageText, setMessageText] = useState<string>();
-  const [messageId, setMessageId] = useState<string | null>(null);
-
+  const dispatch = useAppDispatch();
   const [messageImagePreview, setMessageImagePreview] = useState<string | null>(
     null
   );
@@ -44,7 +45,7 @@ const MessageForm = ({
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const handleClearMessage = () => {
     handleResetIsEditingMessage();
-    setMessageId(null);
+    setMessageImageFile(null);
     setMessageText("");
     setMessageImagePreview("");
   };
@@ -83,9 +84,40 @@ const MessageForm = ({
       handleClearMessage();
       return;
     }
+    const tempId = "temp-" + Date.now();
+    if (isMessageEdit && editingMessage) {
+      const optimisticMessage: TMessageInfo = {
+        ...editingMessage,
+        messageText: messageText?.trim(),
+        messageImage: messageImagePreview ? messageImagePreview : undefined,
+        editedAt: new Date().toISOString(),
+        pendingId: tempId,
+        pending: true,
+      };
+
+      dispatch(updateMessage({ updatedMessage: optimisticMessage }));
+    } else {
+      const optimisticMessage: TMessageInfo = {
+        _id: tempId,
+        senderId: currentUser._id,
+        messageText: messageText?.trim() || "",
+        messageImage: messageImagePreview ? messageImagePreview : undefined,
+        sentAt: new Date().toISOString(),
+        pendingId: tempId,
+        pending: true,
+        seenIds: [],
+        conversationId: conversationId,
+        sender: currentUser,
+      };
+
+      dispatch(newMessage(optimisticMessage));
+    }
 
     try {
       const formData = new FormData();
+      if (isMessageEdit && editingMessage) {
+        formData.append("messageId", editingMessage._id);
+      }
       formData.append("conversationId", conversationId);
       if (messageImageFile) {
         if (
@@ -101,10 +133,22 @@ const MessageForm = ({
       } else {
         formData.append("messageText", "");
       }
-      if (isMessageEdit && messageId && editingMessage) {
-        await editMessage({ formData }).unwrap();
+      handleClearMessage();
+
+      if (isMessageEdit) {
+        const { data } = await editMessage({ formData }).unwrap();
+        dispatch(
+          updateMessage({
+            updatedMessage: { ...data, pendingId: tempId, pending: false },
+          })
+        );
       } else {
-        await sendMessage({ formData }).unwrap();
+        const { data } = await sendMessage({ formData }).unwrap();
+        dispatch(
+          updateMessage({
+            updatedMessage: { ...data, pendingId: tempId, pending: false },
+          })
+        );
       }
       handleClearMessage();
     } catch (error) {
@@ -114,7 +158,6 @@ const MessageForm = ({
 
   useEffect(() => {
     if (isMessageEdit && editingMessage) {
-      setMessageId(editingMessage._id);
       if (editingMessage.messageText) {
         setMessageText(editingMessage.messageText);
       }
