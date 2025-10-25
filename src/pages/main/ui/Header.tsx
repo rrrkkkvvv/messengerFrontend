@@ -11,7 +11,7 @@ const Header: FC<IHeaderProps> = ({ handleOpenModal }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   return (
-    <h1 className="h-20 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
+    <h1 className="py-5 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
       <button
         className="
                         text-gray-50

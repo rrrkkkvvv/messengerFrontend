@@ -33,8 +33,8 @@ const ImageModal: FC<ImageModalProps> = ({ isOpen, onClose, src }) => {
       onClose={onClose}
       portalId="imageProtal"
     >
-      <div className="relative flex items-center    max-w-sm md:max-w-lg justify-center ">
-        <img alt="Image" className="object-cover shadow-2xl" src={src} />
+      <div className="relative flex items-center      max-w-xs   md:max-w-md justify-center ">
+        <img alt="Image" className="object-cover shadow-2xl " src={src} />
       </div>
     </Modal>
   );

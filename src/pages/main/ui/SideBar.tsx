@@ -14,9 +14,8 @@ const SideBar = () => {
   };
   return (
     <>
-      <div className=" w-full md:w-2/5 relative  h-screen overflow-auto   bg-gray-400">
+      <div className=" flex flex-col flex-1 h-dvh      w-dvw md:w-2/5 relative        bg-gray-400">
         <Header handleOpenModal={handleOpenModal} />
-        
 
         <ContactsList />
       </div>

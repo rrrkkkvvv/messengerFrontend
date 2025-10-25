@@ -79,7 +79,7 @@ const Contact = ({
     <div
       onClick={onClick}
       className={`
-                    w-full
+                     w-full
                     relative
                     flex
                     items-center

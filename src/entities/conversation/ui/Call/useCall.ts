@@ -23,6 +23,7 @@ import {
   TMediaState,
 } from "../../api/callTypes";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
+import toast from "react-hot-toast";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
@@ -85,7 +86,7 @@ const useCall = () => {
       );
     });
     callsSocket.on("incomingCall", ({ sdp, from }) => {
-      if (callStatus !== "idle") {
+      if (callStateRef.current.callStatus !== "idle") {
         callsSocket.emit("endCall", {
           callWith: from._id,
         });
@@ -103,10 +104,7 @@ const useCall = () => {
         callStateRef.current.callTo === from._id
       ) {
         dispatch(setCallStatus("active"));
-        // if (callStateRef.current.isRemoteSdpSet) {
-        //   return;
-        // }
-        // callStateRef.current.isRemoteSdpSet = true;
+
         callStateRef.current?.peerConnection?.setRemoteDescription(sdp);
       }
     });
@@ -182,7 +180,6 @@ const useCall = () => {
       setRemoteStream(remoteStream);
     };
     pc.onnegotiationneeded = async () => {
-      console.log("onnegotiationneeded");
       await sendSdp("offer");
     };
     pc.onicecandidate = (e) => {
@@ -273,13 +270,20 @@ const useCall = () => {
     dispatch(setMediaState({ ...mediaState, muted: !mediaState.muted }));
     sendMediaStateUpdate({ ...mediaState, muted: !mediaState.muted });
   };
-  const toggleVideo = () => {
+  const toggleVideo = async () => {
     if (mediaState.videoEnable) {
       disableVideo();
     } else {
-      //toast.loading("Video enabling");
-
-      enableVideo();
+      const toastId = toast.loading("Video enabling...");
+      try {
+        await enableVideo();
+        toast.success("Video enabled successfully");
+      } catch (err) {
+        toast.error(
+          "Failed to enable video. Please check your camera and permissions"
+        );
+      }
+      toast.dismiss(toastId);
     }
     dispatch(
       setMediaState({ ...mediaState, videoEnable: !mediaState.videoEnable })

@@ -94,7 +94,7 @@ const ContactsList = () => {
     }
   };
   return (
-    <div>
+    <div className="flex flex-col flex-1 min-h-0 relative     text-gray-50">
       {isGroupCreating && (
         <form
           className={`w-full animate-dropDown  overflow-hidden bg-gray-400  flex justify-center items-center transition-all duration-300 flex-col gap-2 text-white ${
@@ -116,7 +116,7 @@ const ContactsList = () => {
         </form>
       )}
 
-      <div className="relative  max-h-full overflow-y-scroll   text-gray-50">
+      <div className="flex-1 overflow-y-auto     text-gray-50">
         {isLoadingContacts && <ContactsSkeleton />}
         {contactsList &&
           [...contactsList]
