@@ -2,11 +2,7 @@ import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
-import {
-  TEditGroupInfo,
-  TMessageInfo,
-  TUpdateGroupResponse,
-} from "./conversationTypes";
+import { TMessageInfo } from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 const { createGroupConversation } = apiURLs.paths.conversation;
@@ -249,16 +245,13 @@ const conversationApi = baseApi.injectEndpoints({
         body: { conversationId },
       }),
     }),
-
-    updateGroupConversation: builder.mutation<
-      TUpdateGroupResponse,
-      TEditGroupInfo
-    >({
-      query: (updatedGroup) => {
+    // Returns data of updated group
+    updateGroupConversation: builder.mutation<void, FormData>({
+      query: (formData) => {
         return {
           url: `/conversations/updateGroup`,
           method: "PUT",
-          body: updatedGroup,
+          body: formData,
         };
       },
     }),

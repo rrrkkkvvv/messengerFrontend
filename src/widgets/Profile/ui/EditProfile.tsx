@@ -69,18 +69,12 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
       }
       const formData = new FormData();
 
-      // let profile: TEditedProfile = {};
       if (userName !== currentUser.name) {
         formData.append("updatedName", userName);
-        // profile.name = userName;
       }
 
-      if (avatarPreview !== currentUser.avatarURL) {
-        if (avatarFile) {
-          formData.append("updatedAvatar", avatarFile);
-        }
-
-        // profile.avatar = { fileBuffer: avatarFile };
+      if (avatarFile && avatarPreview !== currentUser.avatarURL) {
+        formData.append("updatedAvatar", avatarFile);
       }
 
       const result = await updateProfile(formData).unwrap();

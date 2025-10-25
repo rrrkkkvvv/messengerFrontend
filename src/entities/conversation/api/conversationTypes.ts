@@ -43,10 +43,3 @@ export type TEditGroupInfo = {
     fileBuffer: number[] | null;
   };
 };
-export type TUpdateGroupResponse =
-  | {
-      message: "Group was updated";
-    }
-  | {
-      message: "Updating went wrong";
-    };

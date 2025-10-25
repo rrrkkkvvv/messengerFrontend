@@ -7,7 +7,6 @@ import { FormEvent, useEffect, useState } from "react";
 import { useUpdateGroupConversationMutation } from "../../api/conversationApi";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
-import { TEditGroupInfo } from "../../api/conversationTypes";
 import { toastTexts } from "../../../../shared/values/strValues";
 import SolidButton from "../../../../shared/ui/Button/SolidButton";
 
@@ -29,26 +28,26 @@ const GroupConversationEdit = ({
 }: IGroupCOnversationEditProps) => {
   const [nameInputValue, setNameValue] = useState("");
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-  const [avatarBuffer, setAvatarBuffer] = useState<number[]>([]);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const [updateGroupConversation] = useUpdateGroupConversationMutation();
 
   const handleSetAvatarPreview = (url: string) => {
     setAvatarPreview(url);
   };
-  const handleSetAvatarBuffer = (fileBuffer: number[]) => {
-    setAvatarBuffer(fileBuffer);
+  const handleSetAvatarFile = (file: File) => {
+    setAvatarFile(file);
   };
   const handleInputChange = (event: FormEvent<HTMLInputElement>) => {
     setNameValue(event.currentTarget.value);
   };
   const handleRemoveAvatar = () => {
     setAvatarPreview(null);
-    setAvatarBuffer([]);
+    setAvatarFile(null);
   };
   const handleResetAvatar = () => {
     setAvatarPreview(avatarURL);
-    setAvatarBuffer([]);
+    setAvatarFile(null);
   };
   const handleResetUsername = () => {
     if (!originalName) return;
@@ -66,22 +65,16 @@ const GroupConversationEdit = ({
         toast.error(toastTexts.error.errorEditUser);
         return;
       }
-      let result;
+      const formData = new FormData();
+      formData.append("_id", conversationId);
+      formData.append("creatorId", creatorId);
 
-      let groupInfo: TEditGroupInfo = {
-        _id: conversationId,
-        creatorId,
-      };
-      if (nameInputValue !== originalName) {
-        groupInfo.name = nameInputValue;
-      }
-      if (avatarPreview !== avatarURL) {
-        groupInfo.avatar = {
-          fileBuffer: avatarBuffer,
-        };
+      formData.append("name", nameInputValue);
+      if (avatarFile && avatarPreview !== avatarURL) {
+        formData.append("avatar", avatarFile);
       }
 
-      result = await updateGroupConversation(groupInfo).unwrap();
+      await updateGroupConversation(formData).unwrap();
       toast.success(toastTexts.success.successEditUser);
     } catch (error: any) {
       console.log(error);
@@ -95,7 +88,7 @@ const GroupConversationEdit = ({
       setNameValue(originalName);
     }
     setAvatarPreview(avatarURL);
-    setAvatarBuffer([]);
+    setAvatarFile(null);
   }, [originalName, avatarURL]);
   return (
     <form
@@ -122,7 +115,7 @@ const GroupConversationEdit = ({
         )}
         <UploadButton
           setImagePreview={handleSetAvatarPreview}
-          setImageFile={handleSetAvatarBuffer}
+          setImageFile={handleSetAvatarFile}
         />
         {avatarPreview && (
           <button
