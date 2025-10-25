@@ -264,6 +264,11 @@ const useCall = () => {
   };
 
   const toggleMic = () => {
+    if (mediaState.muted) {
+      toast.success("Unmuted successfully");
+    } else {
+      toast.success("Muted successfully");
+    }
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = !track.enabled;
     });
