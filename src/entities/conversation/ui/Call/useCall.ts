@@ -265,9 +265,9 @@ const useCall = () => {
 
   const toggleMic = () => {
     if (mediaState.muted) {
-      toast.success("Unmuted successfully");
+      toast.success("Unmuted");
     } else {
-      toast.success("Muted successfully");
+      toast.success("Muted");
     }
     localStream?.getAudioTracks().forEach((track) => {
       track.enabled = !track.enabled;
@@ -278,11 +278,12 @@ const useCall = () => {
   const toggleVideo = async () => {
     if (mediaState.videoEnable) {
       disableVideo();
+      toast.success("Video disabled");
     } else {
       const toastId = toast.loading("Video enabling...");
       try {
         await enableVideo();
-        toast.success("Video enabled successfully");
+        toast.success("Video enabled");
       } catch (err) {
         toast.error(
           "Failed to enable video. Please check your camera and permissions"
