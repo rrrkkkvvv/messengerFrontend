@@ -85,7 +85,7 @@ const CallLayout = () => {
       </div>
 
       <div
-        className={`h-full w-full flex flex-col  overflow-hidden  items-center justify-around  ${
+        className={`h-full w-full flex flex-col relative  overflow-hidden  items-center justify-around  ${
           isCollapsed ? "opacity-0 hidden" : "opacity-100 visible"
         }`}
       >
