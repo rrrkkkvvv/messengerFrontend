@@ -39,7 +39,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
   const navigate = useNavigate();
 
   const handleCloseConversation = () => {
-    navigate(-1);
+    navigate("/");
   };
 
   const closeConversation = async () => {
@@ -52,7 +52,6 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
     dispatch(callUserThunk({ ...anotherUser, ...defaultMediaState }));
   };
   useEffect(() => {
-    // Resize of window if there is mobile device
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
     };

@@ -19,7 +19,7 @@ import {
   useInvalidateConversationMutation,
 } from "../api";
 import MessageList from "./Messages/MessageList";
-import SidebarMenu from "./Sidebar/SidebarMenu";
+import SideMenu from "./SideMenu/SideMenu";
 import ConversationPlaceholder from "./ConversationPlaceholder";
 import { TMessageInfo } from "../api/conversationTypes";
 import MessageForm from "./MessageForm/MessageForm";
@@ -29,7 +29,7 @@ import {
   selectCurrentConversationName,
   setCurrentConversationGroupInfo,
 } from "../model/conversationSlice";
-import { selectUsersOnlineEmails } from "../../contact/model/contactSlice";
+import { selectUsersOnline } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
@@ -55,7 +55,7 @@ const Conversation = () => {
   const conversationMessages = useAppSelector(
     selectCurrentConversationMessages
   );
-  const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
+  const usersOnline = useAppSelector(selectUsersOnline);
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -74,12 +74,12 @@ const Conversation = () => {
 
   const isAnotherUserOnline = useCallback(() => {
     const anotherUserData = anotherUser();
-    if (usersOnlineEmails && anotherUserData) {
-      return usersOnlineEmails.includes(anotherUserData.email);
+    if (usersOnline && anotherUserData) {
+      return usersOnline.includes(anotherUserData._id);
     } else {
       return false;
     }
-  }, [usersOnlineEmails, anotherUser]);
+  }, [usersOnline, anotherUser]);
 
   // Chat connection
   const {
@@ -193,6 +193,9 @@ const Conversation = () => {
   ) {
     return <ConversationSkeleton />;
   }
+  if (contactId !== conversationId && contactId !== anotherUser()?._id) {
+    return <ConversationSkeleton />;
+  }
   return (
     <>
       <div
@@ -230,7 +233,7 @@ const Conversation = () => {
           <Call callTo={anotherUser()?._id} currentUser={currentUser} />
         )} */}
 
-        <SidebarMenu
+        <SideMenu
           avatarURL={conversationAvatarURL}
           creatorId={conversationCreatorId}
           members={conversationMembers}
@@ -240,7 +243,7 @@ const Conversation = () => {
           closeSidebarMenu={handleCloseSidebarMenu}
           anotherUser={anotherUser()}
           conversationId={conversationId}
-          usersOnlineEmails={usersOnlineEmails}
+          usersOnline={usersOnline}
         />
       </div>
     </>

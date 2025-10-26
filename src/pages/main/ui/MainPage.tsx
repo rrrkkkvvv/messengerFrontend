@@ -7,7 +7,7 @@ import Call from "../../../entities/conversation/ui/Call/CallPortal";
 import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
 import {
   setContactsList,
-  setUsersOnlineEmails,
+  setUsersOnline,
 } from "../../../entities/contact/model/contactSlice";
 import { skipToken } from "@reduxjs/toolkit/query";
 import SideBar from "./SideBar";
@@ -31,7 +31,7 @@ const MainPage = () => {
       dispatch(setContactsList(data.contactsData));
     }
     if (data.usersOnline) {
-      dispatch(setUsersOnlineEmails(data.usersOnline));
+      dispatch(setUsersOnline(data.usersOnline));
     }
   }, [data]);
 
@@ -48,7 +48,9 @@ const MainPage = () => {
     <div className="bg-gray-400 h-screen  flex flex-col ">
       <div className="flex flex-1">
         {isMobile ? (
-          <MobileLayout />
+          <>
+            <MobileLayout />
+          </>
         ) : (
           <>
             <SideBar />

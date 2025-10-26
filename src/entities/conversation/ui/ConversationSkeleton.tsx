@@ -1,24 +1,51 @@
-import { FaArrowAltCircleDown } from "react-icons/fa";
+import { FaArrowAltCircleDown, FaArrowLeft } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
 import Input from "../../../shared/ui/Input/Input";
+import { BiSolidPhoneCall } from "react-icons/bi";
+import { IoCloseOutline } from "react-icons/io5";
+import { useEffect, useState } from "react";
 
 const ConversationSkeleton = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <>
       <div className="flex flex-col w-dvw h-dvh overflow-hidden md:w-3/5  relative text-gray-50 ">
         {/* HEADER */}
-        <h1 className="flex px-5  border border-gray-200  w-full z-10  items-center justify-between h-20 bg-gray-200">
+        <h1 className="flex md:px-5  border border-gray-200  w-full z-10  items-center justify-between  h-16 bg-gray-200">
+          {isMobile && (
+            <div className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl animate-pulse       ">
+              <FaArrowLeft />
+            </div>
+          )}
           <div className="flex flex-row scale-125 md:scale-100 items-center gap-5">
-            <div className="h-11 w-11 rounded-full bg-gray-400 relative animate-pulse"></div>
+            <div className="h-9 w-9 md:h-11 md:w-11 rounded-full bg-gray-400 relative animate-pulse"></div>
 
             <div className="flex flex-col ">
-              <div className="text-lg  truncate h-6  w-56 rounded-lg bg-gray-200"></div>
+              <div className="text-lg  truncate h-6  w-20 rounded-lg bg-gray-200"></div>
             </div>
           </div>
-          <div className="">
+          <div className="flex flex-row">
+            <div className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl animate-pulse       ">
+              <BiSolidPhoneCall />
+            </div>
             <div className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl animate-pulse       ">
               <HiDotsHorizontal />
             </div>
+            {!isMobile && (
+              <div className="text-gray-300 mx-2 p-2 rounded-full outline-none  text-3xl animate-pulse       ">
+                <IoCloseOutline />
+              </div>
+            )}
           </div>
         </h1>
 

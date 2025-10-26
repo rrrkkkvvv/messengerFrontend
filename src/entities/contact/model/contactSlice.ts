@@ -11,13 +11,13 @@ import { TEditGroupInfo } from "../../conversation/api/conversationTypes";
 
 interface IConversationsListSliceProps {
   contactsList: TContactsList | null;
-  usersOnlineEmails: string[] | null;
+  usersOnline: string[] | null;
   isLoading: boolean;
 }
 
 const initialState: IConversationsListSliceProps = {
   contactsList: null,
-  usersOnlineEmails: null,
+  usersOnline: null,
   isLoading: true,
 };
 const contactsListSlice = createSlice({
@@ -30,11 +30,8 @@ const contactsListSlice = createSlice({
     ) => {
       state.contactsList = action.payload;
     },
-    setUsersOnlineEmailsState: (
-      state,
-      action: PayloadAction<string[] | null>
-    ) => {
-      state.usersOnlineEmails = action.payload;
+    setUsersOnlineState: (state, action: PayloadAction<string[] | null>) => {
+      state.usersOnline = action.payload;
     },
     setIsLoading: (state, action: PayloadAction<boolean>) => {
       state.isLoading = action.payload;
@@ -42,15 +39,15 @@ const contactsListSlice = createSlice({
   },
   selectors: {
     selectContactsList: (state) => state.contactsList,
-    selectUsersOnlineEmails: (state) => state.usersOnlineEmails,
+    selectUsersOnline: (state) => state.usersOnline,
     selectIsLoadnigContacts: (state) => state.isLoading,
   },
 });
-const { setContactsListsState, setUsersOnlineEmailsState, setIsLoading } =
+const { setContactsListsState, setUsersOnlineState, setIsLoading } =
   contactsListSlice.actions;
 export const {
   selectContactsList,
-  selectUsersOnlineEmails,
+  selectUsersOnline,
   selectIsLoadnigContacts,
 } = contactsListSlice.selectors;
 export const selectUsersByIds = (userIds: string[] | undefined) =>
@@ -231,9 +228,9 @@ export const setContactsList =
     dispatch(setIsLoading(false));
     dispatch(setContactsListsState(conversationsList));
   };
-export const setUsersOnlineEmails =
-  (usersOnlineEmails: string[] | null) => async (dispatch: AppDispatch) => {
-    dispatch(setUsersOnlineEmailsState(usersOnlineEmails));
+export const setUsersOnline =
+  (usersOnline: string[] | null) => async (dispatch: AppDispatch) => {
+    dispatch(setUsersOnlineState(usersOnline));
   };
 export const deleteConversation =
   (conversationId: string, isGroup: boolean) =>

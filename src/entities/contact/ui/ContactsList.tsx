@@ -12,7 +12,7 @@ import { selectCurrentUser } from "../../user";
 import {
   selectContactsList,
   selectIsLoadnigContacts,
-  selectUsersOnlineEmails,
+  selectUsersOnline,
 } from "../model/contactSlice";
 import ContactsSkeleton from "./ContactsSkeleton";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
@@ -22,7 +22,7 @@ const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);
   const contactsList = useAppSelector(selectContactsList);
   const isLoadingContacts = useAppSelector(selectIsLoadnigContacts);
-  const usersOnlineEmails = useAppSelector(selectUsersOnlineEmails);
+  const usersOnline = useAppSelector(selectUsersOnline);
   const [createGroupConversation] = useCreateGroupConversationMutation();
   const navigate = useNavigate();
 
@@ -133,8 +133,7 @@ const ContactsList = () => {
             })
             .map((contact) => {
               let isOnline =
-                contact.type === "single" &&
-                usersOnlineEmails?.includes(contact.email);
+                contact.type === "single" && usersOnline?.includes(contact._id);
 
               return (
                 <Contact

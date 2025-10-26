@@ -15,7 +15,7 @@ const CallLayout = () => {
 
   const callStatus = useAppSelector(selectCallStatus);
 
-  const handleToggleHidden = () => {
+  const handleToggleCollapsed = () => {
     setIsCollapsed((prev) => !prev);
   };
   const renderCall = () => {
@@ -47,32 +47,28 @@ const CallLayout = () => {
       return "Ended call";
     }
   };
-  const styleCall = () => {
-    if (isHidden) {
-      return "hidden ";
-    } else {
-      return ` 
-      text-gray-50 animate-fadeIn transition-all duration-300     md:rounded-lg  fixed z-50  bg-gray-200     ${
-        isCollapsed
-          ? "-translate-x-1/2 left-1/2 w-1/2 md:w-1/3 lg:w-1/5 h-16 top-0  cursor-pointer     rounded-lg"
-          : "w-full h-full top-0 md:h-1/2 md:w-1/2 lg:w-1/3 md:-translate-x-1/2 md:left-1/2 md:-translate-y-1/2 md:top-1/3 "
-      }`;
-    }
-  };
+
   useEffect(() => {
     if (callStatus === "idle") {
       setIsHidden(true);
     } else {
       setIsCollapsed(false);
+
       setIsHidden(false);
     }
   }, [callStatus]);
   return (
     <div
       onClick={() => {
-        isCollapsed && handleToggleHidden();
+        isCollapsed && handleToggleCollapsed();
       }}
-      className={styleCall()}
+      className={` 
+         ${isHidden && "hidden"}
+      text-gray-50 animate-fadeIn transition-all duration-300     md:rounded-lg  fixed z-50  bg-gray-200     ${
+        isCollapsed
+          ? "-translate-x-1/2 left-1/2 w-1/2 md:w-1/3 lg:w-1/5 h-16 top-0  cursor-pointer     rounded-lg"
+          : "w-full h-full top-0 md:h-1/2 md:w-1/2 lg:w-1/3 md:-translate-x-1/2 md:left-1/2 md:-translate-y-1/2 md:top-1/3 "
+      }`}
     >
       <div
         className={` transition-all duration-700 flex gap-5  items-center w-full h-full justify-center  ${
@@ -90,7 +86,7 @@ const CallLayout = () => {
         }`}
       >
         <div
-          onClick={handleToggleHidden}
+          onClick={handleToggleCollapsed}
           className="absolute left-4 top-4 cursor-pointer z-20"
         >
           <IoResizeSharp className="text-4xl" />

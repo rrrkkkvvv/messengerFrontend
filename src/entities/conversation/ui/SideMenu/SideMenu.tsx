@@ -29,9 +29,9 @@ interface ISidebarMenuProps {
   name: string | null;
   avatarURL: string | null;
   creatorId: string | null;
-  usersOnlineEmails: string[] | null;
+  usersOnline: string[] | null;
 }
-const SidebarMenu = ({
+const SideMenu = ({
   conversationId,
   anotherUser,
   closeSidebarMenu,
@@ -41,7 +41,7 @@ const SidebarMenu = ({
   creatorId,
   members,
   name,
-  usersOnlineEmails,
+  usersOnline,
 }: ISidebarMenuProps) => {
   const currentUser = useAppSelector(selectCurrentUser);
   const [isEditing, setIsEditing] = useState(false);
@@ -169,8 +169,8 @@ const SidebarMenu = ({
                     <Avatar
                       isProfileAvatar={false}
                       picture={creator?.avatarURL}
-                      isOnline={usersOnlineEmails?.includes(
-                        creator ? creator.email : ""
+                      isOnline={usersOnline?.includes(
+                        creator ? creator._id : ""
                       )}
                     />
                     <p className="max-w-16 truncate">{creator?.name}</p>
@@ -197,7 +197,7 @@ const SidebarMenu = ({
                       <Avatar
                         isProfileAvatar={false}
                         picture={member.avatarURL}
-                        isOnline={usersOnlineEmails?.includes(member.email)}
+                        isOnline={usersOnline?.includes(member._id)}
                       />
                       <p className="max-w-16 truncate">{member.name}</p>
                       {isCurrentUserCreator && (
@@ -237,4 +237,4 @@ const SidebarMenu = ({
     </div>
   );
 };
-export default SidebarMenu;
+export default SideMenu;
