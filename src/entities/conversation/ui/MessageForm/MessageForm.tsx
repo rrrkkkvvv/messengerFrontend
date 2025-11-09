@@ -5,10 +5,7 @@ import { useEditMessageMutation, useSendMessageMutation } from "../../api/";
 import { TMessageInfo } from "../../api/conversationTypes";
 import { FaCheck } from "react-icons/fa";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
-import {
-  useStartTypingMutation,
-  useStopTypingMutation,
-} from "../../api/conversationApi";
+
 import { TbSend2 } from "react-icons/tb";
 import Input from "../../../../shared/ui/Input/Input";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
@@ -38,8 +35,9 @@ const MessageForm = ({
 
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
-  const [startTyping] = useStartTypingMutation();
-  const [stopTyping] = useStopTypingMutation();
+  // TODO: GET FROM CUSTOM HOOK
+  // const [startTyping] = useStartTypingMutation();
+  // const [stopTyping] = useStopTypingMutation();
 
   const [isTyping, setIsTyping] = useState(false);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -63,7 +61,7 @@ const MessageForm = ({
     setMessageText(e.currentTarget.value);
     if (!conversationId) return;
     if (!isTyping) {
-      startTyping({ conversationId }).unwrap();
+      // startTyping({ conversationId }).unwrap();
       setIsTyping(true);
     }
     if (typingTimeoutRef.current) {
@@ -71,7 +69,7 @@ const MessageForm = ({
     }
 
     typingTimeoutRef.current = setTimeout(() => {
-      stopTyping({ conversationId }).unwrap();
+      // stopTyping({ conversationId }).unwrap();
       setIsTyping(false);
     }, 750);
   };
@@ -85,9 +83,10 @@ const MessageForm = ({
       return;
     }
     const tempId = "temp-" + Date.now();
-    if (isMessageEdit && editingMessage) {
+    if (isMessageEdit && editingMessage && !editingMessage.isCallInfo) {
       const optimisticMessage: TMessageInfo = {
         ...editingMessage,
+
         messageText: messageText?.trim(),
         messageImage: messageImagePreview ? messageImagePreview : undefined,
         editedAt: new Date().toISOString(),
@@ -99,6 +98,7 @@ const MessageForm = ({
     } else {
       const optimisticMessage: TMessageInfo = {
         _id: tempId,
+        isCallInfo: false,
         senderId: currentUser._id,
         messageText: messageText?.trim() || "",
         messageImage: messageImagePreview ? messageImagePreview : undefined,
@@ -121,9 +121,10 @@ const MessageForm = ({
       formData.append("conversationId", conversationId);
       if (messageImageFile) {
         if (
-          !isMessageEdit ||
-          (isMessageEdit &&
-            messageImagePreview !== editingMessage?.messageImage)
+          !editingMessage?.isCallInfo &&
+          (!isMessageEdit ||
+            (isMessageEdit &&
+              messageImagePreview !== editingMessage?.messageImage))
         ) {
           formData.append("messageImage", messageImageFile);
         }
@@ -137,13 +138,20 @@ const MessageForm = ({
 
       if (isMessageEdit) {
         const { data } = await editMessage({ formData }).unwrap();
+        if (data.isCallInfo) return;
         dispatch(
           updateMessage({
-            updatedMessage: { ...data, pendingId: tempId, pending: false },
+            updatedMessage: {
+              ...data,
+              pendingId: tempId,
+              pending: false,
+            },
           })
         );
       } else {
         const { data } = await sendMessage({ formData }).unwrap();
+        if (data.isCallInfo) return;
+
         dispatch(
           updateMessage({
             updatedMessage: { ...data, pendingId: tempId, pending: false },
@@ -157,7 +165,7 @@ const MessageForm = ({
   };
 
   useEffect(() => {
-    if (isMessageEdit && editingMessage) {
+    if (isMessageEdit && editingMessage && !editingMessage.isCallInfo) {
       if (editingMessage.messageText) {
         setMessageText(editingMessage.messageText);
       }

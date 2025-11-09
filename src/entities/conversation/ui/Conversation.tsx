@@ -33,6 +33,8 @@ import { selectUsersOnline } from "../../contact/model/contactSlice";
 import { selectCurrentUser } from "../../user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
+import { useGetConversationDataQuery } from "../api/conversationApi";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();
@@ -63,7 +65,7 @@ const Conversation = () => {
   //USE CALLBACKS
 
   const anotherUser = useCallback(() => {
-    if (currentUser && conversationMembers) {
+    if (currentUser && conversationMembers && !conversationCreatorId) {
       return conversationMembers.find(
         (member) => member._id !== currentUser._id
       );
@@ -80,7 +82,7 @@ const Conversation = () => {
       return false;
     }
   }, [usersOnline, anotherUser]);
-
+  // const {data} = useGetConversationDataQuery(contactId?{_id: contactId, isGroup: conversationType ==="group"}:skipToken)
   // Chat connection
   const {
     data: chatData = {
@@ -153,6 +155,7 @@ const Conversation = () => {
     }
   }, [conversationStatus]);
 
+  useEffect(() => {}, [conversationType, contactId]);
   useEffect(() => {
     if (!chatData && !currentUser) return;
     // Open of websocket always returns members and conversationId
@@ -193,7 +196,11 @@ const Conversation = () => {
   ) {
     return <ConversationSkeleton />;
   }
-  if (contactId !== conversationId && contactId !== anotherUser()?._id) {
+
+  if (
+    (conversationType === "group" && contactId !== conversationId) ||
+    (conversationType === "single" && contactId !== anotherUser()?._id)
+  ) {
     return <ConversationSkeleton />;
   }
   return (

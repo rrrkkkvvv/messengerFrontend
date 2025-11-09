@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Conversation from "../../../entities/conversation/";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { selectCurrentUser } from "../../../entities/user";
-import Call from "../../../entities/conversation/ui/Call/CallPortal";
 import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
 import {
   setContactsList,
@@ -12,6 +11,7 @@ import {
 import { skipToken } from "@reduxjs/toolkit/query";
 import SideBar from "./SideBar";
 import MobileLayout from "./MobileLayout";
+import Call from "../../../entities/call/ui/CallPortal";
 
 const MainPage = () => {
   const dispatch = useAppDispatch();

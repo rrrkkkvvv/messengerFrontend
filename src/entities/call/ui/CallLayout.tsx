@@ -4,14 +4,15 @@ import { useEffect, useState } from "react";
 import IncomingCall from "./callStates/IncomingCall";
 import OutgoingCall from "./callStates/OutgoingCall";
 import ActiveCall from "./callStates/ActiveCall";
-import useCall from "./useCall";
-import { useAppSelector } from "../../../../app/store/store";
-import { selectCallStatus } from "../../model/callSlice";
+import useCall from "../useCall";
+import { useAppSelector } from "../../../app/store/store";
+import { selectCallStatus } from "../model/callSlice";
 
 const CallLayout = () => {
   const [isHidden, setIsHidden] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { localStream, remoteStream, toggleMic, toggleVideo } = useCall();
+  const { localStream, remoteStream, toggleMic, toggleVideo, callDuration } =
+    useCall();
 
   const callStatus = useAppSelector(selectCallStatus);
 
@@ -30,6 +31,7 @@ const CallLayout = () => {
           toggleMic={toggleMic}
           localStream={localStream}
           remoteStream={remoteStream}
+          callDuration={callDuration}
         />
       );
     } else if (callStatus === "idle") {

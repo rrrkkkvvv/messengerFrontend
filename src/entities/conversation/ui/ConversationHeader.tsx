@@ -6,11 +6,11 @@ import { FaArrowLeft } from "react-icons/fa";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { resetCurrentConversation } from "../model/conversationSlice";
-import { useLeaveConversationConnectMutation } from "../api/conversationApi";
+// import { useLeaveConversationConnectMutation } from "../api/conversationApi";
 import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
 import { BiSolidPhoneCall } from "react-icons/bi";
-import { callUserThunk } from "../model/callSlice";
+import { callUserThunk } from "../../call/model/callSlice";
 import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
 import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 interface IConversationHeaderProps {
@@ -34,7 +34,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
   handleShowSidebarMenu,
 }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [leaveConversationConn] = useLeaveConversationConnectMutation();
+  // const [leaveConversationConn] = useLeaveConversationConnectMutation();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -44,7 +44,7 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
 
   const closeConversation = async () => {
     if (!conversationId) return;
-    await leaveConversationConn(conversationId).unwrap();
+    // await leaveConversationConn(conversationId).unwrap();
     dispatch(resetCurrentConversation());
   };
   const handleCallUser = async () => {

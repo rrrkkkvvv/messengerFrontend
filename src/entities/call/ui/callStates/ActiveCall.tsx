@@ -1,23 +1,26 @@
-import Avatar from "../../../../../shared/ui/Avatar/Avatar";
 import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
 
 import { MdCallEnd } from "react-icons/md";
 import { FC } from "react";
-import { useAppDispatch, useAppSelector } from "../../../../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 import {
   selectInterlocuter,
   selectMediaState,
   setCallEndReason,
   setCallStatus,
-} from "../../../model/callSlice";
-import Video from "../../../../../shared/ui/Video/Video";
-import Audio from "../../../../../shared/ui/Audio/Audio";
+} from "../../model/callSlice";
+import Avatar from "../../../../shared/ui/Avatar/Avatar";
+import Audio from "../../../../shared/ui/Audio/Audio";
+import Video from "../../../../shared/ui/Video/Video";
+import { formatTime } from "../../../../shared/utils/formatTime";
+
 interface IActiveCallProps {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
   toggleMic: () => void;
   toggleVideo: () => void;
+  callDuration: number;
 }
 
 const ActiveCall: FC<IActiveCallProps> = ({
@@ -25,6 +28,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
   remoteStream,
   toggleMic,
   toggleVideo,
+  callDuration,
 }) => {
   const interlocuter = useAppSelector(selectInterlocuter);
   const mediaState = useAppSelector(selectMediaState);
@@ -44,6 +48,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
             <div className=" max-w-40 truncate text-3xl">
               {interlocuter.name}
             </div>
+            <div>{formatTime(callDuration)}</div>
             <Avatar
               isMobileCallAvatar={true}
               isProfileAvatar={true}

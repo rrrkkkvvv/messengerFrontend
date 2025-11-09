@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from "../../../../../app/store/store";
-import Avatar from "../../../../../shared/ui/Avatar/Avatar";
 import { MdCallEnd } from "react-icons/md";
 import {
   selectInterlocuter,
   setCallEndReason,
   setCallStatus,
-} from "../../../model/callSlice";
+} from "../../model/callSlice";
+import Avatar from "../../../../shared/ui/Avatar/Avatar";
+import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 
 const OutgoingCall = () => {
   const interlocuter = useAppSelector(selectInterlocuter);

@@ -1,12 +1,12 @@
-import Avatar from "../../../../../shared/ui/Avatar/Avatar";
 import { MdCallEnd } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
-import { useAppDispatch, useAppSelector } from "../../../../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 import {
   selectInterlocuter,
   setCallEndReason,
   setCallStatus,
-} from "../../../model/callSlice";
+} from "../../model/callSlice";
+import Avatar from "../../../../shared/ui/Avatar/Avatar";
 
 const IncomingCall = () => {
   const interlocuter = useAppSelector(selectInterlocuter);

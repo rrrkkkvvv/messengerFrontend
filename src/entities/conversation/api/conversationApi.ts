@@ -1,9 +1,9 @@
 import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
 import { TMessageInfo } from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
+import { useSocket } from "../../../shared/utils/useSocket";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 const { createGroupConversation } = apiURLs.paths.conversation;
 
@@ -78,15 +78,18 @@ const conversationApi = baseApi.injectEndpoints({
               }
             });
           });
+
           socket.on("newMessage", (sendedMessage) => {
             updateCachedData((draft) => {
               if (
                 draft.messages?.find(
                   (message) =>
-                    message._id === sendedMessage._id ||
-                    (message.pendingId &&
-                      sendedMessage.pendingId &&
-                      message.pendingId === sendedMessage.pendingId)
+                    !message.isCallInfo &&
+                    !sendedMessage.isCallInfo &&
+                    (message._id === sendedMessage._id ||
+                      (message.pendingId &&
+                        sendedMessage.pendingId &&
+                        message.pendingId === sendedMessage.pendingId))
                 )
               ) {
                 return;
@@ -128,6 +131,7 @@ const conversationApi = baseApi.injectEndpoints({
       },
       providesTags: ["Conversation"],
     }),
+
     setSeenMessage: builder.mutation<
       string,
       {
@@ -168,6 +172,25 @@ const conversationApi = baseApi.injectEndpoints({
           socket?.emit("userStopTyping", { conversationId });
           resolve({ data: "Stop typing" });
         });
+      },
+    }),
+    getConversationData: builder.query<
+      {
+        messages: TMessageInfo[];
+        members: TUserInfo[];
+        conversationId: string;
+        avatarURL: string | null;
+        creatorId: string | null;
+        name: string | null;
+      },
+      { isGroup: boolean; _id: string | undefined }
+    >({
+      query: ({ isGroup, _id }) => {
+        return {
+          url: `/conversations/getData`,
+          method: "GET",
+          body: { isGroup, _id },
+        };
       },
     }),
 
@@ -274,15 +297,6 @@ const conversationApi = baseApi.injectEndpoints({
       }),
     }),
     //
-    leaveConversationConnect: builder.mutation<string, string>({
-      async queryFn(conversationId) {
-        return new Promise((resolve) => {
-          socket?.emit("leaveConversation", { conversationId });
-          socket?.disconnect();
-          resolve({ data: "Leaved out a conversation" });
-        });
-      },
-    }),
     invalidateConversation: builder.mutation<string, void>({
       async queryFn() {
         return new Promise((resolve) => {
@@ -296,18 +310,15 @@ const conversationApi = baseApi.injectEndpoints({
 
 export const {
   useUpdateGroupConversationMutation,
-  useConnectToChatChanelQuery,
   useDeleteConversationMutation,
   useInvalidateConversationMutation,
   useLeaveFromConversationMutation,
   useSendMessageMutation,
   useDeleteMessageMutation,
   useEditMessageMutation,
-  useSetSeenMessageMutation,
-  useLeaveConversationConnectMutation,
-  useStartTypingMutation,
-  useStopTypingMutation,
+  useGetConversationDataQuery,
   useKickUserFromConversationMutation,
   useAddUsersToConversationMutation,
   useCreateGroupConversationMutation,
+  useConnectToChatChanelQuery,
 } = conversationApi;

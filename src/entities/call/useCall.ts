@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { useSocket } from "../../../../shared/utils/useSocket";
-import { apiURLs } from "../../../../shared/values/strValues";
-import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
+import { useSocket } from "../../shared/utils/useSocket";
+import { apiURLs } from "../../shared/values/strValues";
+import { useAppDispatch, useAppSelector } from "../../app/store/store";
 import {
   resetCallState,
   selectCallEndReason,
@@ -14,16 +14,13 @@ import {
   setCallStatus,
   setInterlocuter,
   setMediaState,
-} from "../../model/callSlice";
-import { selectCurrentUser } from "../../../user";
-import { rtcConfig } from "../../../../shared/utils/rtcConfig";
-import {
-  TCallParticipant,
-  TCallStatus,
-  TMediaState,
-} from "../../api/callTypes";
-import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
+} from "./model/callSlice";
+import { selectCurrentUser } from "../user";
+import { rtcConfig } from "../../shared/utils/rtcConfig";
+import { TCallParticipant, TCallStatus, TMediaState } from "./api/callTypes";
+import { TUserInfo } from "../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
+import { selectCurrentConversationId } from "../conversation/model";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
@@ -33,13 +30,16 @@ type TCallStateRef = {
   sdp: RTCSessionDescriptionInit | null;
   peerConnection: RTCPeerConnection | null;
   currentUser: TUserInfo | null;
+  callMessageId: string | null;
 };
 const useCall = () => {
   const dispatch = useAppDispatch();
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-
+  const [callDuration, setCallDuration] = useState(0);
+  const [callStartTime, setCallStartTime] = useState<number | null>(null);
+  const conversationId = useAppSelector(selectCurrentConversationId);
   const callTo = useAppSelector(selectCallTo);
   const currentUser = useAppSelector(selectCurrentUser);
   const callStatus = useAppSelector(selectCallStatus);
@@ -56,7 +56,11 @@ const useCall = () => {
     callTo: callTo,
     sdp: null,
     peerConnection: null,
+    callMessageId: null,
   });
+  useEffect(() => {
+    callStateRef.current.currentUser = currentUser;
+  }, [currentUser]);
   useEffect(() => {
     callStateRef.current.currentUser = currentUser;
   }, [currentUser]);
@@ -85,14 +89,16 @@ const useCall = () => {
         setInterlocuter({ ...callStateRef.current.interlocuter, ...mediaState })
       );
     });
-    callsSocket.on("incomingCall", ({ sdp, from }) => {
+    callsSocket.on("incomingCall", ({ sdp, from, callMessageId }) => {
       if (callStateRef.current.callStatus !== "idle") {
         callsSocket.emit("endCall", {
           callWith: from._id,
+          isAnswered: false,
+          callMessageId,
         });
         return;
       }
-
+      callStateRef.current.callMessageId = callMessageId;
       callStateRef.current.sdp = sdp;
       dispatch(setCallFrom(from._id));
       dispatch(setInterlocuter(from));
@@ -122,6 +128,12 @@ const useCall = () => {
         }
       }
     });
+    callsSocket.on("newCallMessageId", ({ callMessageId }) => {
+      callStateRef.current.callMessageId = callMessageId;
+    });
+    callsSocket.on("callStarted", ({ startTime }) => {
+      setCallStartTime(startTime);
+    });
     return () => {
       callsSocket.off("newSdp");
       callsSocket.off("callEnded");
@@ -132,7 +144,16 @@ const useCall = () => {
       endCall();
     };
   }, []);
-
+  useEffect(() => {
+    setCallDuration(0);
+    let interval: NodeJS.Timeout;
+    if (callStartTime) {
+      interval = setInterval(() => {
+        setCallDuration((prev) => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [callStartTime]);
   useEffect(() => {
     if (callStatus === "outgoing") {
       callUser();
@@ -222,6 +243,7 @@ const useCall = () => {
       to: callTo,
       sdp: offer,
       from: { ...currentUser, ...mediaState },
+      conversationId: conversationId,
     });
   };
   const answerCall = async () => {
@@ -239,6 +261,7 @@ const useCall = () => {
       to: interlocuter._id,
       sdp: answer,
       from: currentUser,
+      callMessageId: callStateRef.current.callMessageId,
     });
     dispatch(setCallStatus("active"));
   };
@@ -246,6 +269,9 @@ const useCall = () => {
     if (!interlocuter) return;
     callsSocket.emit("endCall", {
       callWith: interlocuter._id,
+      startTime: callStartTime,
+      callMessageId: callStateRef.current.callMessageId,
+      isAnswered: true,
     });
     resetCall();
   };
@@ -335,6 +361,7 @@ const useCall = () => {
     remoteStream,
     toggleMic,
     toggleVideo,
+    callDuration,
   };
 };
 export default useCall;

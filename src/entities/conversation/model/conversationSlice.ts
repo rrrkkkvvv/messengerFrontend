@@ -245,6 +245,19 @@ export const newMessage =
     const { currentConversation } = getState();
     if (currentConversation.conversationId !== sendedMessage.conversationId)
       return;
+    if (
+      currentConversation.messages?.find(
+        (message) =>
+          !message.isCallInfo &&
+          !sendedMessage.isCallInfo &&
+          (message._id === sendedMessage._id ||
+            (message.pendingId &&
+              sendedMessage.pendingId &&
+              message.pendingId === sendedMessage.pendingId))
+      )
+    )
+      return;
+
     const messages = currentConversation.messages?.length
       ? [...currentConversation.messages, sendedMessage]
       : [sendedMessage];
@@ -262,7 +275,9 @@ export const updateMessage =
     const messages = currentConversation.messages.map((message) => {
       if (
         message._id === updatedMessage._id ||
-        (message.pendingId &&
+        (!message.isCallInfo &&
+          !updatedMessage.isCallInfo &&
+          message.pendingId &&
           updatedMessage.pendingId &&
           message.pendingId === updatedMessage.pendingId)
       ) {
@@ -272,6 +287,26 @@ export const updateMessage =
       }
       return message;
     });
+    dispatch(setCurrentConversationMessages(messages));
+  };
+export const deleteMessage =
+  ({
+    messageId,
+    conversationId,
+  }: {
+    conversationId: string;
+    messageId: string;
+  }) =>
+  async (dispatch: AppDispatch, getState: () => RootState) => {
+    const { currentConversation } = getState();
+    if (
+      currentConversation.conversationId !== conversationId ||
+      !currentConversation.messages
+    )
+      return;
+    const messages = currentConversation.messages.filter(
+      (message) => message._id !== messageId
+    );
     dispatch(setCurrentConversationMessages(messages));
   };
 export const {

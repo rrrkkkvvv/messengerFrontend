@@ -6,6 +6,9 @@ import { TContact } from "../../../shared/types/Contact";
 import TypingUser from "./TypingUser";
 import { useAppSelector } from "../../../app/store/store";
 import { selectCurrentConversationId } from "../../conversation/model";
+import { MdCallMade, MdCallReceived } from "react-icons/md";
+import { IoIosCall } from "react-icons/io";
+import { formatTime } from "../../../shared/utils/formatTime";
 
 interface IContactProps {
   contact: TContact;
@@ -41,33 +44,83 @@ const Contact = ({
   };
 
   const lastMessageSnipet = () => {
-    if (
-      !contact.lastMessage?.messageImage &&
-      contact.lastMessage?.messageText
-    ) {
-      return (
-        <div className="max-w-40 truncate">
-          {contact.lastMessage.messageText}
-        </div>
-      );
-    } else if (
-      contact.lastMessage?.messageImage &&
-      !contact.lastMessage?.messageText
-    ) {
+    const lastMessage = contact.lastMessage;
+    if (!lastMessage) return;
+    if (lastMessage.isCallInfo) {
+      if (!lastMessage.isEnded && lastMessage.isAnswered) {
+        return (
+          <div className="flex gap-2 items-center">
+            <IoIosCall className="text-xl text-green-200" />
+            <div>Active call</div>
+            <div>{formatTime(lastMessage.duration)} </div>
+          </div>
+        );
+      }
+      if (lastMessage.senderId === currentUserId) {
+        if (!lastMessage.isEnded && !lastMessage.isAnswered)
+          return (
+            <div className="flex gap-2 items-center">
+              <MdCallMade className="text-green-200" />
+              <div>Outgoing call</div>
+            </div>
+          );
+        return (
+          <div className="flex gap-2 items-center">
+            <div>Outgoing call</div>
+            {lastMessage.isAnswered ? (
+              <div>
+                <MdCallMade className="text-green-200" />
+              </div>
+            ) : (
+              <div>
+                <MdCallMade className="text-red-100" />
+              </div>
+            )}
+
+            {lastMessage.isAnswered && (
+              <div>{formatTime(lastMessage.duration)}</div>
+            )}
+          </div>
+        );
+      } else {
+        if (!lastMessage.isEnded && !lastMessage.isAnswered)
+          return (
+            <div className="flex gap-2 items-center">
+              <MdCallReceived className="text-green-200" />
+              <div>Incoming call</div>
+            </div>
+          );
+        return (
+          <div className="flex gap-2 items-center">
+            {lastMessage.isAnswered ? (
+              <div>
+                <MdCallReceived className="text-green-200" />
+              </div>
+            ) : (
+              <div>
+                <MdCallReceived className="text-red-100" />
+              </div>
+            )}
+            <div>Incoming call</div>
+            {lastMessage.isAnswered && (
+              <div>{formatTime(lastMessage.duration)}</div>
+            )}
+          </div>
+        );
+      }
+    }
+    if (!lastMessage.messageImage && lastMessage.messageText) {
+      return <div className="max-w-40 truncate">{lastMessage.messageText}</div>;
+    } else if (lastMessage.messageImage && !lastMessage.messageText) {
       return (
         <div className="flex justify-center items-center gap-2">
           <FaFileImage />
         </div>
       );
-    } else if (
-      contact.lastMessage?.messageImage &&
-      contact.lastMessage?.messageText
-    ) {
+    } else if (lastMessage.messageImage && lastMessage.messageText) {
       return (
         <>
-          <div className="max-w-20 truncate">
-            {contact.lastMessage?.messageText}
-          </div>
+          <div className="max-w-20 truncate">{lastMessage.messageText}</div>
           <div className="flex justify-center items-center gap-2">
             <FaFileImage />
           </div>
@@ -111,16 +164,17 @@ const Contact = ({
               />
             ) : (
               <>
-                {contact.lastMessage?.senderId === currentUserId ? (
-                  <span className=" text-gray-150">You:</span>
-                ) : (
-                  contact.type === "group" &&
-                  contact.lastMessage?.sender && (
-                    <span className="truncate max-w-40 text-gray-150">
-                      {contact.lastMessage.sender.name}:
-                    </span>
-                  )
-                )}
+                {!contact.lastMessage?.isCallInfo &&
+                  (contact.lastMessage?.senderId === currentUserId ? (
+                    <span className=" text-gray-150">You:</span>
+                  ) : (
+                    contact.type === "group" &&
+                    contact.lastMessage?.sender && (
+                      <span className="truncate max-w-40 text-gray-150">
+                        {contact.lastMessage.sender.name}:
+                      </span>
+                    )
+                  ))}
                 {lastMessageSnipet()}
               </>
             )}

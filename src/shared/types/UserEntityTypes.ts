@@ -13,7 +13,7 @@ export type TUserInfo = {
 export type TLastMessage = {
   seenStatus: boolean;
   sender?: TUserInfo;
-} & Omit<TMessageInfo, "editedAt">;
+} & TMessageInfo;
 
 export type TUserData = {
   name: string;

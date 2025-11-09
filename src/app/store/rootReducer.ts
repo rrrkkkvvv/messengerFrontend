@@ -3,7 +3,7 @@ import baseApi from "../api/baseApi";
 import { currentConversationReducer } from "../../entities/conversation/model/";
 import currentUserReducer from "../../entities/user/model/userSlice";
 import contactsListReducer from "../../entities/contact/model/contactSlice";
-import callReducer from "../../entities/conversation/model/callSlice";
+import callReducer from "../../entities/call/model/callSlice";
 
 export const rootReducer = combineReducers({
   currentUser: currentUserReducer,

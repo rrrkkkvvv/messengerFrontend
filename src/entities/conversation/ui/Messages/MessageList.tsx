@@ -186,11 +186,12 @@ const MessageList = ({
               Sent at {formatTime(contextMenu.message.sentAt)}
             </div>
           )}
-          {contextMenu.message?.editedAt && (
-            <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
-              Edited at {formatTime(contextMenu.message.editedAt)}
-            </div>
-          )}
+          {!contextMenu.message?.isCallInfo &&
+            contextMenu.message?.editedAt && (
+              <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
+                Edited at {formatTime(contextMenu.message.editedAt)}
+              </div>
+            )}
 
           {contextMenu.message?.senderId === currentUser?._id && (
             <>
