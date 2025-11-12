@@ -5,7 +5,7 @@ import IncomingCall from "./callStates/IncomingCall";
 import OutgoingCall from "./callStates/OutgoingCall";
 import ActiveCall from "./callStates/ActiveCall";
 import { useAppSelector } from "../../../app/store/store";
-import { selectCallStatus } from "../../../entities/call/model/callSlice";
+import { selectCallStatus } from "../../../entities/call/";
 import { useCall } from "../../../entities/call";
 
 const CallLayout = () => {

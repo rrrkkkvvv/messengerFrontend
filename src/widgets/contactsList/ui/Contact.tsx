@@ -3,7 +3,7 @@ import { FaFileImage } from "react-icons/fa6";
 import { formatLastMessageDate } from "../../../shared/utils/formatLastMessageDate";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { TContact } from "../../../shared/types/Contact";
-import TypingUser from "./TypingUser";
+import TypingUser from "../../conversation/ui/TypingUser";
 import { useAppSelector } from "../../../app/store/store";
 import { selectCurrentConversationId } from "../../../entities/conversation/";
 import { MdCallMade, MdCallReceived } from "react-icons/md";

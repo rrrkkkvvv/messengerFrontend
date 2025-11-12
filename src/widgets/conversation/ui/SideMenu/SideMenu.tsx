@@ -12,7 +12,7 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import {
   useKickUserFromConversationMutation,
   useLeaveFromConversationMutation,
-} from "../../../../entities/conversation/api/conversationApi";
+} from "../../../../entities/conversation/";
 import GroupConversationEdit from "./GroupConversationEdit";
 import AddUsersToGroup from "./AddUsersToGroup";
 import SidebarBtn from "../../../../shared/ui/Button/SidebarBtn";

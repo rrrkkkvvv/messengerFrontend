@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import Header from "./Header";
 import ProfileModal from "../../../widgets/profile";
-import ContactsList from "../../../widgets/contactsList/ui/ContactsList";
+import { ContactsList } from "../../../widgets/contactsList";
 
-const SideBar = () => {
+const Sidebar = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const handleCloseModal = () => {
     setIsOpenModal(false);
@@ -24,4 +24,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default Sidebar;

@@ -3,7 +3,6 @@ import ImageModal from "../ImageModal/ImageModal.tsx";
 import { formatTime } from "../../../../shared/utils/formatTime.ts";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes.ts";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
-// import { useSetSeenMessageMutation } from "../../api/conversationApi.ts";
 import Avatar from "../../../../shared/ui/Avatar/Avatar.tsx";
 import { MdCallMade, MdCallReceived } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";

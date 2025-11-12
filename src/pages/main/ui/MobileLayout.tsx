@@ -1,8 +1,8 @@
 import { Route, Routes, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
-import SideBar from "./SideBar";
-import Conversation from "../../../widgets/conversation/ui/Conversation";
+import { Conversation } from "../../../widgets/conversation";
+import Sidebar from "./Sidebar";
 
 const MobileLayout = () => {
   const location = useLocation();
@@ -49,7 +49,7 @@ const MobileLayout = () => {
           path="/"
           element={
             <PageWrapper>
-              <SideBar />
+              <Sidebar />
             </PageWrapper>
           }
         />

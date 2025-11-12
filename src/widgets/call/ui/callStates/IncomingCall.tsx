@@ -5,7 +5,7 @@ import {
   selectInterlocuter,
   setCallEndReason,
   setCallStatus,
-} from "../../../../entities/call/model/callSlice";
+} from "../../../../entities/call/";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 
 const IncomingCall = () => {

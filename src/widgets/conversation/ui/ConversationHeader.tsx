@@ -1,16 +1,15 @@
 import { FC, useEffect, useState } from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { IoCloseOutline } from "react-icons/io5";
-import TypingUser from "../../contactsList/ui/TypingUser";
+import TypingUser from "./TypingUser";
 import { FaArrowLeft } from "react-icons/fa";
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { resetCurrentConversation } from "../../../entities/conversation/model/conversationSlice";
-// import { useLeaveConversationConnectMutation } from "../api/conversationApi";
+import { resetCurrentConversation } from "../../../entities/conversation/";
 import { useAppDispatch } from "../../../app/store/store";
 import { useNavigate } from "react-router-dom";
 import { BiSolidPhoneCall } from "react-icons/bi";
-import { callUserThunk } from "../../../entities/call/model/callSlice";
+import { callUserThunk } from "../../../entities/call/";
 import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
 import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 interface IConversationHeaderProps {

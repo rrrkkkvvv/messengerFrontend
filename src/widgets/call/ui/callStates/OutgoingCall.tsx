@@ -3,7 +3,7 @@ import {
   selectInterlocuter,
   setCallEndReason,
   setCallStatus,
-} from "../../../../entities/call/model/callSlice";
+} from "../../../../entities/call/";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 

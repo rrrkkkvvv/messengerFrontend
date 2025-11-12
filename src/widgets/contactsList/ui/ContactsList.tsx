@@ -15,7 +15,7 @@ import {
 } from "../../../entities/contact/";
 import ContactsSkeleton from "./ContactsSkeleton";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
-import { useCreateGroupConversationMutation } from "../../../entities/conversation/api/conversationApi";
+import { useCreateGroupConversationMutation } from "../../../entities/conversation/";
 import Contact from "./Contact";
 
 const ContactsList = () => {

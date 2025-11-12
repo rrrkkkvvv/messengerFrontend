@@ -1,6 +1,6 @@
 export {
   default as currentConversationReducer,
-  resetCurrentConversation as deleteCurrentConversation,
+  resetCurrentConversation,
   selectCurrentConversationId,
   selectCurrentConversationMembers,
   selectCurrentConversationMessages,
@@ -37,4 +37,3 @@ export {
   useLeaveFromConversationMutation,
   useUpdateGroupConversationMutation,
 } from "./api/conversationApi";
-// TODO: CHECK IMPORTS

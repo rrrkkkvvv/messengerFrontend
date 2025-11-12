@@ -11,10 +11,7 @@ import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import { TbSend2 } from "react-icons/tb";
 import Input from "../../../../shared/ui/Input/Input";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
-import {
-  newMessage,
-  updateMessage,
-} from "../../../../entities/conversation/model/conversationSlice";
+import { newMessage, updateMessage } from "../../../../entities/conversation/";
 import { useAppDispatch } from "../../../../app/store/store";
 import { TMessageInfo } from "../../../../shared/types/messageTypes";
 

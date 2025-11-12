@@ -4,7 +4,7 @@ import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoCloseOutline } from "react-icons/io5";
 import Input from "../../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
-import { useUpdateGroupConversationMutation } from "../../../../entities/conversation/api/conversationApi";
+import { useUpdateGroupConversationMutation } from "../../../../entities/conversation/";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../../shared/values/strValues";

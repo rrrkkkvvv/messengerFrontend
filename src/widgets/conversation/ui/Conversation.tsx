@@ -27,7 +27,7 @@ import {
   selectCurrentConversationCreatorId,
   selectCurrentConversationName,
   setCurrentConversationGroupInfo,
-} from "../../../entities/conversation/model/conversationSlice";
+} from "../../../entities/conversation/";
 import { selectUsersOnline } from "../../../entities/contact/";
 import { selectCurrentUser } from "../../../entities/user";
 import ConversationSkeleton from "./ConversationSkeleton";

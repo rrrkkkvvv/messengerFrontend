@@ -4,7 +4,7 @@ import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../../shared/values/strValues";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
-import { useAddUsersToConversationMutation } from "../../../../entities/conversation/api/conversationApi";
+import { useAddUsersToConversationMutation } from "../../../../entities/conversation/";
 import { selectContactsList } from "../../../../entities/contact/";
 import SolidButton from "../../../../shared/ui/Button/SolidButton";
 

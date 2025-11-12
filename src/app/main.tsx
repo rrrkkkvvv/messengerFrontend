@@ -3,18 +3,17 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthPage from "../pages/auth";
+import { AuthPage } from "../pages/auth";
 import { Provider } from "react-redux";
 import { store } from "./store/store";
-import MainPage from "../pages/main/";
+import { MainPage, Sidebar } from "../pages/main";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";
 
-import ErrorPage from "../pages/error";
+import { ErrorPage } from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
-import SideBar from "../pages/main/ui/SideBar";
-import Conversation from "../widgets/conversation/ui/Conversation";
+import { Conversation } from "../widgets/conversation";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +38,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <SideBar />,
+        element: <Sidebar />,
       },
       {
         path: routes.conversation,

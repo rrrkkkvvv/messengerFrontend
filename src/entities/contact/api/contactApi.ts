@@ -9,7 +9,7 @@ import {
   kickUserFromCurrentConversation,
   updateCurrentConversationInfo,
   updateUserInfoInConversation,
-} from "../../conversation/model/conversationSlice";
+} from "../../conversation/";
 import {
   addGroupToContacts,
   createChatWithUser,
