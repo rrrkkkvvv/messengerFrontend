@@ -22,6 +22,7 @@ import { rtcConfig } from "../../../shared/utils/rtcConfig";
 import toast from "react-hot-toast";
 import { TMediaState } from "../../../shared/types/callTypes";
 import { TCallParticipant, TCallStatus } from "../api/callTypes";
+import { Socket } from "socket.io-client";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
@@ -48,7 +49,7 @@ const useCall = () => {
   const interlocuter = useAppSelector(selectInterlocuter);
   const mediaState = useAppSelector(selectMediaState);
 
-  const callsSocket = useSocket(wsUrl);
+  const callsSocket = useRef<Socket | null>(null);
   // REFS for states because of stale closure
   const callStateRef = useRef<TCallStateRef>({
     interlocuter: interlocuter,
@@ -76,23 +77,29 @@ const useCall = () => {
   }, [callTo]);
 
   useEffect(() => {
-    callsSocket.emit("joinCallsSocket");
+    if (callsSocket.current) {
+      callsSocket.current.close();
+      callsSocket.current = null;
+    }
 
-    callsSocket.on("iceCandidate", ({ candidate }) => {
-      callStateRef.current?.peerConnection?.addIceCandidate(
+    callsSocket.current = useSocket(wsUrl);
+    callsSocket.current.emit("joinCallsSocket");
+
+    callsSocket.current.on("iceCandidate", ({ candidate }) => {
+      callStateRef.current.peerConnection?.addIceCandidate(
         new RTCIceCandidate(candidate)
       );
     });
-    callsSocket.on("mediaStateChanged", ({ from, mediaState }) => {
+    callsSocket.current.on("mediaStateChanged", ({ from, mediaState }) => {
       if (callStateRef.current?.interlocuter?._id !== from._id) return;
 
       dispatch(
         setInterlocuter({ ...callStateRef.current.interlocuter, ...mediaState })
       );
     });
-    callsSocket.on("incomingCall", ({ sdp, from, callMessageId }) => {
+    callsSocket.current.on("incomingCall", ({ sdp, from, callMessageId }) => {
       if (callStateRef.current.callStatus !== "idle") {
-        callsSocket.emit("endCall", {
+        callsSocket.current?.emit("endCall", {
           callWith: from._id,
           isAnswered: false,
           callMessageId,
@@ -105,7 +112,7 @@ const useCall = () => {
       dispatch(setInterlocuter(from));
       dispatch(setCallStatus("incoming"));
     });
-    callsSocket.on("callAccepted", ({ sdp, from }) => {
+    callsSocket.current.on("callAccepted", ({ sdp, from }) => {
       if (
         callStateRef.current.callStatus === "outgoing" &&
         callStateRef.current.callTo === from._id
@@ -115,12 +122,12 @@ const useCall = () => {
         callStateRef.current?.peerConnection?.setRemoteDescription(sdp);
       }
     });
-    callsSocket.on("callEnded", () => {
+    callsSocket.current.on("callEnded", () => {
       dispatch(setCallEndReason("interlocuter"));
 
       dispatch(setCallStatus("ended"));
     });
-    callsSocket.on("newSdp", ({ sdp, from, sdpType }) => {
+    callsSocket.current.on("newSdp", ({ sdp, from, sdpType }) => {
       if (callStateRef.current.interlocuter?._id === from._id) {
         callStateRef.current?.peerConnection?.setRemoteDescription(sdp);
 
@@ -129,19 +136,22 @@ const useCall = () => {
         }
       }
     });
-    callsSocket.on("newCallMessageId", ({ callMessageId }) => {
+    callsSocket.current.on("newCallMessageId", ({ callMessageId }) => {
       callStateRef.current.callMessageId = callMessageId;
     });
-    callsSocket.on("callStarted", ({ startTime }) => {
+    callsSocket.current.on("callStarted", ({ startTime }) => {
       setCallStartTime(startTime);
     });
     return () => {
-      callsSocket.off("newSdp");
-      callsSocket.off("callEnded");
-      callsSocket.off("callAccepted");
-      callsSocket.off("incomingCall");
-      callsSocket.off("mediaStateChanged");
-      callsSocket.off("iceCandidate");
+      if (!callsSocket.current) return;
+      callsSocket.current.off("newSdp");
+      callsSocket.current.off("callEnded");
+      callsSocket.current.off("callAccepted");
+      callsSocket.current.off("incomingCall");
+      callsSocket.current.off("mediaStateChanged");
+      callsSocket.current.off("iceCandidate");
+      callsSocket.current.close();
+      callsSocket.current = null;
       endCall();
     };
   }, []);
@@ -169,6 +179,7 @@ const useCall = () => {
     }
   }, [callStatus]);
   const sendSdp = async (sdpType: "offer" | "answer") => {
+    if (!callsSocket.current) return;
     if (!callStateRef.current.peerConnection) {
       callStateRef.current.peerConnection = createPeerConnection();
     }
@@ -179,7 +190,7 @@ const useCall = () => {
       sdp = await callStateRef.current.peerConnection.createAnswer();
     }
     await callStateRef.current.peerConnection.setLocalDescription(sdp);
-    callsSocket.emit("sendSdp", {
+    callsSocket.current.emit("sendSdp", {
       to: callStateRef.current.interlocuter?._id,
       sdp: sdp,
       sdpType: sdpType,
@@ -188,13 +199,12 @@ const useCall = () => {
   };
 
   const sendMediaStateUpdate = (newMediaState: TMediaState) => {
-    if (interlocuter) {
-      callsSocket.emit("mediaStateChange", {
-        from: currentUser,
-        mediaState: newMediaState,
-        to: interlocuter._id,
-      });
-    }
+    if (!interlocuter || !callsSocket.current) return;
+    callsSocket.current.emit("mediaStateChange", {
+      from: currentUser,
+      mediaState: newMediaState,
+      to: interlocuter._id,
+    });
   };
   const createPeerConnection = () => {
     const pc = new RTCPeerConnection(rtcConfig);
@@ -205,8 +215,8 @@ const useCall = () => {
       await sendSdp("offer");
     };
     pc.onicecandidate = (e) => {
-      if (e.candidate && interlocuter) {
-        callsSocket.emit("iceCandidate", {
+      if (e.candidate && interlocuter && callsSocket.current) {
+        callsSocket.current.emit("iceCandidate", {
           to: interlocuter._id,
           candidate: e.candidate,
         });
@@ -232,7 +242,7 @@ const useCall = () => {
     }
   };
   const callUser = async () => {
-    if (!currentUser || !callTo) return;
+    if (!currentUser || !callTo || !callsSocket.current) return;
     callStateRef.current.peerConnection = createPeerConnection();
     await handleInitLocalStream();
 
@@ -240,7 +250,7 @@ const useCall = () => {
 
     await callStateRef.current.peerConnection.setLocalDescription(offer);
 
-    callsSocket.emit("callUser", {
+    callsSocket.current.emit("callUser", {
       to: callTo,
       sdp: offer,
       from: { ...currentUser, ...mediaState },
@@ -248,7 +258,8 @@ const useCall = () => {
     });
   };
   const answerCall = async () => {
-    if (!interlocuter || !callStateRef.current.sdp) return;
+    if (!interlocuter || !callStateRef.current.sdp || !callsSocket.current)
+      return;
     callStateRef.current.peerConnection = createPeerConnection();
     await handleInitLocalStream();
     callStateRef.current.peerConnection.setRemoteDescription(
@@ -258,7 +269,7 @@ const useCall = () => {
     const answer = await callStateRef.current.peerConnection.createAnswer();
     await callStateRef.current.peerConnection.setLocalDescription(answer);
 
-    callsSocket.emit("answerCall", {
+    callsSocket.current.emit("answerCall", {
       to: interlocuter._id,
       sdp: answer,
       from: currentUser,
@@ -267,8 +278,8 @@ const useCall = () => {
     dispatch(setCallStatus("active"));
   };
   const endCall = () => {
-    if (!interlocuter) return;
-    callsSocket.emit("endCall", {
+    if (!interlocuter || !callsSocket.current) return;
+    callsSocket.current.emit("endCall", {
       callWith: interlocuter._id,
       startTime: callStartTime,
       callMessageId: callStateRef.current.callMessageId,

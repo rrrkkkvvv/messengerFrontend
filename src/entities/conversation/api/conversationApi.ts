@@ -49,9 +49,10 @@ const conversationApi = baseApi.injectEndpoints({
         if (socket) {
           socket.disconnect();
         }
-        socket = useSocket(wsUrl);
         if ((isGroup && !args.conversationId) || (!isGroup && !args.userId))
           return;
+        socket = useSocket(wsUrl);
+
         socket.emit(
           "joinConversation",
           isGroup
