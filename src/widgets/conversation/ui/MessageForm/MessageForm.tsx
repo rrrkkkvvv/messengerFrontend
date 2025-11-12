@@ -1,10 +1,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoClose, IoCloseOutline } from "react-icons/io5";
-import {
-  useEditMessageMutation,
-  useSendMessageMutation,
-} from "../../../../entities/conversation";
+
 import { FaCheck } from "react-icons/fa";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
@@ -14,6 +11,10 @@ import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
 import { newMessage, updateMessage } from "../../../../entities/conversation/";
 import { useAppDispatch } from "../../../../app/store/store";
 import { TMessageInfo } from "../../../../shared/types/messageTypes";
+import {
+  useEditMessageMutation,
+  useSendMessageMutation,
+} from "../../../../entities/message";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;

@@ -4,8 +4,8 @@ import { FaArrowAltCircleDown } from "react-icons/fa";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
-import { useDeleteMessageMutation } from "../../../../entities/conversation";
 import { TMessageInfo } from "../../../../shared/types/messageTypes";
+import { useDeleteMessageMutation } from "../../../../entities/message";
 
 interface IMessageListProps {
   conversationId: string | null;

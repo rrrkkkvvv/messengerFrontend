@@ -6,7 +6,7 @@ import {
   TContactsList,
   TGroupConversation,
 } from "../../../shared/types/Contact";
-import { deleteCurrentConversation } from "../../conversation/";
+import { resetCurrentConversation } from "../../conversation";
 
 interface IConversationsListSliceProps {
   contactsList: TContactsList | null;
@@ -239,7 +239,7 @@ export const deleteConversation =
       currentConversation,
     } = getState();
     if (currentConversation.conversationId === conversationId) {
-      dispatch(deleteCurrentConversation());
+      dispatch(resetCurrentConversation());
     }
     if (!contactsList) return;
     if (isGroup) {

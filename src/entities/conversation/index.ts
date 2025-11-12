@@ -26,10 +26,7 @@ export {
 export {
   useConnectToChatChanelQuery,
   useDeleteConversationMutation,
-  useDeleteMessageMutation,
-  useEditMessageMutation,
   useInvalidateConversationMutation,
-  useSendMessageMutation,
   useAddUsersToConversationMutation,
   useCreateGroupConversationMutation,
   useGetConversationDataQuery,
