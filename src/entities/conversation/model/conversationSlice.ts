@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { TMessageInfo } from "../api/conversationTypes";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { AppDispatch, RootState } from "../../../app/store/store";
 import { TGroupConversation } from "../../../shared/types/Contact";
+import { TMessageInfo } from "../../../shared/types/messageTypes";
 
 interface ICurrentConversationSliceProps {
   members: TUserInfo[] | null;

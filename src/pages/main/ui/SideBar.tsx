@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { ContactsList } from "../../../entities/contact";
 
 import Header from "./Header";
-import ProfileModal from "../../../widgets/Profile";
+import ProfileModal from "../../../widgets/profile";
+import ContactsList from "../../../widgets/contactsList/ui/ContactsList";
 
 const SideBar = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);

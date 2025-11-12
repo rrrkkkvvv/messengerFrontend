@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { MdDelete } from "react-icons/md";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
-import { logout } from "../../../entities/contact";
+import { logout } from "../../../entities/user";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
 import Input from "../../../shared/ui/Input/Input";

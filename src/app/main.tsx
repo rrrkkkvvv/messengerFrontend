@@ -10,11 +10,11 @@ import MainPage from "../pages/main/";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { routes } from "../shared/values/strValues";
-import Conversation from "../entities/conversation";
 
 import ErrorPage from "../pages/error";
 import { RestrictedRoute, PrivateRoute } from "./routes/";
 import SideBar from "../pages/main/ui/SideBar";
+import Conversation from "../widgets/conversation/ui/Conversation";
 
 const router = createBrowserRouter([
   {

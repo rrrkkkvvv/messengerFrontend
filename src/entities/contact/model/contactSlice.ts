@@ -6,8 +6,7 @@ import {
   TContactsList,
   TGroupConversation,
 } from "../../../shared/types/Contact";
-import { deleteCurrentConversation } from "../../conversation/model";
-import { TEditGroupInfo } from "../../conversation/api/conversationTypes";
+import { deleteCurrentConversation } from "../../conversation/";
 
 interface IConversationsListSliceProps {
   contactsList: TContactsList | null;
@@ -259,6 +258,14 @@ export const deleteConversation =
       dispatch(setContactsListsState(newContactsList));
     }
   };
+type TEditGroupInfo = {
+  _id: string;
+  creatorId: string;
+  name?: string;
+  avatar?: {
+    fileBuffer: number[] | null;
+  };
+};
 export const updateGroupContact =
   (updatedInfo: TEditGroupInfo) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {

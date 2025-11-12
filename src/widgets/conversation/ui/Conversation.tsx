@@ -10,31 +10,29 @@ import {
   setCurrentConversationId,
   setCurrentConversationMembers,
   setCurrentConversationMessages,
-} from "../model";
+} from "../../../entities/conversation";
 
 import { useCallback, useEffect, useState } from "react";
 import { routes } from "../../../shared/values/strValues";
 import {
   useConnectToChatChanelQuery,
   useInvalidateConversationMutation,
-} from "../api";
+} from "../../../entities/conversation";
 import MessageList from "./Messages/MessageList";
 import SideMenu from "./SideMenu/SideMenu";
 import ConversationPlaceholder from "./ConversationPlaceholder";
-import { TMessageInfo } from "../api/conversationTypes";
 import MessageForm from "./MessageForm/MessageForm";
 import {
   selectCurrentConversationAvatarURL,
   selectCurrentConversationCreatorId,
   selectCurrentConversationName,
   setCurrentConversationGroupInfo,
-} from "../model/conversationSlice";
-import { selectUsersOnline } from "../../contact/model/contactSlice";
-import { selectCurrentUser } from "../../user";
+} from "../../../entities/conversation/model/conversationSlice";
+import { selectUsersOnline } from "../../../entities/contact/";
+import { selectCurrentUser } from "../../../entities/user";
 import ConversationSkeleton from "./ConversationSkeleton";
 import ConversationHeader from "./ConversationHeader";
-import { useGetConversationDataQuery } from "../api/conversationApi";
-import { skipToken } from "@reduxjs/toolkit/query";
+import { TMessageInfo } from "../../../shared/types/messageTypes";
 
 const Conversation = () => {
   const { type: conversationType, contactId } = useParams();

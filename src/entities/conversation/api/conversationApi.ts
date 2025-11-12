@@ -1,9 +1,9 @@
 import baseApi from "../../../app/api/baseApi";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 import { apiURLs } from "../../../shared/values/strValues";
-import { TMessageInfo } from "./conversationTypes";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
+import { TMessageInfo } from "../../../shared/types/messageTypes";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 const { createGroupConversation } = apiURLs.paths.conversation;
 
@@ -113,7 +113,7 @@ const conversationApi = baseApi.injectEndpoints({
               );
             });
           });
-          socket.on("messageDeleted", (messageId) => {
+          socket.on("messageDeleted", ({ messageId, conversationId }) => {
             updateCachedData((draft) => {
               if (!draft.messages) return;
 

@@ -1,9 +1,9 @@
 import { CiLogout } from "react-icons/ci";
-import { logout } from "../../../entities/contact";
 import { CgProfile } from "react-icons/cg";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../app/store/store";
 import { FC } from "react";
+import { logout } from "../../../entities/user";
 interface IHeaderProps {
   handleOpenModal: () => void;
 }

@@ -1,6 +1,6 @@
 import { NavigateFunction } from "react-router-dom";
 import { AppDispatch } from "../../store/store";
-import { logout } from "../../../entities/contact";
+import { logout } from "../../../entities/user";
 import { routes } from "../../../shared/values/strValues";
 import userApi from "../../../entities/user/api/userApi";
 import { setUserLoginData } from "../../../entities/user/model/userSlice";

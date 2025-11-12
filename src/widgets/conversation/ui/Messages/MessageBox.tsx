@@ -1,13 +1,13 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import ImageModal from "../ImageModal/ImageModal.tsx";
-import { TMessageInfo } from "../../api/conversationTypes";
-import { formatTime } from "../../../../shared/utils/formatTime";
+import { formatTime } from "../../../../shared/utils/formatTime.ts";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes.ts";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 // import { useSetSeenMessageMutation } from "../../api/conversationApi.ts";
 import Avatar from "../../../../shared/ui/Avatar/Avatar.tsx";
 import { MdCallMade, MdCallReceived } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
+import { TMessageInfo } from "../../../../shared/types/messageTypes.ts";
 
 type TMessageBoxProps = {
   conversationId: string;

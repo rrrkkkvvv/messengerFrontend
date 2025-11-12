@@ -1,5 +1,4 @@
 import { useAppSelector } from "../../../app/store/store";
-import { Contact } from "..";
 import { CiCirclePlus } from "react-icons/ci";
 
 import { useNavigate } from "react-router-dom";
@@ -8,15 +7,16 @@ import Input from "../../../shared/ui/Input/Input";
 import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { TContact } from "../../../shared/types/Contact";
-import { selectCurrentUser } from "../../user";
+import { selectCurrentUser } from "../../../entities/user";
 import {
   selectContactsList,
   selectIsLoadnigContacts,
   selectUsersOnline,
-} from "../model/contactSlice";
+} from "../../../entities/contact/";
 import ContactsSkeleton from "./ContactsSkeleton";
 import SolidButton from "../../../shared/ui/Button/SolidButton";
-import { useCreateGroupConversationMutation } from "../../conversation/api/conversationApi";
+import { useCreateGroupConversationMutation } from "../../../entities/conversation/api/conversationApi";
+import Contact from "./Contact";
 
 const ContactsList = () => {
   const currentUser = useAppSelector(selectCurrentUser);

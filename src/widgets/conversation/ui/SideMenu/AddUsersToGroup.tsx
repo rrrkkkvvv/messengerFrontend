@@ -4,8 +4,8 @@ import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import toast from "react-hot-toast";
 import { toastTexts } from "../../../../shared/values/strValues";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
-import { useAddUsersToConversationMutation } from "../../api/conversationApi";
-import { selectContactsList } from "../../../contact/model/contactSlice";
+import { useAddUsersToConversationMutation } from "../../../../entities/conversation/api/conversationApi";
+import { selectContactsList } from "../../../../entities/contact/";
 import SolidButton from "../../../../shared/ui/Button/SolidButton";
 
 interface IAddUsersToGroupProps {

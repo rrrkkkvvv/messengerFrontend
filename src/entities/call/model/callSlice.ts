@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AppDispatch, RootState } from "../../../app/store/store";
+import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
+import { TMediaState } from "../../../shared/types/callTypes";
 import {
   TCallParticipant,
   TCallStatus,
   TEndCallReason,
-  TMediaState,
 } from "../api/callTypes";
-import { AppDispatch, RootState } from "../../../app/store/store";
-import { defaultMediaState } from "../../../shared/values/mediaStateConfig";
 
 interface ICallSliceProps {
   mediaState: TMediaState;

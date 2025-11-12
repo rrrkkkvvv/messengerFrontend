@@ -1,6 +1,6 @@
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import { IoCloseOutline } from "react-icons/io5";
-import { useDeleteConversationMutation } from "../../api";
+import { useDeleteConversationMutation } from "../../../../entities/conversation/";
 import { toastTexts } from "../../../../shared/values/strValues";
 import toast from "react-hot-toast";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
@@ -12,11 +12,11 @@ import { AiOutlineUsergroupAdd } from "react-icons/ai";
 import {
   useKickUserFromConversationMutation,
   useLeaveFromConversationMutation,
-} from "../../api/conversationApi";
+} from "../../../../entities/conversation/api/conversationApi";
 import GroupConversationEdit from "./GroupConversationEdit";
 import AddUsersToGroup from "./AddUsersToGroup";
 import SidebarBtn from "../../../../shared/ui/Button/SidebarBtn";
-import { selectCurrentUser } from "../../../user";
+import { selectCurrentUser } from "../../../../entities/user";
 import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
 
 interface ISidebarMenuProps {

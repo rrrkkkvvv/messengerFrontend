@@ -2,11 +2,7 @@ import { useEffect, useRef } from "react";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { apiURLs } from "../../../shared/values/strValues";
 import { useAppDispatch } from "../../../app/store/store";
-import {
-  deleteMessage,
-  newMessage,
-  updateMessage,
-} from "../model/conversationSlice";
+import { deleteMessage, newMessage, updateMessage } from "../";
 import { Socket } from "socket.io-client";
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 export type TUseConversationSocketProps = {

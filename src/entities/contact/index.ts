@@ -1,3 +1,18 @@
-export { default as Contact } from "./ui/Contact";
-export { default as ContactsList } from "./ui/ContactsList";
-export { default as logout } from "../user/utils/logout";
+export { useConnectToGetUsersChanelQuery } from "./api/contactApi";
+export {
+  addGroupToContacts,
+  addUsersToConversation,
+  changeLastMessage,
+  changeUserTypingStatus,
+  createChatWithUser,
+  deleteConversation,
+  deleteMemberFromGroup,
+  resetLastMessage,
+  selectContactsList,
+  selectIsLoadnigContacts,
+  selectUsersByIds,
+  selectUsersOnline,
+  setContactsList,
+  setUsersOnline,
+  updateGroupContact,
+} from "./model/contactSlice";

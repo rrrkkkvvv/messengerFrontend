@@ -3,9 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../store/store";
 import { routes } from "../../../shared/values/strValues";
 import { refreshAuth } from "../utils/refreshAuth";
-import { logout } from "../../../entities/contact";
 import getTokenFromLS from "../../../shared/utils/getTokenFromLS";
-import { selectCurrentUser, selectIsLoggedIn } from "../../../entities/user";
+import {
+  logout,
+  selectCurrentUser,
+  selectIsLoggedIn,
+} from "../../../entities/user";
 
 type TPrivateRouteProps = {
   children: ReactNode;

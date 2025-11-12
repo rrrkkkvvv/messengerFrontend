@@ -20,7 +20,7 @@ import {
   updateGroupContact,
   deleteMemberFromGroup,
   addUsersToConversation,
-} from "../model/contactSlice";
+} from "../";
 import {
   TContactsList,
   TGroupConversation,
@@ -184,6 +184,6 @@ const contactApi = baseApi.injectEndpoints({
   }),
 });
 
-export const { usePrefetch, useConnectToGetUsersChanelQuery } = contactApi;
+export const { useConnectToGetUsersChanelQuery } = contactApi;
 
 export default contactApi;

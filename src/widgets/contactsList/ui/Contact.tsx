@@ -5,7 +5,7 @@ import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { TContact } from "../../../shared/types/Contact";
 import TypingUser from "./TypingUser";
 import { useAppSelector } from "../../../app/store/store";
-import { selectCurrentConversationId } from "../../conversation/model";
+import { selectCurrentConversationId } from "../../../entities/conversation/";
 import { MdCallMade, MdCallReceived } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
 import { formatTime } from "../../../shared/utils/formatTime";

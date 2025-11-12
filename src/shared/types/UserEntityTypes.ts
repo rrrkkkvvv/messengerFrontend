@@ -1,4 +1,4 @@
-import { TMessageInfo } from "../../entities/conversation/api/conversationTypes";
+import { TMessageInfo } from "./messageTypes";
 
 export type TUserInfo = {
   _id: string;

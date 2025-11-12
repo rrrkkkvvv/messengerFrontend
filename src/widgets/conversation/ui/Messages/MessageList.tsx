@@ -1,11 +1,11 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
-import { TMessageInfo } from "../../api/conversationTypes";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 
 import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
-import { useDeleteMessageMutation } from "../../api";
+import { useDeleteMessageMutation } from "../../../../entities/conversation";
+import { TMessageInfo } from "../../../../shared/types/messageTypes";
 
 interface IMessageListProps {
   conversationId: string | null;

@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
 
-import Conversation from "../../../entities/conversation/";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { selectCurrentUser } from "../../../entities/user";
-import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/api";
-import {
-  setContactsList,
-  setUsersOnline,
-} from "../../../entities/contact/model/contactSlice";
+import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/";
+import { setContactsList, setUsersOnline } from "../../../entities/contact/";
 import { skipToken } from "@reduxjs/toolkit/query";
 import SideBar from "./SideBar";
 import MobileLayout from "./MobileLayout";
-import Call from "../../../entities/call/ui/CallPortal";
+import Call from "../../../widgets/call/ui/CallPortal";
+import Conversation from "../../../widgets/conversation/ui/Conversation";
 
 const MainPage = () => {
   const dispatch = useAppDispatch();

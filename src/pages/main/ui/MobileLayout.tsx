@@ -2,7 +2,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import SideBar from "./SideBar";
-import Conversation from "../../../entities/conversation";
+import Conversation from "../../../widgets/conversation/ui/Conversation";
 
 const MobileLayout = () => {
   const location = useLocation();

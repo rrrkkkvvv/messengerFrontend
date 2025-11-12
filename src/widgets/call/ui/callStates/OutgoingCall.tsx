@@ -1,21 +1,17 @@
 import { MdCallEnd } from "react-icons/md";
-import { IoIosCall } from "react-icons/io";
-import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 import {
   selectInterlocuter,
   setCallEndReason,
   setCallStatus,
-} from "../../model/callSlice";
+} from "../../../../entities/call/model/callSlice";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
+import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 
-const IncomingCall = () => {
+const OutgoingCall = () => {
   const interlocuter = useAppSelector(selectInterlocuter);
 
   const dispatch = useAppDispatch();
-  const handleAcceptCall = () => {
-    dispatch(setCallStatus("accepted"));
-  };
-  const handleDeclineCall = () => {
+  const handleStopCall = () => {
     dispatch(setCallStatus("ended"));
     dispatch(setCallEndReason("self"));
   };
@@ -33,26 +29,20 @@ const IncomingCall = () => {
           />
         </div>
         <div className="w-full text-center mt-2 md:mt-0 uppercase text-2xl opacity-75  ">
-          is calling
+          outgoing call
         </div>
       </div>
 
       <div className="flex  w-full justify-around">
         <div
-          onClick={handleDeclineCall}
+          onClick={handleStopCall}
           className="bg-red-100 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
         >
           <MdCallEnd className="text-gray-50 text-6xl animate-shake   " />
-        </div>
-        <div
-          onClick={handleAcceptCall}
-          className="animate-elevate  bg-green-200 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
-        >
-          <IoIosCall className="text-gray-50 text-6xl  animate-shake  " />
         </div>
       </div>
     </>
   );
 };
 
-export default IncomingCall;
+export default OutgoingCall;

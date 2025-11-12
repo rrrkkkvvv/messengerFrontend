@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { useSocket } from "../../shared/utils/useSocket";
-import { apiURLs } from "../../shared/values/strValues";
-import { useAppDispatch, useAppSelector } from "../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
+import { selectCurrentConversationId } from "../../conversation/";
 import {
   resetCallState,
   selectCallEndReason,
@@ -14,13 +13,15 @@ import {
   setCallStatus,
   setInterlocuter,
   setMediaState,
-} from "./model/callSlice";
-import { selectCurrentUser } from "../user";
-import { rtcConfig } from "../../shared/utils/rtcConfig";
-import { TCallParticipant, TCallStatus, TMediaState } from "./api/callTypes";
-import { TUserInfo } from "../../shared/types/UserEntityTypes";
+} from "../model/callSlice";
+import { selectCurrentUser } from "../../user";
+import { useSocket } from "../../../shared/utils/useSocket";
+import { apiURLs } from "../../../shared/values/strValues";
+import { TUserInfo } from "../../../shared/types/UserEntityTypes";
+import { rtcConfig } from "../../../shared/utils/rtcConfig";
 import toast from "react-hot-toast";
-import { selectCurrentConversationId } from "../conversation/model";
+import { TMediaState } from "../../../shared/types/callTypes";
+import { TCallParticipant, TCallStatus } from "../api/callTypes";
 
 const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {

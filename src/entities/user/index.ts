@@ -7,6 +7,7 @@ export {
   setCurrentUser,
   setIsLoggedIn,
   setJWTToken,
+  setUserLoginData,
 } from "./model/userSlice";
 
 export {
@@ -16,4 +17,6 @@ export {
   useSignInByGoogleMutation,
   useSignInMutation,
   useSignUpMutation,
+  useDeleteAccountMutation,
+  useUpdateProfileMutation,
 } from "./api/userApi";

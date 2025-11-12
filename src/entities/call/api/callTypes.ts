@@ -1,3 +1,4 @@
+import { TMediaState } from "../../../shared/types/callTypes";
 import { TUserInfo } from "../../../shared/types/UserEntityTypes";
 
 export type TCallStatus =
@@ -8,9 +9,5 @@ export type TCallStatus =
   | "active"
   | "ended";
 export type TEndCallReason = "self" | "interlocuter" | null;
-export type TMediaState = {
-  muted: boolean;
-  videoEnable: boolean;
-  screenDemoEnable: boolean;
-};
+
 export type TCallParticipant = TUserInfo & TMediaState;

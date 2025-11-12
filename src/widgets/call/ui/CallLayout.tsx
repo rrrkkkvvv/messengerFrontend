@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import IncomingCall from "./callStates/IncomingCall";
 import OutgoingCall from "./callStates/OutgoingCall";
 import ActiveCall from "./callStates/ActiveCall";
-import useCall from "../useCall";
 import { useAppSelector } from "../../../app/store/store";
-import { selectCallStatus } from "../model/callSlice";
+import { selectCallStatus } from "../../../entities/call/model/callSlice";
+import { useCall } from "../../../entities/call";
 
 const CallLayout = () => {
   const [isHidden, setIsHidden] = useState(false);

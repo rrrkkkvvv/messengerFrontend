@@ -9,7 +9,7 @@ import {
   selectMediaState,
   setCallEndReason,
   setCallStatus,
-} from "../../model/callSlice";
+} from "../../../../entities/call/model/callSlice";
 import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import Audio from "../../../../shared/ui/Audio/Audio";
 import Video from "../../../../shared/ui/Video/Video";

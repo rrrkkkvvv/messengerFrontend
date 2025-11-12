@@ -1,4 +1,4 @@
-import { TMediaState } from "../../entities/call/api/callTypes";
+import { TMediaState } from "../types/callTypes";
 
 export const defaultMediaState: TMediaState = {
   muted: false,
