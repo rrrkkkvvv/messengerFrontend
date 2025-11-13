@@ -94,7 +94,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
           <Video
             className={` absolute max-h-1/2  rounded-xl  z-20 ${
               interlocuter.videoEnable
-                ? "w-2/4 right-5 top-5 "
+                ? "w-3/6 right-5 top-5 "
                 : " w-full -translate-y-1/2 top-1/2 "
             }`}
             isMuted={true}
