@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Modal from "../../../../shared/ui/Modal/Modal";
-import Profile from "../Profile";
+import Profile from "../profile";
 
 interface ProfileModalProps {
   isOpen: boolean;
