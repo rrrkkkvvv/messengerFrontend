@@ -5,7 +5,7 @@ import { selectCurrentUser } from "../../../entities/user";
 import { useConnectToGetUsersChanelQuery } from "../../../entities/contact/";
 import { setContactsList, setUsersOnline } from "../../../entities/contact/";
 import { skipToken } from "@reduxjs/toolkit/query";
-import Sidebar from "./SideBar";
+import Sidebar from "./Sidebar";
 import MobileLayout from "./MobileLayout";
 import { Call } from "../../../widgets/call/";
 import { Conversation } from "../../../widgets/conversation";
