@@ -69,11 +69,27 @@ const ActiveCall: FC<IActiveCallProps> = ({
       ) : (
         <div className="flex absolute w-full h-full z-10">
           <Video
-            className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full max-h-1/2 object-cover`}
+            className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full  object-contain `}
             isMuted={false}
             stream={remoteStream}
             enabled={interlocuter.videoEnable}
           />
+          {/* {mediaState.videoEnable && !interlocuter.videoEnable && (
+            <>
+              <div
+                className={`absolute max-h-1/2  rounded-xl  z-20 w-1/4 right-0 bottom-0  flex flex-col justify-center items-center `}
+              >
+                <div className=" max-w-40 truncate ">{interlocuter.name}</div>
+                <Avatar
+                  isMobileCallAvatar={true}
+                  isMessageAvatar={true}
+                  isProfileAvatar={false}
+                  picture={interlocuter.avatarURL}
+                  hideOnline={true}
+                />
+              </div>
+            </>
+          )} */}
 
           <Video
             className={` absolute max-h-1/2  rounded-xl  z-20 ${

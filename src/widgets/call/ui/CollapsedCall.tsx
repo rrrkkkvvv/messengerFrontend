@@ -1,7 +1,7 @@
 import { IoIosCall } from "react-icons/io";
-import BorderedButton from "../../../../shared/ui/Button/BorderedButton";
 
 import { MdCallEnd } from "react-icons/md";
+import BorderedButton from "../../../shared/ui/Button/BorderedButton";
 
 const CollapsedCall = () => {
   return (

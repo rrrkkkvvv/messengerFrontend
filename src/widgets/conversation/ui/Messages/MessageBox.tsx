@@ -22,7 +22,6 @@ type TMessageBoxProps = {
 const MessageBox = ({
   message,
   currentUser,
-  conversationId,
   handleContextMenu,
   isGroup,
 }: TMessageBoxProps) => {
