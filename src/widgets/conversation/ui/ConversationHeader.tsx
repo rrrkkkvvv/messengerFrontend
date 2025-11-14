@@ -73,7 +73,6 @@ const ConversationHeader: FC<IConversationHeaderProps> = ({
       )}
       <div className="flex flex-row  items-center gap-5">
         <Avatar
-          isProfileAvatar={false}
           isGroup={!!conversationName}
           picture={
             conversationName ? conversationAvatarURL : anotherUser?.avatarURL

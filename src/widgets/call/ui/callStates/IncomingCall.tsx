@@ -26,8 +26,7 @@ const IncomingCall = () => {
         <div className="flex items-center gap-5 flex-col ">
           <div className=" max-w-40 truncate text-3xl">{interlocuter.name}</div>
           <Avatar
-            isMobileCallAvatar={true}
-            isProfileAvatar={true}
+            avatarType="call"
             picture={interlocuter.avatarURL}
             hideOnline={true}
           />

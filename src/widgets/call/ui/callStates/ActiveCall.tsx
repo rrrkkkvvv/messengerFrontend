@@ -1,8 +1,9 @@
 import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
+import Draggable from "react-draggable";
 
 import { MdCallEnd } from "react-icons/md";
-import { FC } from "react";
+import { FC, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../../../app/store/store";
 import {
   selectInterlocuter,
@@ -14,6 +15,8 @@ import Avatar from "../../../../shared/ui/Avatar/Avatar";
 import Audio from "../../../../shared/ui/Audio/Audio";
 import Video from "../../../../shared/ui/Video/Video";
 import { formatTime } from "../../../../shared/utils/formatTime";
+import DraggableWrapper from "../../../../shared/ui/DraggableWrapper/DraggableWrapper";
+import { ConditionalWrapper } from "../../../../shared/ui/ConditionalWrapper/ConditionalWrapper";
 
 interface IActiveCallProps {
   localStream: MediaStream | null;
@@ -30,6 +33,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
   toggleVideo,
   callDuration,
 }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const interlocuter = useAppSelector(selectInterlocuter);
   const mediaState = useAppSelector(selectMediaState);
 
@@ -43,15 +47,14 @@ const ActiveCall: FC<IActiveCallProps> = ({
   return (
     <>
       {!interlocuter.videoEnable && !mediaState.videoEnable ? (
-        <div className="gap-5">
+        <div className="gap-5" ref={wrapperRef}>
           <div className="flex items-center gap-5 flex-col ">
             <div className=" max-w-40 truncate text-3xl">
               {interlocuter.name}
             </div>
             <div>{formatTime(callDuration)}</div>
             <Avatar
-              isMobileCallAvatar={true}
-              isProfileAvatar={true}
+              avatarType="call"
               picture={interlocuter.avatarURL}
               hideOnline={true}
             />
@@ -74,33 +77,41 @@ const ActiveCall: FC<IActiveCallProps> = ({
             stream={remoteStream}
             enabled={interlocuter.videoEnable}
           />
-          {/* {mediaState.videoEnable && !interlocuter.videoEnable && (
-            <>
+          {mediaState.videoEnable && !interlocuter.videoEnable && (
+            <DraggableWrapper>
               <div
-                className={`absolute max-h-1/2  rounded-xl  z-20 w-1/4 right-0 bottom-0  flex flex-col justify-center items-center `}
+                className={`absolute   h-28 rounded-xl  z-40 w-36 right-5 top-5 bg-gray-100   flex flex-col justify-center items-center `}
               >
-                <div className=" max-w-40 truncate ">{interlocuter.name}</div>
+                <div className=" truncate text-center">{interlocuter.name}</div>
                 <Avatar
-                  isMobileCallAvatar={true}
-                  isMessageAvatar={true}
-                  isProfileAvatar={false}
+                  avatarType="smallMobileCall"
                   picture={interlocuter.avatarURL}
                   hideOnline={true}
                 />
               </div>
-            </>
-          )} */}
-
-          <Video
-            className={` absolute max-h-1/2  rounded-xl  z-20 ${
-              interlocuter.videoEnable
-                ? "w-2/6 right-5 top-5 "
-                : " w-full -translate-y-1/2 top-1/2 "
-            }`}
-            isMuted={true}
-            stream={localStream}
-            enabled={mediaState.videoEnable}
-          />
+            </DraggableWrapper>
+          )}
+          <ConditionalWrapper
+            condition={interlocuter.videoEnable}
+            wrapper={(children) => (
+              <DraggableWrapper>{children}</DraggableWrapper>
+            )}
+          >
+            <div
+              className={` absolute max-h-1/2  rounded-xl cursor-pointer  z-20 ${
+                interlocuter.videoEnable
+                  ? "w-2/6 right-5 top-5 "
+                  : " w-full -translate-y-1/2 top-1/2 "
+              }`}
+            >
+              <Video
+                className="rounded-xl"
+                isMuted={true}
+                stream={localStream}
+                enabled={mediaState.videoEnable}
+              />
+            </div>
+          </ConditionalWrapper>
         </div>
       )}
 

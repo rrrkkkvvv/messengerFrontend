@@ -124,7 +124,7 @@ const EditProfile = ({ currentUser, closeEditProfile }: TEditProfileProps) => {
         >
           <div className="flex w-full justify-center items-center flex-col gap-3">
             {/* User picture */}
-            <Avatar isProfileAvatar={true} picture={avatarPreview} />
+            <Avatar avatarType="profile" picture={avatarPreview} />
 
             <div className="flex items-center justify-between gap-5">
               {/* Reset picture button(exists if picture is not saved) */}

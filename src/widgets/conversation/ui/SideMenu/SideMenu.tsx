@@ -147,7 +147,6 @@ const SideMenu = ({
                 picture={isGroup ? avatarURL : anotherUser?.avatarURL}
                 isGroup={isGroup}
                 isOnline={isAnotherUserOnline}
-                isProfileAvatar={false}
               />
             </h1>
             <h1 className="text-lg sm:text-lg md:text-base lg:text-lg xl:text-xl max-w-40 truncate">
@@ -167,7 +166,6 @@ const SideMenu = ({
                 ) : (
                   <>
                     <Avatar
-                      isProfileAvatar={false}
                       picture={creator?.avatarURL}
                       isOnline={usersOnline?.includes(
                         creator ? creator._id : ""
@@ -195,7 +193,6 @@ const SideMenu = ({
                       className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 animate-fadeIn  overflow-auto "
                     >
                       <Avatar
-                        isProfileAvatar={false}
                         picture={member.avatarURL}
                         isOnline={usersOnline?.includes(member._id)}
                       />

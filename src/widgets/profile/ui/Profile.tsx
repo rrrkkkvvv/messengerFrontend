@@ -39,7 +39,7 @@ const Profile: FC<Profile> = ({ closeProfile }) => {
         {/* Profile edit feautures */}
 
         <>
-          <Avatar isProfileAvatar={true} picture={currentUser?.avatarURL} />
+          <Avatar avatarType="profile" picture={currentUser?.avatarURL} />
 
           <span className=" text-3xl md:text-2xl truncate max-w-96">
             {currentUser?.name}

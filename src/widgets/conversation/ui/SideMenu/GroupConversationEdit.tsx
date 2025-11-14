@@ -100,7 +100,6 @@ const GroupConversationEdit = ({
           isGroup={true}
           picture={avatarPreview}
           isOnline={isAnotherUserOnline}
-          isProfileAvatar={false}
         />
       </h1>
       <div className="flex items-center justify-between gap-5">

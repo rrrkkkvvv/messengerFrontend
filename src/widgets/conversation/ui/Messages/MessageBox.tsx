@@ -151,9 +151,8 @@ const MessageBox = ({
             <>
               <Avatar
                 hideOnline={true}
-                isProfileAvatar={false}
                 picture={message.sender ? message.sender.avatarURL : null}
-                isMessageAvatar={true}
+                avatarType="message"
               />
             </>
           )}

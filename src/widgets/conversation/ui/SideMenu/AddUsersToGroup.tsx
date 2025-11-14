@@ -68,7 +68,6 @@ const AddUsersToGroup: React.FC<IAddUsersToGroupProps> = ({
             className="flex justify-between items-center gap-10 rounded-lg duration-300 cursor-pointer hover:bg-gray-400 px-9 py-1 max-h-96   overflow-hidden animate-fadeIn  "
           >
             <Avatar
-              isProfileAvatar={false}
               picture={user.avatarURL}
               isUserSelectedForGroup={selectedUsers.includes(user._id)}
               hideOnline

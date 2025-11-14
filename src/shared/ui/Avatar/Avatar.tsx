@@ -1,45 +1,42 @@
 import { FaCheck } from "react-icons/fa6";
-
+type TAvatarType = "profile" | "message" | "call" | "smallMobileCall";
 interface AvatarProps {
   picture: string | null | undefined;
-  isProfileAvatar: boolean;
+  avatarType?: TAvatarType;
   isOnline?: boolean;
-  isMobileCallAvatar?: boolean;
   isGroup?: boolean;
   hideOnline?: boolean;
-  isMessageAvatar?: boolean;
   isUserSelectedForGroup?: boolean;
 }
+
 const Avatar = ({
   picture,
   isOnline,
   isGroup,
-  isProfileAvatar,
-  isMobileCallAvatar,
+  avatarType,
   isUserSelectedForGroup,
   hideOnline,
-  isMessageAvatar,
 }: AvatarProps) => {
   const avatarSize = () => {
-    if (isMobileCallAvatar) {
-      return "h-36 w-36 md:h-24 md:w-24";
-    } else if (isProfileAvatar) {
-      return "h-20 w-20 md:h-24 md:w-24";
-    } else if (isMessageAvatar) {
-      return "h-9 w-9";
+    if (avatarType) {
+      if (avatarType === "call") {
+        return "h-36 w-36 md:h-24 md:w-24";
+      } else if (avatarType === "profile") {
+        return "h-20 w-20 md:h-24 md:w-24";
+      } else if (avatarType === "message") {
+        return "h-9 w-9";
+      } else if (avatarType === "smallMobileCall") {
+        return "h-14 w-14";
+      }
     } else {
       return "h-9 w-9 md:h-11 md:w-11";
     }
   };
   return (
     <div className="relative">
-      {!isGroup &&
-        !isProfileAvatar &&
-        !hideOnline &&
-        !isMobileCallAvatar &&
-        !isUserSelectedForGroup && (
-          <div
-            className={`
+      {!isGroup && !avatarType && !hideOnline && !isUserSelectedForGroup && (
+        <div
+          className={`
             absolute
             rounded-full
             
@@ -49,8 +46,8 @@ const Avatar = ({
   
         ${isOnline ? "bg-green-200" : "bg-gray-50"}
         `}
-          ></div>
-        )}
+        ></div>
+      )}
       {isUserSelectedForGroup && (
         <div
           className={`

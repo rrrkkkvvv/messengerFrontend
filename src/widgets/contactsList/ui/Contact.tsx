@@ -148,7 +148,6 @@ const Contact = ({
         isGroup={contact.type === "group"}
         picture={contact.avatarURL}
         isOnline={isOnline}
-        isProfileAvatar={false}
         isUserSelectedForGroup={isUserSelectedForGroup}
       />
       <div className="text-gray-50">
