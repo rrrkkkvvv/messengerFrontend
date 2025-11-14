@@ -71,7 +71,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
       ) : (
         <div className="flex absolute w-full h-full z-10">
           <Video
-            className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full  object-contain `}
+            className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full rounded-xl  object-contain `}
             isMuted={false}
             stream={remoteStream}
             enabled={interlocuter.videoEnable}
@@ -100,7 +100,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
               className={` absolute max-h-1/2  rounded-xl cursor-pointer  z-20 ${
                 interlocuter.videoEnable
                   ? "w-2/6 right-5 top-5 "
-                  : " w-full -translate-y-1/2 top-1/2 "
+                  : " w-full -translate-y-1/2 top-1/2  "
               }`}
             >
               <Video
