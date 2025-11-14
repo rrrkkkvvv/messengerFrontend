@@ -104,7 +104,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
               }`}
             >
               <Video
-                className="rounded-xl"
+                className="rounded-xl object-contain"
                 isMuted={true}
                 stream={localStream}
                 enabled={mediaState.videoEnable}
