@@ -1,6 +1,5 @@
 import { FiVideo, FiVideoOff } from "react-icons/fi";
 import { CiMicrophoneOff, CiMicrophoneOn } from "react-icons/ci";
-import Draggable from "react-draggable";
 
 import { MdCallEnd } from "react-icons/md";
 import { FC, useRef } from "react";
