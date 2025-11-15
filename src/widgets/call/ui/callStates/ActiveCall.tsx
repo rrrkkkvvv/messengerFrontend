@@ -16,13 +16,13 @@ import Video from "../../../../shared/ui/Video/Video";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import DraggableWrapper from "../../../../shared/ui/DraggableWrapper/DraggableWrapper";
 import { ConditionalWrapper } from "../../../../shared/ui/ConditionalWrapper/ConditionalWrapper";
+import { selectCallDuration } from "../../../../entities/call/model/callSlice";
 
 interface IActiveCallProps {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
   toggleMic: () => void;
   toggleVideo: () => void;
-  callDuration: number;
 }
 
 const ActiveCall: FC<IActiveCallProps> = ({
@@ -30,19 +30,18 @@ const ActiveCall: FC<IActiveCallProps> = ({
   remoteStream,
   toggleMic,
   toggleVideo,
-  callDuration,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const interlocuter = useAppSelector(selectInterlocuter);
   const mediaState = useAppSelector(selectMediaState);
-
+  const callDuration = useAppSelector(selectCallDuration);
   const dispatch = useAppDispatch();
   const handleEndCall = () => {
     dispatch(setCallStatus("ended"));
     dispatch(setCallEndReason("self"));
   };
 
-  if (!interlocuter) return <></>;
+  if (!interlocuter || callDuration === null) return <></>;
   return (
     <>
       {!interlocuter.videoEnable && !mediaState.videoEnable ? (
@@ -69,7 +68,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
           />
         </div>
       ) : (
-        <div className="flex absolute w-full h-full z-10">
+        <div className="flex absolute w-full h-full ">
           <Video
             className={`remote absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 w-full   object-cover `}
             isMuted={false}
@@ -79,9 +78,13 @@ const ActiveCall: FC<IActiveCallProps> = ({
           {mediaState.videoEnable && !interlocuter.videoEnable && (
             <DraggableWrapper>
               <div
-                className={`absolute   h-28 rounded-xl  z-40 w-36 right-5 top-5 bg-gray-100   flex flex-col justify-center items-center `}
+                className={`absolute z-10  h-28 rounded-xl   w-36 right-5 top-5 bg-gray-100  gap-1  flex flex-col justify-center items-center `}
               >
-                <div className=" truncate text-center">{interlocuter.name}</div>
+                <div className=" truncate max-w-32 text-center">
+                  {interlocuter.name}
+                </div>
+                <div className="text-xs">{formatTime(callDuration)}</div>
+
                 <Avatar
                   avatarType="smallMobileCall"
                   picture={interlocuter.avatarURL}
@@ -97,7 +100,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
             )}
           >
             <div
-              className={` absolute max-h-1/2  rounded-xl cursor-pointer  z-20 ${
+              className={` absolute max-h-1/2  rounded-xl cursor-pointer   ${
                 interlocuter.videoEnable
                   ? "w-2/6 right-5 top-5 "
                   : " w-full -translate-y-1/2 top-1/2  "
@@ -117,11 +120,11 @@ const ActiveCall: FC<IActiveCallProps> = ({
       <div
         className={`  flex gap-5  ${
           interlocuter.videoEnable || mediaState.videoEnable
-            ? "absolute bottom-10 z-20"
+            ? "absolute bottom-10 "
             : ""
         }`}
       >
-        <div className="flex  w-full justify-around">
+        <div className="flex    w-full justify-around">
           <div
             onClick={toggleMic}
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"

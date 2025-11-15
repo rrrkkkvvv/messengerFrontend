@@ -1,5 +1,10 @@
 import { FaCheck } from "react-icons/fa6";
-type TAvatarType = "profile" | "message" | "call" | "smallMobileCall";
+type TAvatarType =
+  | "profile"
+  | "message"
+  | "call"
+  | "smallMobileCall"
+  | "collapsedCall";
 interface AvatarProps {
   picture: string | null | undefined;
   avatarType?: TAvatarType;
@@ -23,7 +28,7 @@ const Avatar = ({
         return "h-36 w-36 md:h-24 md:w-24";
       } else if (avatarType === "profile") {
         return "h-20 w-20 md:h-24 md:w-24";
-      } else if (avatarType === "message") {
+      } else if (avatarType === "message" || avatarType === "collapsedCall") {
         return "h-9 w-9";
       } else if (avatarType === "smallMobileCall") {
         return "h-14 w-14";

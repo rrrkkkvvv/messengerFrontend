@@ -3,6 +3,7 @@ import { useState } from "react";
 import Header from "./Header";
 import ProfileModal from "../../../widgets/profile";
 import { ContactsList } from "../../../widgets/contactsList";
+import CollapsedCall from "../../../widgets/call/ui/CollapsedCall";
 
 const Sidebar = () => {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -16,6 +17,7 @@ const Sidebar = () => {
     <>
       <div className=" flex flex-col flex-1 h-dvh      w-dvw md:w-2/5 relative        bg-gray-400">
         <Header handleOpenModal={handleOpenModal} />
+        <CollapsedCall />
 
         <ContactsList />
       </div>

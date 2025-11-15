@@ -13,6 +13,7 @@ interface ICallSliceProps {
   callStatus: TCallStatus;
   endReason: TEndCallReason;
   callFrom: string | null;
+  callDuration: number | null;
   callTo: string | null;
   interlocuter: TCallParticipant | null;
 }
@@ -23,6 +24,7 @@ const initialState: ICallSliceProps = {
   callFrom: null,
   callTo: null,
   interlocuter: null,
+  callDuration: null,
   mediaState: defaultMediaState,
 };
 
@@ -35,11 +37,15 @@ const callSlice = createSlice({
       state.callFrom = null;
       state.callTo = null;
       state.interlocuter = null;
+      state.callDuration = null;
       state.mediaState = defaultMediaState;
     },
 
     setCallStatus(state, action: PayloadAction<TCallStatus>) {
       state.callStatus = action.payload;
+    },
+    setCallDuration(state, action: PayloadAction<number>) {
+      state.callDuration = action.payload;
     },
     setCallTo(state, action: PayloadAction<string>) {
       state.callTo = action.payload;
@@ -65,10 +71,12 @@ const callSlice = createSlice({
     selectCallStatus: (state) => state.callStatus,
     selectInterlocuter: (state) => state.interlocuter,
     selectMediaState: (state) => state.mediaState,
+    selectCallDuration: (state) => state.callDuration,
   },
 });
 
 export const {
+  setCallDuration,
   resetCallState,
   setMediaState,
   setCallFrom,
@@ -77,6 +85,18 @@ export const {
   setInterlocuter,
   setCallEndReason,
 } = callSlice.actions;
+export const incrementCallDuration =
+  () => async (dispatch: AppDispatch, getState: () => RootState) => {
+    const {
+      callState: { callStatus, callDuration },
+    } = getState();
+    if (callStatus !== "active") return;
+    if (callDuration === null) {
+      dispatch(setCallDuration(0));
+    } else {
+      dispatch(setCallDuration(callDuration + 1));
+    }
+  };
 export const callUserThunk =
   (user: TCallParticipant) =>
   async (dispatch: AppDispatch, getState: () => RootState) => {
@@ -90,6 +110,7 @@ export const callUserThunk =
   };
 
 export const {
+  selectCallDuration,
   selectCallTo,
   selectCallFrom,
   selectCallStatus,

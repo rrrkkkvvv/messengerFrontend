@@ -1,23 +1,24 @@
-import { IoIosCall } from "react-icons/io";
 import { IoResizeSharp } from "react-icons/io5";
 import { useEffect, useState } from "react";
 import IncomingCall from "./callStates/IncomingCall";
 import OutgoingCall from "./callStates/OutgoingCall";
 import ActiveCall from "./callStates/ActiveCall";
-import { useAppSelector } from "../../../app/store/store";
+import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { selectCallStatus } from "../../../entities/call/";
 import { useCall } from "../../../entities/call";
+import {
+  selectIsCallCollapsed,
+  toggleIsCallCollapsed,
+} from "../../../features/call";
 
 const CallLayout = () => {
   const [isHidden, setIsHidden] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const { localStream, remoteStream, toggleMic, toggleVideo, callDuration } =
-    useCall();
-
+  const { localStream, remoteStream, toggleMic, toggleVideo } = useCall();
+  const dispatch = useAppDispatch();
   const callStatus = useAppSelector(selectCallStatus);
-
+  const isCollapsed = useAppSelector(selectIsCallCollapsed);
   const handleToggleCollapsed = () => {
-    setIsCollapsed((prev) => !prev);
+    dispatch(toggleIsCallCollapsed());
   };
   const renderCall = () => {
     if (callStatus === "incoming") {
@@ -31,22 +32,10 @@ const CallLayout = () => {
           toggleMic={toggleMic}
           localStream={localStream}
           remoteStream={remoteStream}
-          callDuration={callDuration}
         />
       );
     } else if (callStatus === "idle") {
       return <></>;
-    }
-  };
-  const getCallLabel = () => {
-    if (callStatus === "incoming") {
-      return "Incoming call";
-    } else if (callStatus === "outgoing") {
-      return "Outgoing call";
-    } else if (callStatus === "active") {
-      return "Active call";
-    } else {
-      return "Ended call";
     }
   };
 
@@ -54,8 +43,6 @@ const CallLayout = () => {
     if (callStatus === "idle") {
       setIsHidden(true);
     } else {
-      setIsCollapsed(false);
-
       setIsHidden(false);
     }
   }, [callStatus]);
@@ -66,30 +53,18 @@ const CallLayout = () => {
       }}
       className={` 
          ${isHidden && "hidden"}
-      text-gray-50 animate-fadeIn transition-all duration-300 overflow-hidden     md:rounded-lg  fixed z-50  bg-gray-200     ${
+      text-gray-50  transition-all duration-300 overflow-hidden     md:rounded-lg  fixed z-50  bg-gray-200 h-full  w-full  top-0 md:h-1/2 md:w-1/2 lg:w-1/3  md:left-1/2 md:-translate-x-1/2  ${
         isCollapsed
-          ? "-translate-x-1/2 left-1/2 w-1/2 md:w-1/3 lg:w-1/5 h-16 top-0  cursor-pointer     rounded-lg"
-          : "w-full h-full top-0 md:h-1/2 md:w-1/2 lg:w-1/3 md:-translate-x-1/2 md:left-1/2 md:-translate-y-1/2 md:top-1/3 "
+          ? " opacity-0 scale-0  -translate-y-1/2 top-0"
+          : "opacity-100 scale-100 translate-0     md:-translate-y-1/2 md:top-1/3"
       }`}
     >
       <div
-        className={` transition-all duration-700 flex gap-5  items-center w-full h-full justify-center  ${
-          isCollapsed ? "opacity-100 visible" : "opacity-0 hidden"
-        }`}
-      >
-        <IoResizeSharp className="text-3xl" />
-        <div className="  text-xl uppercase">{getCallLabel()}</div>
-        <IoIosCall className=" text-3xl  animate-shake  " />
-      </div>
-
-      <div
-        className={`h-full w-full flex flex-col relative  overflow-hidden  items-center justify-around  ${
-          isCollapsed ? "opacity-0 hidden" : "opacity-100 visible"
-        }`}
+        className={`h-full w-full flex flex-col relative  overflow-hidden  items-center justify-around `}
       >
         <div
           onClick={handleToggleCollapsed}
-          className="absolute left-4 top-4 cursor-pointer z-20"
+          className="absolute left-4 top-4 cursor-pointer z-10"
         >
           <IoResizeSharp className="text-4xl" />
         </div>

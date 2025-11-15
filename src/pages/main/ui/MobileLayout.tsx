@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ReactNode } from "react";
 import { Conversation } from "../../../widgets/conversation";
 import Sidebar from "./Sidebar";
+import CollapsedCall from "../../../widgets/call/ui/CollapsedCall";
 
 const MobileLayout = () => {
   const location = useLocation();
@@ -57,7 +58,10 @@ const MobileLayout = () => {
           path="/conversation/:type/:contactId"
           element={
             <PageWrapper>
-              <Conversation />
+              <div>
+                <CollapsedCall />
+                <Conversation />
+              </div>
             </PageWrapper>
           }
         />

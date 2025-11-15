@@ -2,12 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../app/store/store";
 import { selectCurrentConversationId } from "../../conversation/";
 import {
+  incrementCallDuration,
   resetCallState,
   selectCallEndReason,
   selectCallStatus,
   selectCallTo,
   selectInterlocuter,
   selectMediaState,
+  setCallDuration,
   setCallEndReason,
   setCallFrom,
   setCallStatus,
@@ -39,7 +41,6 @@ const useCall = () => {
 
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
-  const [callDuration, setCallDuration] = useState(0);
   const [callStartTime, setCallStartTime] = useState<number | null>(null);
   const conversationId = useAppSelector(selectCurrentConversationId);
   const callTo = useAppSelector(selectCallTo);
@@ -156,11 +157,11 @@ const useCall = () => {
     };
   }, []);
   useEffect(() => {
-    setCallDuration(0);
+    dispatch(setCallDuration(0));
     let interval: NodeJS.Timeout;
     if (callStartTime) {
       interval = setInterval(() => {
-        setCallDuration((prev) => prev + 1);
+        dispatch(incrementCallDuration());
       }, 1000);
     }
     return () => clearInterval(interval);
@@ -373,7 +374,6 @@ const useCall = () => {
     remoteStream,
     toggleMic,
     toggleVideo,
-    callDuration,
   };
 };
 export default useCall;
