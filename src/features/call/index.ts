@@ -3,4 +3,4 @@ export {
   selectIsCallCollapsed,
   toggleIsCallCollapsed,
   setIsCallCollapsed,
-} from "./model/callUiSlice";
+} from "./model/callUISlice";
