@@ -358,6 +358,7 @@ const useCall = () => {
       const videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
+      toast.success(videoStream.getVideoTracks().length.toString());
       const videoTrack = videoStream.getVideoTracks()[0];
       localStream.addTrack(videoTrack);
 
