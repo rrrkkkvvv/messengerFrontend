@@ -383,7 +383,6 @@ const useCall = () => {
           facingMode: mediaState.isFrontCamera ? "user" : "environment",
         },
       });
-      toast.success(videoStream.getVideoTracks().length.toString());
       const videoTrack = videoStream.getVideoTracks()[0];
       localStream.addTrack(videoTrack);
 
