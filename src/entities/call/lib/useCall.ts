@@ -356,7 +356,7 @@ const useCall = () => {
     if (!localStream) return;
     try {
       const videoStream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: { facingMode: { exact: "environment" } },
       });
       toast.success(videoStream.getVideoTracks().length.toString());
       const videoTrack = videoStream.getVideoTracks()[0];
