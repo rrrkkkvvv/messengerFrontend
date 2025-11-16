@@ -42,6 +42,7 @@ const useCall = () => {
   const [localStream, setLocalStream] = useState<MediaStream | null>(null);
   const [remoteStream, setRemoteStream] = useState<MediaStream | null>(null);
   const [callStartTime, setCallStartTime] = useState<number | null>(null);
+
   const conversationId = useAppSelector(selectCurrentConversationId);
   const callTo = useAppSelector(selectCallTo);
   const currentUser = useAppSelector(selectCurrentUser);
@@ -315,29 +316,29 @@ const useCall = () => {
     sendMediaStateUpdate({ ...mediaState, muted: !mediaState.muted });
   };
   const toggleVideo = async () => {
-    if (mediaState.videoEnable) {
-      disableVideo();
-      toast.success("Video disabled");
-    } else {
-      const toastId = toast.loading("Video enabling...");
-      try {
+    const toastId = toast.loading("Video enabling...");
+    try {
+      if (mediaState.videoEnable) {
+        disableVideo();
+        toast.success("Video disabled");
+      } else {
         await enableVideo();
-        toast.success("Video enabled");
-      } catch (err) {
-        toast.error(
-          "Failed to enable video. Please check your camera and permissions"
-        );
-      }
-      toast.dismiss(toastId);
-    }
-    dispatch(
-      setMediaState({ ...mediaState, videoEnable: !mediaState.videoEnable })
-    );
 
-    sendMediaStateUpdate({
-      ...mediaState,
-      videoEnable: !mediaState.videoEnable,
-    });
+        toast.success("Video enabled");
+      }
+      dispatch(
+        setMediaState({ ...mediaState, videoEnable: !mediaState.videoEnable })
+      );
+      sendMediaStateUpdate({
+        ...mediaState,
+        videoEnable: !mediaState.videoEnable,
+      });
+    } catch (err) {
+      toast.error(
+        "Failed to enable video. Please check your camera and permissions"
+      );
+    }
+    toast.dismiss(toastId);
   };
   const disableVideo = () => {
     if (!localStream) return;
@@ -352,11 +353,35 @@ const useCall = () => {
       }
     });
   };
-  const enableVideo = async () => {
-    if (!localStream) return;
+  const toggleFacingMode = async () => {
     try {
+      disableVideo();
+      dispatch(
+        setMediaState({
+          ...mediaState,
+          isFrontCamera: !mediaState.isFrontCamera,
+        })
+      );
+      await enableVideo();
+    } catch (err) {
+      console.error("Error switch facing mode:", err);
+      toast.error(
+        "Failed switch camera. Please check your camera and permissions"
+      );
+      // throw err;
+    }
+  };
+
+  const enableVideo = async () => {
+    try {
+      if (!localStream) {
+        throw new Error("Local stream error");
+      }
+
       const videoStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { exact: "environment" } },
+        video: {
+          facingMode: mediaState.isFrontCamera ? "user" : "environment",
+        },
       });
       toast.success(videoStream.getVideoTracks().length.toString());
       const videoTrack = videoStream.getVideoTracks()[0];
@@ -367,7 +392,7 @@ const useCall = () => {
       }
     } catch (err) {
       console.error("Error get media devices:", err);
-      return null;
+      throw err;
     }
   };
   return {
@@ -375,6 +400,7 @@ const useCall = () => {
     remoteStream,
     toggleMic,
     toggleVideo,
+    toggleFacingMode,
   };
 };
 export default useCall;

@@ -13,7 +13,13 @@ import {
 
 const CallLayout = () => {
   const [isHidden, setIsHidden] = useState(false);
-  const { localStream, remoteStream, toggleMic, toggleVideo } = useCall();
+  const {
+    localStream,
+    remoteStream,
+    toggleMic,
+    toggleVideo,
+    toggleFacingMode,
+  } = useCall();
   const dispatch = useAppDispatch();
   const callStatus = useAppSelector(selectCallStatus);
   const isCollapsed = useAppSelector(selectIsCallCollapsed);
@@ -28,6 +34,7 @@ const CallLayout = () => {
     } else if (callStatus === "active") {
       return (
         <ActiveCall
+          toggleFacingMode={toggleFacingMode}
           toggleVideo={toggleVideo}
           toggleMic={toggleMic}
           localStream={localStream}

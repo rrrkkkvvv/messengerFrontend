@@ -4,4 +4,5 @@ export const defaultMediaState: TMediaState = {
   muted: false,
   videoEnable: false,
   screenDemoEnable: false,
+  isFrontCamera: true,
 };

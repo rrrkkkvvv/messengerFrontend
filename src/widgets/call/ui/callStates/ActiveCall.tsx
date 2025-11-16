@@ -17,12 +17,14 @@ import { formatTime } from "../../../../shared/utils/formatTime";
 import DraggableWrapper from "../../../../shared/ui/DraggableWrapper/DraggableWrapper";
 import { ConditionalWrapper } from "../../../../shared/ui/ConditionalWrapper/ConditionalWrapper";
 import { selectCallDuration } from "../../../../entities/call/model/callSlice";
+import { IoCameraReverseOutline } from "react-icons/io5";
 
 interface IActiveCallProps {
   localStream: MediaStream | null;
   remoteStream: MediaStream | null;
   toggleMic: () => void;
   toggleVideo: () => void;
+  toggleFacingMode: () => void;
 }
 
 const ActiveCall: FC<IActiveCallProps> = ({
@@ -30,6 +32,7 @@ const ActiveCall: FC<IActiveCallProps> = ({
   remoteStream,
   toggleMic,
   toggleVideo,
+  toggleFacingMode,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const interlocuter = useAppSelector(selectInterlocuter);
@@ -118,27 +121,30 @@ const ActiveCall: FC<IActiveCallProps> = ({
       )}
 
       <div
-        className={`  flex gap-5  ${
+        className={`  flex justify-center items-center gap-5 bg-gray-50 bg-opacity-25 rounded-xl px-2 ${
           interlocuter.videoEnable || mediaState.videoEnable
-            ? "absolute bottom-10 "
+            ? "absolute bottom-5 "
             : ""
         }`}
       >
-        <div className="flex    w-full justify-around">
-          <div
-            onClick={toggleMic}
-            className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
-          >
-            {mediaState.muted ? (
-              <CiMicrophoneOff className="text-gray-50 text-6xl    " />
-            ) : (
-              <CiMicrophoneOn className="text-gray-50 text-6xl    " />
-            )}
+        {/* <div className="flex    w-full justify-around">
+          <div className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
+            <MdOutlineScreenShare className="text-gray-50 text-5xl    " />
           </div>
+        </div> */}
+        <div
+          onClick={toggleMic}
+          className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
+        >
+          {mediaState.muted ? (
+            <CiMicrophoneOff className="text-gray-50 text-6xl    " />
+          ) : (
+            <CiMicrophoneOn className="text-gray-50 text-6xl    " />
+          )}
         </div>
         <div onClick={handleEndCall} className="flex  w-full justify-around">
-          <div className="bg-red-100 w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
-            <MdCallEnd className="text-gray-50 text-6xl    " />
+          <div className="bg-red-100 w-16 h-16 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center">
+            <MdCallEnd className="text-gray-50 text-5xl    " />
           </div>
         </div>
         <div className="flex  w-full justify-around">
@@ -147,11 +153,19 @@ const ActiveCall: FC<IActiveCallProps> = ({
             className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
           >
             {mediaState.videoEnable ? (
-              <FiVideo className="text-gray-50 text-6xl    " />
+              <FiVideo className="text-gray-50 text-5xl    " />
             ) : (
-              <FiVideoOff className="text-gray-50 text-6xl    " />
+              <FiVideoOff className="text-gray-50 text-5xl    " />
             )}
           </div>
+          {mediaState.videoEnable && (
+            <div
+              onClick={toggleFacingMode}
+              className=" w-20 h-20 md:w-16 md:h-16 rounded-full cursor-pointer flex justify-center items-center"
+            >
+              <IoCameraReverseOutline className="text-gray-50 text-5xl    " />
+            </div>
+          )}
         </div>
       </div>
     </>
