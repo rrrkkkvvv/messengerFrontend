@@ -1,6 +1,6 @@
 import Avatar from "../../../shared/ui/Avatar/Avatar";
 import { FaFileImage } from "react-icons/fa6";
-import { formatLastMessageDate } from "../../../shared/utils/formatLastMessageDate";
+import { formatDateTime } from "../../../shared/utils/formatDateTime";
 import { IoCheckmarkDoneOutline, IoCheckmarkOutline } from "react-icons/io5";
 import { TContact } from "../../../shared/types/Contact";
 import TypingUser from "../../conversation/ui/TypingUser";
@@ -191,7 +191,7 @@ const Contact = ({
             <IoCheckmarkOutline className="text-xl" />
           ))}
         {contact.lastMessage?.sentAt && (
-          <>{formatLastMessageDate(contact.lastMessage?.sentAt)}</>
+          <>{formatDateTime(contact.lastMessage?.sentAt)}</>
         )}
       </div>
     </div>

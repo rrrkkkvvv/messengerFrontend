@@ -1,11 +1,13 @@
 import { MouseEvent, useEffect, useRef, useState } from "react";
 import { FaArrowAltCircleDown } from "react-icons/fa";
 
-import { formatTime } from "../../../../shared/utils/formatTime";
 import MessageBox from "./MessageBox";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 import { TMessageInfo } from "../../../../shared/types/messageTypes";
 import { useDeleteMessageMutation } from "../../../../entities/message";
+import { formatDateTime } from "../../../../shared/utils/formatDateTime";
+import { compareDates } from "../../../../shared/utils/compareDates";
+import { formatDate } from "../../../../shared/utils/formatDate";
 
 interface IMessageListProps {
   conversationId: string | null;
@@ -151,16 +153,31 @@ const MessageList = ({
       >
         {currentUser &&
           conversationId &&
-          conversationMessages?.map((message) => {
+          conversationMessages?.map((message, index) => {
             return (
-              <MessageBox
-                key={message._id}
-                isGroup={isGroup}
-                currentUser={currentUser}
-                conversationId={conversationId}
-                message={message}
-                handleContextMenu={handleContextMenu}
-              />
+              <>
+                {(index === 0 ||
+                  !compareDates(
+                    message.sentAt,
+                    conversationMessages[index - 1].sentAt
+                  )) && (
+                  <>
+                    <div className="w-full p-2 flex justify-center items-center">
+                      <div className="text-base  font-semibold  bg-gray-50 bg-opacity-25 px-3 py-1 rounded-xl  ">
+                        {formatDate(message.sentAt)}
+                      </div>
+                    </div>
+                  </>
+                )}
+                <MessageBox
+                  key={message._id}
+                  isGroup={isGroup}
+                  currentUser={currentUser}
+                  conversationId={conversationId}
+                  message={message}
+                  handleContextMenu={handleContextMenu}
+                />
+              </>
             );
           })}
         <div
@@ -183,13 +200,13 @@ const MessageList = ({
         >
           {contextMenu.message?.sentAt && (
             <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
-              Sent at {formatTime(contextMenu.message.sentAt)}
+              Sent at {formatDateTime(contextMenu.message.sentAt)}
             </div>
           )}
           {!contextMenu.message?.isCallInfo &&
             contextMenu.message?.editedAt && (
               <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
-                Edited at {formatTime(contextMenu.message.editedAt)}
+                Edited at {formatDateTime(contextMenu.message.editedAt)}
               </div>
             )}
 
