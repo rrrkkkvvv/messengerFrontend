@@ -26,7 +26,7 @@ import { TMediaState } from "../../../shared/types/callTypes";
 import { TCallParticipant, TCallStatus } from "../api/callTypes";
 import { Socket } from "socket.io-client";
 
-const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
+const wsURL = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.calls;
 type TCallStateRef = {
   interlocuter: TCallParticipant | null;
   callStatus: TCallStatus;
@@ -84,7 +84,7 @@ const useCall = () => {
       callsSocket.current = null;
     }
 
-    callsSocket.current = useSocket(wsUrl);
+    callsSocket.current = useSocket(wsURL);
     callsSocket.current.emit("joinCallsSocket");
 
     callsSocket.current.on("iceCandidate", ({ candidate }) => {

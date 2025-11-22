@@ -7,6 +7,7 @@ import Avatar from "../../../../shared/ui/Avatar/Avatar.tsx";
 import { MdCallMade, MdCallReceived } from "react-icons/md";
 import { IoIosCall } from "react-icons/io";
 import { TMessageInfo } from "../../../../shared/types/messageTypes.ts";
+import { useSetSeenMessageMutation } from "../../../../entities/conversation/api/conversationApi.ts";
 
 type TMessageBoxProps = {
   conversationId: string;
@@ -24,20 +25,21 @@ const MessageBox = ({
   currentUser,
   handleContextMenu,
   isGroup,
+  conversationId,
 }: TMessageBoxProps) => {
   const [imageModalOpen, setImageModalOpen] = useState<boolean>(false);
   const messageRef = useRef<HTMLDivElement>(null);
-  // const [setSeenMessage] = useSetSeenMessageMutation();
+  const [setSeenMessage] = useSetSeenMessageMutation();
 
   const isCurrentUser = message.senderId === currentUser._id;
   const color = isCurrentUser ? "text-gray-250" : "text-gray-50";
   const backgroundColor = isCurrentUser ? "bg-gray-50" : "bg-gray-250";
   const handleSetMessageSeen = async () => {
-    // await setSeenMessage({
-    //   conversationId,
-    //   messageId: message._id,
-    //   userId: currentUser._id,
-    // }).unwrap();
+    await setSeenMessage({
+      conversationId,
+      messageId: message._id,
+      userId: currentUser._id,
+    }).unwrap();
   };
   useEffect(() => {
     if (message.isCallInfo) return;
@@ -68,6 +70,20 @@ const MessageBox = ({
       }
     };
   }, [message]);
+  const callInfoText = () => {
+    if (message.isCallInfo) {
+      if (!message.isEnded && message.isAnswered) {
+        return <>Active call</>;
+      }
+      if (message.senderId === currentUser?._id) {
+        if (!message.isEnded && !message.isAnswered) return <>Outgoing call</>;
+        return <>Outgoing call</>;
+      } else {
+        if (!message.isEnded && !message.isAnswered) return <>Incoming call</>;
+        return <>Incoming call</>;
+      }
+    }
+  };
   return (
     <div
       ref={messageRef}
@@ -90,17 +106,7 @@ const MessageBox = ({
               <div className="flex   gap-14 items-center">
                 <div>
                   <div className="max-w-52 sm:max-w-96 break-words whitespace-pre-wrap text-wrap  flex  flex-col ">
-                    <div>
-                      {message.isEnded ? (
-                        isCurrentUser ? (
-                          <>Outgoing call</>
-                        ) : (
-                          <>Incoming call</>
-                        )
-                      ) : (
-                        <>Active call</>
-                      )}
-                    </div>
+                    <div>{callInfoText()}</div>
 
                     <div className="flex gap-2 items-center text-sm">
                       {isCurrentUser ? (
@@ -138,6 +144,10 @@ const MessageBox = ({
               </div>
             </div>
           </div>
+        </>
+      ) : message.isAudioMessage ? (
+        <>
+          <audio src={message.audioMessage} controls></audio>
         </>
       ) : (
         <>

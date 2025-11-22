@@ -3,9 +3,15 @@ import { TUserInfo } from "./UserEntityTypes";
 export type TMessageInfo =
   | {
       isCallInfo: false;
+
       _id: string;
+
+      isAudioMessage: boolean;
+
       messageText?: string;
       messageImage?: string;
+      audioMessage?: string;
+
       seenIds: string[];
       conversationId: string;
       senderId: string;

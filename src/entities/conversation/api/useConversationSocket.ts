@@ -4,7 +4,7 @@ import { apiURLs } from "../../../shared/values/strValues";
 import { useAppDispatch } from "../../../app/store/store";
 import { deleteMessage, newMessage, updateMessage } from "../";
 import { Socket } from "socket.io-client";
-const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
+const wsURL = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 export type TUseConversationSocketProps = {
   _id: string | undefined;
 };
@@ -13,7 +13,7 @@ const useConversationSocket = ({ _id }: TUseConversationSocketProps) => {
   const conversationSocket = useRef<Socket>();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    conversationSocket.current = useSocket(wsUrl);
+    conversationSocket.current = useSocket(wsURL);
     conversationSocket.current.emit("joinConversation", _id);
 
     conversationSocket.current.on("newMessage", (sendedMessage) => {

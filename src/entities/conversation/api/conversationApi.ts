@@ -4,7 +4,7 @@ import { apiURLs } from "../../../shared/values/strValues";
 import { TApiSocket } from "../../../shared/types/websocketType";
 import { useSocket } from "../../../shared/utils/useSocket";
 import { TMessageInfo } from "../../../shared/types/messageTypes";
-const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
+const wsURL = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.conversations;
 const { createGroupConversation } = apiURLs.paths.conversation;
 
 let socket: TApiSocket = null;
@@ -51,7 +51,7 @@ const conversationApi = baseApi.injectEndpoints({
         }
         if ((isGroup && !args.conversationId) || (!isGroup && !args.userId))
           return;
-        socket = useSocket(wsUrl);
+        socket = useSocket(wsURL);
 
         socket.emit(
           "joinConversation",
@@ -283,4 +283,7 @@ export const {
   useAddUsersToConversationMutation,
   useCreateGroupConversationMutation,
   useConnectToChatChanelQuery,
+  useSetSeenMessageMutation,
+  useStartTypingMutation,
+  useStopTypingMutation,
 } = conversationApi;

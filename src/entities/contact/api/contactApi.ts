@@ -26,7 +26,7 @@ import {
   TGroupConversation,
 } from "../../../shared/types/Contact";
 
-const wsUrl = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
+const wsURL = apiURLs.wsServer.base + apiURLs.wsServer.namespaces.users;
 let socket: TApiSocket = null;
 
 const contactApi = baseApi.injectEndpoints({
@@ -46,7 +46,7 @@ const contactApi = baseApi.injectEndpoints({
         { updateCachedData, cacheDataLoaded, cacheEntryRemoved, dispatch }
       ) {
         if (userEmail) {
-          socket = useSocket(wsUrl);
+          socket = useSocket(wsURL);
 
           socket.emit("getUsersData");
 

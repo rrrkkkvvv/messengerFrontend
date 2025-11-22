@@ -218,12 +218,15 @@ const MessageList = ({
               >
                 Delete message
               </button>
-              <button
-                onClick={handleEdit}
-                className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-gray-300"
-              >
-                Edit message
-              </button>
+              {!contextMenu.message?.isCallInfo &&
+                !contextMenu.message?.isAudioMessage && (
+                  <button
+                    onClick={handleEdit}
+                    className="block px-4 py-4  w-full rounded-xl text-gray-50 transition duration-300 hover:bg-gray-300"
+                  >
+                    Edit message
+                  </button>
+                )}
             </>
           )}
         </div>

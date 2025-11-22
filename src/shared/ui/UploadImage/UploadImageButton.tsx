@@ -38,8 +38,8 @@ const UploadButton: FC<UploadButtonProps> = ({
       return;
     }
     setIsLoading(true);
-    const previewUrl = URL.createObjectURL(file);
-    setImagePreview(previewUrl);
+    const previewURL = URL.createObjectURL(file);
+    setImagePreview(previewURL);
 
     setImageFile(file);
     setIsLoading(false);
