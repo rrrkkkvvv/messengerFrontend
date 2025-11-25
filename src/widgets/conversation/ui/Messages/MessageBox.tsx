@@ -9,6 +9,8 @@ import { IoIosCall } from "react-icons/io";
 import { TMessageInfo } from "../../../../shared/types/messageTypes.ts";
 import { useSetSeenMessageMutation } from "../../../../entities/conversation/api/conversationApi.ts";
 
+import AudioMessage from "./AudioMessage.tsx";
+
 type TMessageBoxProps = {
   conversationId: string;
   message: TMessageInfo;
@@ -147,7 +149,17 @@ const MessageBox = ({
         </>
       ) : message.isAudioMessage ? (
         <>
-          <audio src={message.audioMessage} controls></audio>
+          {/* <AudioMessage src={message.audioMessage}></AudioMessage> */}
+          {/* <audio src={message.audioMessage} controls></audio> */}
+          <div
+            className={`h-16  w-72 px-2     text-base md:text-lg cursor-pointer   rounded-xl font-semibold      flex justify-center items-center   relative   ${color} ${backgroundColor} `}
+          >
+            <AudioMessage
+              isCurrentUser={isCurrentUser}
+              isGroup={isGroup}
+              message={message}
+            ></AudioMessage>
+          </div>
         </>
       ) : (
         <>

@@ -1,16 +1,19 @@
 export const formatTime = (dateInput: Date | string | number): string => {
   if (typeof dateInput === "number") {
-    const seconds = dateInput % 60;
-    dateInput -= seconds;
+    const minutes = Math.floor(dateInput / 60);
+    const seconds = Math.round(dateInput) % 60;
 
-    const minutes = (dateInput - (dateInput - (dateInput % 3600))) / 60;
-    dateInput = dateInput - (dateInput % 3600);
+    const hours = Math.floor(dateInput / 3600);
 
-    const hours = dateInput / 3600;
-
-    return `${hours < 10 ? `0${hours}` : hours}:${
-      minutes < 10 ? `0${minutes}` : minutes
-    }:${seconds < 10 ? `0${seconds}` : seconds}`;
+    if (hours) {
+      return `${minutes < 10 ? `0${minutes}` : minutes}:${
+        seconds < 10 ? `0${seconds}` : seconds
+      }`;
+    } else {
+      return `${minutes < 10 ? `0${minutes}` : minutes}:${
+        seconds < 10 ? `0${seconds}` : seconds
+      }`;
+    }
   } else if (typeof dateInput === "string" || dateInput instanceof Date) {
     const parsedDate =
       typeof dateInput === "string" ? new Date(dateInput) : dateInput;

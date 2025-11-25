@@ -200,13 +200,19 @@ const MessageList = ({
         >
           {contextMenu.message?.sentAt && (
             <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
-              Sent at {formatDateTime(contextMenu.message.sentAt)}
+              Sent{" "}
+              <span className="lowercase">
+                {formatDateTime(contextMenu.message.sentAt)}
+              </span>
             </div>
           )}
           {!contextMenu.message?.isCallInfo &&
             contextMenu.message?.editedAt && (
               <div className="block px-4 py-4 w-full rounded-xl text-gray-50 ">
-                Edited at {formatDateTime(contextMenu.message.editedAt)}
+                Edited{" "}
+                <span className="lowercase">
+                  {formatDateTime(contextMenu.message.editedAt)}
+                </span>
               </div>
             )}
 
