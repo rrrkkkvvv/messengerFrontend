@@ -21,6 +21,8 @@ import {
   useStopTypingMutation,
 } from "../../../../entities/conversation/api/conversationApi";
 import { formatTime } from "../../../../shared/utils/formatTime";
+import AudioMessage from "../Messages/AudioMessage";
+import AudioMessagePreview from "./AudioMessagePreview";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -324,7 +326,7 @@ const MessageForm = ({
                   </>
                 )}
                 {!isAudioRecording && audioMessageURL && (
-                  <audio controls src={audioMessageURL} />
+                  <AudioMessagePreview src={audioMessageURL} />
                 )}
                 {isAudioRecording && !audioMessageURL && (
                   <div className="font-semibold">

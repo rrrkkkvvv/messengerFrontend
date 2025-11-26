@@ -27,8 +27,11 @@ const AudioMessage: FC<IAudioMessageProps> = ({
     if (containterRef.current) {
       wavesurfer.current = WaveSurfer.create({
         container: containterRef.current,
-        waveColor: "rgb(0, 0, 0)",
+        waveColor: isCurrentUser ? "rgb(0, 0, 0)" : "#e5e5e5",
         progressColor: "rgb(69, 69, 69)",
+        barWidth: 4,
+        barGap: 3,
+        barRadius: 25,
         height: 50,
         width: 200,
       });
@@ -87,7 +90,7 @@ const AudioMessage: FC<IAudioMessageProps> = ({
             className="relative    flex  justify-center   h-full items-center"
           ></div>
         </div>
-        <sub className="text-xs absolute bottom-1 left-9">
+        <sub className="text-xs absolute bottom-0 left-8">
           {formatTime(duration - currentTime)}
         </sub>
 
