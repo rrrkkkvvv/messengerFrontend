@@ -6,9 +6,7 @@ import { formatTime } from "../../../../shared/utils/formatTime";
 interface IAudioMessagePreview {
   src: string;
 }
-const AudioMessagePreview: FC<IAudioMessagePreview> = () => {
-  const src =
-    "https://res.cloudinary.com/dbxpvyzxo/video/upload/v1763837892/neynhttycco6n6rupf1q.webm";
+const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
   const containterRef = useRef<HTMLDivElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const wavesurfer = useRef<WaveSurfer | null>(null);
