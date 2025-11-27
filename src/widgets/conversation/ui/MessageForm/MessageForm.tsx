@@ -436,6 +436,7 @@ const MessageForm = ({
             // onMouseMove={handleRecordHoldMove}
             // onTouchMove={handleRecordHoldMove}
             // onClick={handleRecordHoldEnd}
+            onTouchCancel={handleRecordHoldEnd}
             className={`text-xl hover:outline-none ${
               isAudioRecording && "animate-pulse"
             }`}
