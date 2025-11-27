@@ -44,7 +44,55 @@ const MessageForm = ({
   );
   const [messageImageFile, setMessageImageFile] = useState<File | null>(null);
   const [audioMessageFile, setAudioMessageFile] = useState<Blob | null>(null);
+  // const [isHolding, setIsHolding] = useState(false);
+  // const [isLocked, setIsLocked] = useState(false);
+  const startPos = useRef({ x: 0, y: 0 });
+  const handleRecordHoldStart = (e: React.MouseEvent | React.TouchEvent) => {
+    const point = "touches" in e ? e.touches[0] : e;
+    startPos.current = { x: point.clientX, y: point.clientY };
 
+    // setIsHolding(true);
+    handleStartRecording();
+  };
+  // const handleRecordHoldMove = (e: React.MouseEvent | React.TouchEvent) => {
+  //   console.log("handleRecordHoldMove");
+  //   if (!isHolding || isLocked || !isAudioRecording) return;
+
+  //   const point = "touches" in e ? e.touches[0] : e;
+  //   const dx = point.clientX - startPos.current.x;
+  //   const dy = point.clientY - startPos.current.y;
+
+  //   if (dx < -60) {
+  //     handleResetAudioMessage();
+  //     setIsHolding(false);
+  //     return;
+  //   }
+
+  //   if (dy < -60) {
+  //     setIsLocked(true);
+  //     setIsHolding(false);
+  //     return;
+  //   }
+  // };
+  const handleRecordHoldEnd = () => {
+    console.log("handleRecordHoldEnd");
+
+    if (!isAudioRecording) return;
+
+    // if (isLocked) return;
+
+    // setIsHolding(false);
+    handleStopRecording();
+  };
+  // const handleLockedStop = () => {
+  //   console.log("handleLockedStop");
+
+  //   console.log(1);
+  //   console.log(isLocked);
+  //   if (!isLocked) return;
+  //   setIsLocked(false);
+  //   handleStopRecording();
+  // };
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
 
@@ -64,6 +112,7 @@ const MessageForm = ({
   const chunks = useRef<Blob[]>([]);
 
   const handleStartRecording = async () => {
+    handleResetAudioMessage();
     setIsAudioRecording(true);
     try {
       setAudioMessageDuration(0);
@@ -122,13 +171,13 @@ const MessageForm = ({
     mediaStream.current = null;
     mediaRecorder.current = null;
   };
-  const handleRecordButtonClick = () => {
-    if (isAudioRecording) {
-      handleStopRecording();
-    } else {
-      handleStartRecording();
-    }
-  };
+  // const handleRecordButtonClick = () => {
+  //   if (isAudioRecording) {
+  //     handleStopRecording();
+  //   } else {
+  //     handleStartRecording();
+  //   }
+  // };
 
   const handleClearMessage = () => {
     handleResetIsEditingMessage();
@@ -301,95 +350,98 @@ const MessageForm = ({
         </>
       )}
 
-      <div className="flex gap-5 items-center ">
-        <div className={`flex w-full items-center  `}>
-          {(isAudioRecording || audioMessageURL) && (
-            <>
-              <div className="flex w-full items-center justify-between">
-                {isAudioRecording ? (
-                  <>
-                    <div className=" flex justify-center items-center">
-                      <div className="h-3 w-3 rounded-full bg-red-100 animate-pulse"></div>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <BorderedButton
-                        type="button"
-                        onClick={handleResetAudioMessage}
-                      >
-                        <FaTrashAlt className="text-xl text-red-100 text-center" />
-                      </BorderedButton>
-                    </div>
-                  </>
-                )}
-                {!isAudioRecording && audioMessageURL && (
-                  <AudioMessagePreview src={audioMessageURL} />
-                )}
-                {isAudioRecording && !audioMessageURL && (
-                  <div className="font-semibold">
-                    {formatTime(audioMessageDuration)}
+      <div className={`flex w-full gap-5 items-center  `}>
+        {(isAudioRecording || audioMessageURL) && (
+          <>
+            <div
+              className={`flex w-full items-center between ${
+                isAudioRecording
+                  ? "justify-between"
+                  : "justify-between md:justify-around"
+              }`}
+            >
+              {isAudioRecording ? (
+                <>
+                  <div className=" flex justify-center items-center">
+                    <div className="h-3 w-3 rounded-full bg-red-100 animate-pulse"></div>
                   </div>
-                )}
-              </div>
-            </>
-          )}
-          {!isAudioRecording && !audioMessageURL && (
-            <>
-              {isMessageEdit && (
-                <div>
-                  <BorderedButton type="button" onClick={handleClearMessage}>
-                    <IoClose className="text-3xl  text-center" />
-                  </BorderedButton>
+                </>
+              ) : (
+                <>
+                  <div>
+                    <BorderedButton
+                      type="button"
+                      onClick={handleResetAudioMessage}
+                    >
+                      <FaTrashAlt className="text-xl text-red-100 text-center" />
+                    </BorderedButton>
+                  </div>
+                </>
+              )}
+              {!isAudioRecording && audioMessageURL && (
+                <AudioMessagePreview src={audioMessageURL} />
+              )}
+              {isAudioRecording && !audioMessageURL && (
+                <div className="font-semibold">
+                  {formatTime(audioMessageDuration)}
                 </div>
               )}
-              <UploadButton
-                setImagePreview={handleSetMessageImagePreview}
-                setImageFile={handleSetMessageImage}
-              />
+            </div>
+          </>
+        )}
+        {!isAudioRecording && !audioMessageURL && (
+          <>
+            {isMessageEdit && (
+              <div>
+                <BorderedButton type="button" onClick={handleClearMessage}>
+                  <IoClose className="text-3xl  text-center" />
+                </BorderedButton>
+              </div>
+            )}
+            <UploadButton
+              setImagePreview={handleSetMessageImagePreview}
+              setImageFile={handleSetMessageImage}
+            />
 
-              <Input
-                className="    md:text-base w-full           focus:outline-none
+            <Input
+              className="    md:text-base w-full           focus:outline-none
           bg-gray-400
           transition-all
   "
-                type="text"
-                value={messageText ? messageText : ""}
-                onChange={handleInputChange}
-                placeholder="Write a message..."
-              />
-            </>
-          )}
-          {/* TODO: SEND AUDIO WITHOUT CLICKING ON STOP BTN */}
-          {!isAudioRecording && (
-            <div>
-              <BorderedButton
-                type="submit"
-                className="text-xl hover:outline-none"
-              >
-                {isMessageEdit ? <FaCheck /> : <TbSend2 />}
-              </BorderedButton>
-            </div>
-          )}
-
+              type="text"
+              value={messageText ? messageText : ""}
+              onChange={handleInputChange}
+              placeholder="Write a message..."
+            />
+          </>
+        )}
+        {!isAudioRecording && (
           <div>
             <BorderedButton
-              onClick={() => {
-                handleRecordButtonClick();
-              }}
-              type="button"
-              // onMouseDown={() => {
-              //   console.log("start");
-              // }}
-              // onMouseUp={() => {
-              //   console.log("stop");
-              // }}
+              type="submit"
               className="text-xl hover:outline-none"
             >
-              {isAudioRecording ? <FaRegStopCircle /> : <HiOutlineMicrophone />}
+              {isMessageEdit ? <FaCheck /> : <TbSend2 />}
             </BorderedButton>
           </div>
+        )}
+
+        <div>
+          <BorderedButton
+            type="button"
+            onMouseDown={handleRecordHoldStart}
+            onMouseUp={handleRecordHoldEnd}
+            onTouchStart={handleRecordHoldStart}
+            onTouchEnd={handleRecordHoldEnd}
+            // onMouseMove={handleRecordHoldMove}
+            // onTouchMove={handleRecordHoldMove}
+            // onClick={handleRecordHoldEnd}
+            className={`text-xl hover:outline-none ${
+              isAudioRecording && "animate-pulse"
+            }`}
+          >
+            {isAudioRecording ? <FaRegStopCircle /> : <HiOutlineMicrophone />}
+          </BorderedButton>
         </div>
       </div>
     </form>

@@ -24,7 +24,6 @@ const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
         barGap: 3,
         barRadius: 25,
         height: 40,
-        width: 200,
       });
       if (src) {
         wavesurfer.current.load(src);
@@ -42,6 +41,7 @@ const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
         setCurrentTime(newCurrentTime);
       });
     }
+
     return () => {
       containterRef.current = null;
     };
@@ -58,7 +58,7 @@ const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
   };
   return (
     <>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center justify-center gap-4 w-full">
         {isPlaying ? (
           <>
             <FaRegPauseCircle
@@ -77,10 +77,10 @@ const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
         <div
           ref={containterRef}
           onClick={togglePlay}
-          className="relative    flex  justify-center   h-full items-center"
+          className="relative          w-full  h-full  "
         ></div>
       </div>
-      <sub className="text-xs absolute bottom-0 left-28 z-20     ">
+      <sub className="text-xs absolute bottom-0 left-1/2  z-20     ">
         {formatTime(duration - currentTime)}
       </sub>
     </>
