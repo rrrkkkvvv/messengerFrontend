@@ -22,6 +22,7 @@ import {
 } from "../../../../entities/conversation/api/conversationApi";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import AudioMessagePreview from "./AudioMessagePreview";
+import toast from "react-hot-toast";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -44,14 +45,16 @@ const MessageForm = ({
   );
   const [messageImageFile, setMessageImageFile] = useState<File | null>(null);
   const [audioMessageFile, setAudioMessageFile] = useState<Blob | null>(null);
-  // const [isHolding, setIsHolding] = useState(false);
+  const [isHolding, setIsHolding] = useState(false);
   // const [isLocked, setIsLocked] = useState(false);
   const startPos = useRef({ x: 0, y: 0 });
   const handleRecordHoldStart = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+
     const point = "touches" in e ? e.touches[0] : e;
     startPos.current = { x: point.clientX, y: point.clientY };
 
-    // setIsHolding(true);
+    setIsHolding(true);
     handleStartRecording();
   };
   // const handleRecordHoldMove = (e: React.MouseEvent | React.TouchEvent) => {
@@ -74,14 +77,13 @@ const MessageForm = ({
   //     return;
   //   }
   // };
-  const handleRecordHoldEnd = () => {
-    console.log("handleRecordHoldEnd");
-
+  const handleRecordHoldEnd = (e: React.MouseEvent | React.TouchEvent) => {
+    e.preventDefault();
+    toast.success("on cancel touch");
     if (!isAudioRecording) return;
-
     // if (isLocked) return;
 
-    // setIsHolding(false);
+    setIsHolding(false);
     handleStopRecording();
   };
   // const handleLockedStop = () => {
@@ -382,7 +384,7 @@ const MessageForm = ({
                 <AudioMessagePreview src={audioMessageURL} />
               )}
               {isAudioRecording && !audioMessageURL && (
-                <div className="font-semibold">
+                <div className="font-semibold select-none">
                   {formatTime(audioMessageDuration)}
                 </div>
               )}
@@ -427,6 +429,17 @@ const MessageForm = ({
         )}
 
         <div>
+          {/* RECORD AUDIO MESSAGE BUTTON */}
+          {/* <div
+            className="text-xl cursor-pointer"
+            onTouchStart={handleRecordHoldStart}
+            onTouchCancel={handleRecordHoldEnd}
+            onTouchEnd={handleRecordHoldEnd}
+            onMouseDown={handleRecordHoldStart}
+            onMouseUp={handleRecordHoldEnd}
+          >
+            <HiOutlineMicrophone />
+          </div> */}
           <BorderedButton
             type="button"
             onMouseDown={handleRecordHoldStart}
@@ -435,13 +448,22 @@ const MessageForm = ({
             onTouchEnd={handleRecordHoldEnd}
             // onMouseMove={handleRecordHoldMove}
             // onTouchMove={handleRecordHoldMove}
-            // onClick={handleRecordHoldEnd}
+            onClick={handleRecordHoldEnd}
             onTouchCancel={handleRecordHoldEnd}
-            className={`text-xl hover:outline-none ${
-              isAudioRecording && "animate-pulse"
+            className={`text-xl hover:outline-none relative     ${
+              isHolding && "animate-pulse"
             }`}
           >
-            {isAudioRecording ? <FaRegStopCircle /> : <HiOutlineMicrophone />}
+            <FaRegStopCircle
+              className={`absolute   top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2  inset-0 transition-opacity ${
+                isHolding ? "opacity-100" : "opacity-0"
+              }`}
+            />
+            <HiOutlineMicrophone
+              className={`transition-opacity ${
+                isHolding ? "opacity-0" : "opacity-100"
+              }`}
+            />
           </BorderedButton>
         </div>
       </div>
