@@ -22,7 +22,6 @@ import {
 } from "../../../../entities/conversation/api/conversationApi";
 import { formatTime } from "../../../../shared/utils/formatTime";
 import AudioMessagePreview from "./AudioMessagePreview";
-import toast from "react-hot-toast";
 
 type TMessageFormProps = {
   currentUser: TUserInfo | null;
@@ -79,7 +78,6 @@ const MessageForm = ({
   // };
   const handleRecordHoldEnd = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-    toast.success("on cancel touch");
     if (!isAudioRecording) return;
     // if (isLocked) return;
 
@@ -352,11 +350,11 @@ const MessageForm = ({
         </>
       )}
 
-      <div className={`flex w-full gap-5 items-center  `}>
+      <div className={`flex w-full  items-center  `}>
         {(isAudioRecording || audioMessageURL) && (
           <>
             <div
-              className={`flex w-full items-center between ${
+              className={`flex w-full items-center gap-2 ${
                 isAudioRecording
                   ? "justify-between"
                   : "justify-between md:justify-around"
