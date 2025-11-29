@@ -80,24 +80,15 @@ const MessageForm = ({
       return;
     }
   };
-  const handleRecordHoldEnd = (e: React.MouseEvent | React.TouchEvent) => {
-    e.preventDefault();
+  const handleRecordHoldEnd = () => {
     if (!isAudioRecording) return;
-
-    setIsHolding(false);
-    setRecordBtnPosition(0);
-    setIsLocked(false);
+    if (isLocked) return;
     handleStopRecording();
   };
-  // const handleLockedStop = () => {
-  //   console.log("handleLockedStop");
-
-  //   console.log(1);
-  //   console.log(isLocked);
-  //   if (!isLocked) return;
-  //   setIsLocked(false);
-  //   handleStopRecording();
-  // };
+  const handleLockedStop = () => {
+    if (!isLocked) return;
+    handleStopRecording();
+  };
   const [editMessage] = useEditMessageMutation();
   const [sendMessage] = useSendMessageMutation();
 
@@ -156,8 +147,11 @@ const MessageForm = ({
   };
 
   const handleStopRecording = () => {
+    setRecordBtnPosition(0);
+
     setIsAudioRecording(false);
     setIsHolding(false);
+    setIsLocked(false);
     if (mediaRecorder.current) {
       mediaRecorder.current.stop();
       mediaStream.current?.getTracks().forEach((track) => track.stop());
@@ -443,7 +437,7 @@ const MessageForm = ({
               onMouseMove={handleRecordHoldMove}
               onTouchMove={handleRecordHoldMove}
               onTouchCancel={handleRecordHoldEnd}
-              onClick={handleRecordHoldEnd}
+              onClick={handleLockedStop}
               className={`text-xl hover:outline-none relative    bg-gray-350 transition-transform duration-300  p-2  ${
                 isHolding && "animate-pulse"
               }`}
