@@ -2,7 +2,7 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import UploadButton from "../../../../shared/ui/UploadImage/UploadImageButton";
 import { IoClose, IoCloseOutline } from "react-icons/io5";
 
-import { FaCheck, FaRegStopCircle, FaTrashAlt } from "react-icons/fa";
+import { FaCheck, FaLock, FaRegStopCircle, FaTrashAlt } from "react-icons/fa";
 import { TUserInfo } from "../../../../shared/types/UserEntityTypes";
 
 import { TbSend2 } from "react-icons/tb";
@@ -45,43 +45,48 @@ const MessageForm = ({
   const [messageImageFile, setMessageImageFile] = useState<File | null>(null);
   const [audioMessageFile, setAudioMessageFile] = useState<Blob | null>(null);
   const [isHolding, setIsHolding] = useState(false);
-  // const [isLocked, setIsLocked] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
   const startPos = useRef({ x: 0, y: 0 });
   const handleRecordHoldStart = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
-
+    if (isLocked) return;
     const point = "touches" in e ? e.touches[0] : e;
     startPos.current = { x: point.clientX, y: point.clientY };
 
     setIsHolding(true);
     handleStartRecording();
   };
-  // const handleRecordHoldMove = (e: React.MouseEvent | React.TouchEvent) => {
-  //   console.log("handleRecordHoldMove");
-  //   if (!isHolding || isLocked || !isAudioRecording) return;
+  const handleRecordHoldMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isHolding || isLocked || !isAudioRecording) return;
 
-  //   const point = "touches" in e ? e.touches[0] : e;
-  //   const dx = point.clientX - startPos.current.x;
-  //   const dy = point.clientY - startPos.current.y;
+    const point = "touches" in e ? e.touches[0] : e;
+    // const dx = point.clientX - startPos.current.x;
+    const dy = point.clientY - startPos.current.y;
 
-  //   if (dx < -60) {
-  //     handleResetAudioMessage();
-  //     setIsHolding(false);
-  //     return;
-  //   }
-
-  //   if (dy < -60) {
-  //     setIsLocked(true);
-  //     setIsHolding(false);
-  //     return;
-  //   }
-  // };
+    // if (dx < -60) {
+    //   handleResetAudioMessage();
+    //   setIsHolding(false);
+    //   return;
+    // }
+    if (dy > 0) {
+      return;
+    }
+    if (dy > -10) {
+      setRecordBtnPosition(dy);
+    }
+    if (dy < -10) {
+      setIsLocked(true);
+      setIsHolding(false);
+      return;
+    }
+  };
   const handleRecordHoldEnd = (e: React.MouseEvent | React.TouchEvent) => {
     e.preventDefault();
     if (!isAudioRecording) return;
-    // if (isLocked) return;
 
     setIsHolding(false);
+    setRecordBtnPosition(0);
+    setIsLocked(false);
     handleStopRecording();
   };
   // const handleLockedStop = () => {
@@ -110,7 +115,7 @@ const MessageForm = ({
   const mediaStream = useRef<MediaStream | null>(null);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const chunks = useRef<Blob[]>([]);
-
+  const [recordBtnPosition, setRecordBtnPosition] = useState(0);
   const handleStartRecording = async () => {
     handleResetAudioMessage();
     setIsAudioRecording(true);
@@ -152,6 +157,7 @@ const MessageForm = ({
 
   const handleStopRecording = () => {
     setIsAudioRecording(false);
+    setIsHolding(false);
     if (mediaRecorder.current) {
       mediaRecorder.current.stop();
       mediaStream.current?.getTracks().forEach((track) => track.stop());
@@ -427,17 +433,6 @@ const MessageForm = ({
         )}
 
         <div>
-          {/* RECORD AUDIO MESSAGE BUTTON */}
-          {/* <div
-            className="text-xl cursor-pointer"
-            onTouchStart={handleRecordHoldStart}
-            onTouchCancel={handleRecordHoldEnd}
-            onTouchEnd={handleRecordHoldEnd}
-            onMouseDown={handleRecordHoldStart}
-            onMouseUp={handleRecordHoldEnd}
-          >
-            <HiOutlineMicrophone />
-          </div> */}
           {!audioMessageURL && (
             <BorderedButton
               type="button"
@@ -445,22 +440,31 @@ const MessageForm = ({
               onMouseUp={handleRecordHoldEnd}
               onTouchStart={handleRecordHoldStart}
               onTouchEnd={handleRecordHoldEnd}
-              // onMouseMove={handleRecordHoldMove}
-              // onTouchMove={handleRecordHoldMove}
-              onClick={handleRecordHoldEnd}
+              onMouseMove={handleRecordHoldMove}
+              onTouchMove={handleRecordHoldMove}
               onTouchCancel={handleRecordHoldEnd}
-              className={`text-xl hover:outline-none relative     ${
+              onClick={handleRecordHoldEnd}
+              className={`text-xl hover:outline-none relative    bg-gray-350 transition-transform duration-300  p-2  ${
                 isHolding && "animate-pulse"
               }`}
+              style={{
+                transition: "0.3s",
+                translate: `0 ${recordBtnPosition}px`,
+              }}
             >
               <FaRegStopCircle
                 className={`absolute   top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2  inset-0 transition-opacity ${
-                  isHolding ? "opacity-100" : "opacity-0"
+                  !isLocked && isHolding ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              <FaLock
+                className={`absolute   top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2  inset-0 transition-opacity ${
+                  isLocked ? "opacity-100" : "opacity-0"
                 }`}
               />
               <HiOutlineMicrophone
                 className={`transition-opacity ${
-                  isHolding ? "opacity-0" : "opacity-100"
+                  isLocked || isHolding ? "opacity-0" : "opacity-100"
                 }`}
               />
             </BorderedButton>
