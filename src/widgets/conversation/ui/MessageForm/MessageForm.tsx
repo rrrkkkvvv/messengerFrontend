@@ -438,31 +438,33 @@ const MessageForm = ({
           >
             <HiOutlineMicrophone />
           </div> */}
-          <BorderedButton
-            type="button"
-            onMouseDown={handleRecordHoldStart}
-            onMouseUp={handleRecordHoldEnd}
-            onTouchStart={handleRecordHoldStart}
-            onTouchEnd={handleRecordHoldEnd}
-            // onMouseMove={handleRecordHoldMove}
-            // onTouchMove={handleRecordHoldMove}
-            onClick={handleRecordHoldEnd}
-            onTouchCancel={handleRecordHoldEnd}
-            className={`text-xl hover:outline-none relative     ${
-              isHolding && "animate-pulse"
-            }`}
-          >
-            <FaRegStopCircle
-              className={`absolute   top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2  inset-0 transition-opacity ${
-                isHolding ? "opacity-100" : "opacity-0"
+          {!audioMessageURL && (
+            <BorderedButton
+              type="button"
+              onMouseDown={handleRecordHoldStart}
+              onMouseUp={handleRecordHoldEnd}
+              onTouchStart={handleRecordHoldStart}
+              onTouchEnd={handleRecordHoldEnd}
+              // onMouseMove={handleRecordHoldMove}
+              // onTouchMove={handleRecordHoldMove}
+              onClick={handleRecordHoldEnd}
+              onTouchCancel={handleRecordHoldEnd}
+              className={`text-xl hover:outline-none relative     ${
+                isHolding && "animate-pulse"
               }`}
-            />
-            <HiOutlineMicrophone
-              className={`transition-opacity ${
-                isHolding ? "opacity-0" : "opacity-100"
-              }`}
-            />
-          </BorderedButton>
+            >
+              <FaRegStopCircle
+                className={`absolute   top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2  inset-0 transition-opacity ${
+                  isHolding ? "opacity-100" : "opacity-0"
+                }`}
+              />
+              <HiOutlineMicrophone
+                className={`transition-opacity ${
+                  isHolding ? "opacity-0" : "opacity-100"
+                }`}
+              />
+            </BorderedButton>
+          )}
         </div>
       </div>
     </form>

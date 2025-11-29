@@ -80,7 +80,7 @@ const AudioMessagePreview: FC<IAudioMessagePreview> = ({ src }) => {
           className="relative          w-full  h-full  "
         ></div>
       </div>
-      <sub className="text-xs absolute bottom-0 left-1/2  z-20     ">
+      <sub className="text-xs absolute bottom-0 left-1/2  z-20 font-bold    ">
         {formatTime(duration - currentTime)}
       </sub>
     </>
