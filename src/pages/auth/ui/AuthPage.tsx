@@ -100,7 +100,9 @@ const AuthPage = () => {
               e.preventDefault();
               toggleSignIn();
             }}
+            id="toggleSignUpBtn"
             className={`
+              
               underline
                   text-gray-50
                     ml-2
@@ -116,14 +118,14 @@ const AuthPage = () => {
         </p>
         {isSignUp && (
           <>
-            <label className=" font-bold" htmlFor="name_input">
+            <label className=" font-bold" htmlFor="nameInput">
               Name
             </label>
 
             <Input
               maxLength={90}
               required
-              id="name"
+              id="nameInput"
               value={name}
               placeholder="John Doe"
               onChange={(e) => handleInputChange("name", e)}
@@ -131,29 +133,29 @@ const AuthPage = () => {
             />
           </>
         )}
-        <label className=" font-bold" htmlFor="email_input">
+        <label className=" font-bold" htmlFor="emailInput">
           Email
         </label>
         <Input
           maxLength={254}
-          id="email_input"
+          id="emailInput"
           required
           placeholder="email@example.com"
           value={email}
           onChange={(e) => handleInputChange("email", e)}
           type="email"
         />
-        <label className=" font-bold" htmlFor="password_input">
+        <label className=" font-bold" htmlFor="passwordInput">
           Password
         </label>
         <Input
-          id="password_input"
+          id="passwordInput"
           required
           value={password}
           onChange={(e) => handleInputChange("password", e)}
           type="password"
         />
-        <SolidButton type="submit" className="mt-3">
+        <SolidButton type="submit" id="submitAuthBtn" className="mt-3">
           {isSignUp ? <>Sign Up</> : <>Sign In</>}
         </SolidButton>
         <div className="relative my-4 flex justify-center items-center">
