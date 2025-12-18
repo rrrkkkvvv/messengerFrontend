@@ -43,6 +43,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
     <>
       <SolidButton
         onClick={() => setIsModalOpen(true)}
+        id="deleteAccountBtn"
         className=" bg-gray-50 text-gray-400 font-bold flex flex-row justify-center items-center text-center"
       >
         <div>Delete account</div>
@@ -60,6 +61,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
               <h2>Confirm user email: {currentUser?.email}</h2>
 
               <Input
+                id="accountEmailInput"
                 type="email"
                 onClick={() => {}}
                 onChange={handleUserEmailChange}
@@ -76,6 +78,7 @@ const SettingsProfile = ({ currentUser }: TSettingsProfileProps) => {
                 Cancel
               </SolidButton>
               <SolidButton
+                id="submitDeleteAccountBtn"
                 className="px-4 py-2  hover:bg-gray-400 hover:text-gray-50  "
                 onClick={() => {
                   handleDeleteAccount();

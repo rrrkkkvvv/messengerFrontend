@@ -13,6 +13,7 @@ const Header: FC<IHeaderProps> = ({ handleOpenModal }) => {
   return (
     <h1 className="py-5 flex  justify-around  text-center border border-gray-200 text-gray-50 items-center">
       <button
+        id="profileBtn"
         className="
                         text-gray-50
                         flex

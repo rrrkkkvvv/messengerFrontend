@@ -49,6 +49,7 @@ const AuthPage = () => {
           password,
           email: email.trim(),
         }).unwrap();
+        console.log(result.data.user);
         dispatch(
           setUserLoginData({
             loginStatus: true,
@@ -61,6 +62,8 @@ const AuthPage = () => {
         toast.success(toastTexts.success.successSignup);
       } else {
         result = await signIn({ password, email }).unwrap();
+        console.log(result.data.user);
+
         dispatch(
           setUserLoginData({
             loginStatus: true,
